@@ -1,32 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500&display=swap");
 .header {
-  // height: 45px;
   .logo {
-    // height: 45px;
     font-weight: 400;
     font-family: "Alegreya SC", serif;
     color: #2a7a8c;
-    // width: 200px;
   }
   .input {
     width: 400px !important;
   }
   .logo_text {
-    // color:#820E37;
     font-weight: 600;
   }
-  // .badge-up{
-  //     position: absolute;
-  //     top: -11px;
-  //     right: -9px;
-  //     min-width: 1.429rem;
-  //     min-height: 1.429rem;
-  //     display: flex;
-  //     align-items: center;
-  //     justify-content: center;
-  //     font-size: 0.786rem;
-  //     line-height: 0.786;
-  //     padding-left: 0.25rem;
-  //     padding-right: 0.25rem;
-  // }
+}
+
+.cart-card{
+  z-index: 1 !important;
+  
 }
