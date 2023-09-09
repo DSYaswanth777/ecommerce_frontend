@@ -23,7 +23,7 @@ const HeroSection = () => {
 
   return (
     <>
-      <div className="d-lg-none px-2  overflow-hidden">
+      <div className="d-lg-none px-2  overflow-hidden mt-3">
         <HeroSlider {...settings}>
           <div className="w-100 h-56 h-md-80 py-3 ">
             <img
@@ -70,7 +70,7 @@ const HeroSection = () => {
           {/* Add more images as needed */}
         </HeroSlider>
       </div>
-      <div className="d-none d-lg-block px-2 overflow-hidden">
+      <div className="d-none d-lg-block px-2 overflow-hidden ">
         <HeroSlider {...settingsLG}>
           {/* Dummy images for the slider */}
           <div className="w-100 h-56 h-md-80 py-3">

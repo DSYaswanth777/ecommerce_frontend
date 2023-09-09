@@ -7,12 +7,13 @@ import Home from "./pages/HomePage";
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import ResetPassword from "./components/ResetPassword/ResetPassword";
 import AddProduct from "./components/AddProduct/AddProduct";
+import Categories from "./components/Categories/Categories";
 
 function App() {
   return (
     <>
-{/* <Home/> */}
-<Login/>
+<Home/>
+{/* <Login/> */}
 {/* <Signup/> */}
 {/* <ForgotPassword/> */}
 {/* <ResetPassword/> */}

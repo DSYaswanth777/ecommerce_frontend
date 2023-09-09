@@ -4,16 +4,50 @@
     font-weight: 400;
     font-family: "Alegreya SC", serif;
     color: #2a7a8c;
+    font-size: 35px;
+    @media screen and (max-device-width: 480px) and (orientation: portrait) {
+      font-size: 15px;
+    }
+    @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+      font-size: 25px;
+    }
   }
   .input {
-    width: 400px !important;
+    width: 600px !important;
+    @media screen and (max-device-width: 480px) and (orientation: portrait) {
+      display: none;
+    }
+    @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+      display: none;
+    }
   }
   .logo_text {
     font-weight: 600;
   }
+  p {
+    @media screen and (max-device-width: 480px) and (orientation: portrait) {
+      display: none;
+    }
+    @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+      display: none;
+    }
+  }
+  .mobile-menu-icon {
+    display: none;
+    @media screen and (max-device-width: 480px) and (orientation: portrait) {
+      display: inline;
+    }
+    @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+      display: inline;
+    }
+  }
+   li{
+    list-style: none;
+  }
 }
-
-.cart-card{
+li{
+  list-style: none;
+}
+.cart-card {
   z-index: 1 !important;
-  
 }

@@ -1,61 +1,74 @@
 import React, { useState } from "react";
 import { FiShoppingCart } from "react-icons/fi";
 import { BsSuitHeart } from "react-icons/bs";
+import { RxHamburgerMenu } from "react-icons/rx";
 import { HiOutlineUserCircle } from "react-icons/hi";
-import { Input, InputGroup, Modal } from "reactstrap";
+import {
+  Button,
+  Input,
+  InputGroup,
+  Modal,
+  Offcanvas,
+  OffcanvasHeader,
+  OffcanvasBody,
+} from "reactstrap";
 import Login from "../Login/Login";
 import { X } from "react-feather";
 import "./Header.scss";
 
 const Header = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const [isCartHovered, setIsCartHovered] = useState(false);
-  const [cartPosition, setCartPosition] = useState({ top: 0, left: 0 });
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const openLoginModal = () => {
     setLoginModalOpen(true);
   };
 
-  const handleCartHover = (e) => {
-    setIsCartHovered(true);
-    // Calculate the position of the cart card based on the mouse position
-    const x = e.clientX;
-    const y = e.clientY;
-    setCartPosition({ top: y + 10, left: x + 10 }); // Adjust the values as needed
-  };
-
-  const handleCartLeave = () => {
-    setIsCartHovered(false);
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
   };
 
   return (
-    <div className="header shadow p-3 bg-white">
+    <div className="header shadow bg-white pt-3 pb-2">
       <div className="container">
-        <div className="d-flex justify-content-around align-items-center">
-          <h2 className="logo logo_text">
-            GSR <span className="fs-3">Handlooms</span>
+        <div className="d-flex justify-content-between gap-5 align-items-center">
+          <h2 className="logo logo_text d-flex gap-3 justify-content-center align-items-center">
+            <div className="mobile-menu-icon" onClick={toggleMenu}>
+              <RxHamburgerMenu />
+            </div>
+            <div className="">GSR Handlooms</div>
           </h2>
           <div className="d-flex justify-content-center align-items-center gap-5">
-            <InputGroup className="input rounded border border-dark border-2">
-              <Input type="search" name="" id="" placeholder="Search" />
+            <InputGroup className="input rounded border border-2 border-dark border-2">
+              <Input
+                type="search"
+                name=""
+                id=""
+                placeholder="Search your product..."
+                className="rounded"
+              />
             </InputGroup>
-            <div
-              className="d-flex gap-3 justify-content-center align-items-center"
-              onMouseEnter={handleCartHover}
-              onMouseLeave={handleCartLeave}
-            >
+            <div className="d-flex gap-3 justify-content-center align-items-center text-center">
               <div
-                className="d-flex justify-content-center align-items-center gap-2"
-                onClick={openLoginModal}
+                className="d-flex justify-content-center align-items-center gap-3"
                 style={{ cursor: "pointer" }}
               >
-                <HiOutlineUserCircle size={25} />
-                <p className="text-center mt-3 cursor-pointer">SignIn/Join</p>
+                <div
+                  className="d-flex flex-column justify-content-center align-items-center"
+                  onClick={openLoginModal}
+                >
+                  <HiOutlineUserCircle size={25} />
+                  <p className="">My Account</p>
+                </div>
+                <div className="d-flex flex-column justify-content-center align-items-center">
+                  <FiShoppingCart size={22} />
+                  <p className="">Cart</p>
+                </div>
+                <div className="d-flex flex-column justify-content-center align-items-center">
+                  <BsSuitHeart size={22} />
+                  <p className="">Wishlist</p>
+                </div>
               </div>
-              <div className="cart-icon-container">
-                <FiShoppingCart size={22} />
-              </div>
-              <BsSuitHeart size={22} />
             </div>
           </div>
         </div>
@@ -69,14 +82,22 @@ const Header = () => {
         </div>
         <Login />
       </Modal>
-      {isCartHovered && (
-        <div
-          className="cart-card"
-          style={{ top: cartPosition.top, left: cartPosition.left }}
-        >
-          <p>Cart Items:</p>
-        </div>
-      )}
+
+      <Offcanvas isOpen={menuOpen} toggle={toggleMenu} scrollable>
+        <OffcanvasHeader toggle={toggleMenu} className="text-center">
+          GSR Handlooms
+        </OffcanvasHeader>
+        <OffcanvasBody className="bg-transparent">
+          {/* Add your menu items here */}
+          <div className="d-flex flex-column justify-content-center align-items-center gap-5 pt-5">
+            <div>Home</div>
+            <div>About Us</div>
+            <div>Products</div>
+            <div>Contact Us</div>
+            {/* Add more menu items as needed */}
+          </div>
+        </OffcanvasBody>
+      </Offcanvas>
     </div>
   );
 };
