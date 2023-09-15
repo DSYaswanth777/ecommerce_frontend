@@ -1,3 +1,35 @@
-.slider-image{
-    padding: 20px;
+.slider-image {
+  height: 580px !important;
+  @media screen and (max-device-width: 480px) and (orientation: portrait) {
+    height: 380px !important;
+
+  }
+  @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    height: 500px !important;
+  width: 400px !important;
+  margin-left: 20px !important;
+  }
+
+}
+.carousel-status{
+  display: none;
+}
+/* Custom styles for carousel arrows */
+.carousel .control-arrow {
+  font-size: 24px;
+  text-align: center;
+  color: #333;
+  border-radius: 50%; 
+  background-color: transparent !important;
+
+}
+
+
+.carousel .control-prev {
+  left: 10px; 
+}
+
+
+.carousel .control-next {
+  right: 10px; 
 }

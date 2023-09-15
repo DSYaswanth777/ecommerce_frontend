@@ -1,37 +1,41 @@
-@import url("https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500&display=swap");
 .header {
-  .logo {
-    font-weight: 400;
-    font-family: "Alegreya SC", serif;
-    color: #2a7a8c;
-    font-size: 35px;
+  background-color: #f9f4f4 !important;
+  .nav_logo {
     @media screen and (max-device-width: 480px) and (orientation: portrait) {
-      font-size: 15px;
+      width: 100px;
+      height: 70px;
     }
     @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
       font-size: 25px;
     }
   }
   .input {
-    width: 600px !important;
+    width: 50%;
     @media screen and (max-device-width: 480px) and (orientation: portrait) {
-      display: none;
+      width: 100%;
     }
     @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-      display: none;
+      width: 100%;
+    }
+    .input-search {
+      outline: none !important;
+      box-shadow: none !important;
     }
   }
-  .logo_text {
-    font-weight: 600;
+  .input-text {
+    background-color: #ffff !important;
   }
-  p {
+  .search-icon {
+    display: none;
+
     @media screen and (max-device-width: 480px) and (orientation: portrait) {
-      display: none;
+      display: block;
     }
     @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-      display: none;
+      display: block;
     }
   }
+
   .mobile-menu-icon {
     display: none;
     @media screen and (max-device-width: 480px) and (orientation: portrait) {
@@ -41,13 +45,19 @@
       display: inline;
     }
   }
-   li{
-    list-style: none;
+.card-hover{
+  width: 255px;
+  position: absolute;
+  left: 65%;
+  top: 90%;
+  @media screen and (max-device-width: 480px) and (orientation: portrait) {
+    left: 5%;
+
+
+  }
+  @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    left: 50%;
+
   }
 }
-li{
-  list-style: none;
-}
-.cart-card {
-  z-index: 1 !important;
 }

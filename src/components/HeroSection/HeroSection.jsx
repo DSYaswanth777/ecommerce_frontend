@@ -1,124 +1,25 @@
 import React from "react";
-import HeroSlider from "react-slick";
-import SliderImg from "../../assets/images/image.jpg";
+import heroSliderImg from "../../assets/images/heroSliderImg.jpg";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./HeroSection.scss";
-
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; 
 const HeroSection = () => {
-  const settingsLG = {
-    autoplay: true,
-    centerMode: true,
-    centerPadding: "400px",
-    slidesToShow: 1,
-    infinite: true,
-    slidesToScroll: 1,
-  };
-  const settings = {
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
-
   return (
-    <>
-      <div className="d-lg-none px-2  overflow-hidden mt-3">
-        <HeroSlider {...settings}>
-          <div className="w-100 h-56 h-md-80 py-3 ">
-            <img
-              src={SliderImg}
-              className=" w-100 h-100 slider-image m-1"
-              alt="Image 1"
-            />
-          </div>
-          <div className="w-100 h-56 h-md-80 py-3">
-            <img
-              src={SliderImg}
-              className=" w-100 h-100 slider-image m-1"
-              alt="Image 1"
-            />
-          </div>{" "}
-          <div className="w-100 h-56 h-md-80 py-3">
-            <img
-              src={SliderImg}
-              className=" w-100 h-100 slider-image"
-              alt="Image 1"
-            />
-          </div>{" "}
-          <div className="w-100 h-56 h-md-80 py-3">
-            <img
-              src={SliderImg}
-              className=" w-100 h-100 slider-image"
-              alt="Image 1"
-            />
-          </div>{" "}
-          <div className="w-100 h-56 h-md-80 py-3">
-            <img
-              src={SliderImg}
-              className=" w-100 h-100 slider-image"
-              alt="Image 1"
-            />
-          </div>{" "}
-          <div className="w-100 h-56 h-md-80 py-3">
-            <img
-              src={SliderImg}
-              className=" w-100 h-100 slider-image"
-              alt="Image 1"
-            />
-          </div>
-          {/* Add more images as needed */}
-        </HeroSlider>
+    <Carousel autoPlay interval="5000" transitionTime="1000" showThumbs={false}  infiniteLoop className="px-2">
+
+      <div>
+        <img src={heroSliderImg} className="slider-image" />
+        
       </div>
-      <div className="d-none d-lg-block px-2 overflow-hidden ">
-        <HeroSlider {...settingsLG}>
-          {/* Dummy images for the slider */}
-          <div className="w-100 h-56 h-md-80 py-3">
-            <img
-              src={SliderImg}
-              className=" w-100 h-100 slider-image m-1"
-              alt="Image 1"
-            />
-          </div>
-          <div className="w-100 h-56 h-md-80 py-3">
-            <img
-              src={SliderImg}
-              className=" w-100 h-100 slider-image m-1"
-              alt="Image 1"
-            />
-          </div>{" "}
-          <div className="w-100 h-56 h-md-80 py-3">
-            <img
-              src={SliderImg}
-              className=" w-100 h-100 slider-image m-1"
-              alt="Image 1"
-            />
-          </div>{" "}
-          <div className="w-100 h-56 h-md-80 py-3">
-            <img
-              src={SliderImg}
-              className=" w-100 h-100 slider-image m-1"
-              alt="Image 1"
-            />
-          </div>{" "}
-          <div className="w-100 h-56 h-md-80 py-3">
-            <img
-              src={SliderImg}
-              className=" w-100 h-100 slider-image m-1"
-              alt="Image 1"
-            />
-          </div>{" "}
-          <div className="w-100 h-56 h-md-80 py-3">
-            <img
-              src={SliderImg}
-              className=" w-100 h-100 slider-image m-1"
-              alt="Image 1"
-            />
-          </div>
-          {/* Add more images as needed */}
-        </HeroSlider>
+      <div>
+        <img src={heroSliderImg} className="slider-image" />
       </div>
-    </>
+      <div>
+        <img src={heroSliderImg} className="slider-image" />
+      </div>
+    </Carousel>
   );
 };
 

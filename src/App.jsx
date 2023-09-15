@@ -8,16 +8,18 @@ import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import ResetPassword from "./components/ResetPassword/ResetPassword";
 import AddProduct from "./components/AddProduct/AddProduct";
 import Categories from "./components/Categories/Categories";
+import PublicRoutes from "./Routes/PublicRoutes";
 
 function App() {
   return (
     <>
-<Home/>
+{/* <Home/> */}
 {/* <Login/> */}
 {/* <Signup/> */}
 {/* <ForgotPassword/> */}
 {/* <ResetPassword/> */}
 {/* <AddProduct/> */}
+<PublicRoutes/>
     </>
   );
 }

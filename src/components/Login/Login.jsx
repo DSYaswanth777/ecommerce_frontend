@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux"; // Import useDispatch and useSelector
-import { loginAsync } from "../../redux/slice/authSlice"; // Import the loginAsync action
+import React from "react";
+import { useDispatch, useSelector } from "react-redux"; 
+import { loginAsync } from "../../redux/slice/authSlice";
 import Logo from "../../assets/icons/brand_logo.svg";
 import InputPasswordToggle from "../Input-password/Index";
 import {
@@ -11,29 +11,28 @@ import {
   Label,
   Input,
   Button,
-  Modal,
 } from "reactstrap";
 import "./Login.scss";
-import Signup from "../SignUp/Signup";
-import { X } from "react-feather";
 
+import { useNavigate } from "react-router-dom";
 const Login = () => {
-  const [signupModalOpen, setSignupModalOpen] = useState(false);
   const dispatch = useDispatch(); // Get the dispatch function from Redux
   const isLoading = useSelector((state) => state.auth.isLoading); // Get isLoading state from Redux
   const user = useSelector((state) => state.auth);
-  console.log(user,"I am from Redux Store")
   const openSigUpModal = () => {
     setSignupModalOpen(true);
   };
-
+  const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-
-    // Dispatch the loginAsync action with user credentials
     dispatch(loginAsync({ username: email, password }));
+    if (user.isAuthenticated === true) {
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
   };
 
   return (
@@ -93,15 +92,6 @@ const Login = () => {
           </CardBody>
         </div>
       </div>
-      <Modal isOpen={signupModalOpen} toggle={() => setSignupModalOpen(false)}>
-        <div
-          className="d-flex justify-content-end p-4 "
-          onClick={() => setSignupModalOpen(false)}
-        >
-          <X style={{ cursor: "pointer" }} />
-        </div>
-        <Signup />
-      </Modal>
     </div>
   );
 };

@@ -1,103 +1,103 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FiShoppingCart } from "react-icons/fi";
-import { BsSuitHeart } from "react-icons/bs";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { HiOutlineUserCircle } from "react-icons/hi";
-import {
-  Button,
-  Input,
-  InputGroup,
-  Modal,
-  Offcanvas,
-  OffcanvasHeader,
-  OffcanvasBody,
-} from "reactstrap";
-import Login from "../Login/Login";
-import { X } from "react-feather";
+import { BsSearch } from "react-icons/bs";
+import { CgProfile } from "react-icons/cg";
 import "./Header.scss";
+import Logo from "../../assets/icons/brand_logo.svg";
+import NavbarMenu from "../NavbarMenu/NavbarMenu";
+import AccountCard from "./AccountCard";
+import { Input, InputGroup, InputGroupText } from "reactstrap";
+import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const openLoginModal = () => {
-    setLoginModalOpen(true);
-  };
+  const [isSearchContainerVisible, setSearchContainerVisible] = useState(false);
+  const [isAccountVisible, setAccountVisible] = useState(false);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
+  const toggleSearchContainer = () => {
+    setSearchContainerVisible(!isSearchContainerVisible);
+  };
+  const toggleAccount = () => {
+    setAccountVisible(!isAccountVisible);
+  };
+  const accountCardRef = useRef(null);
+  useEffect(() => {
+    if (isAccountVisible) {
+      const handleOutsideClick = (event) => {
+        if (
+          accountCardRef.current &&
+          !accountCardRef.current.contains(event.target)
+        ) {
+          setAccountVisible(false);
+        }
+      };
+      document.addEventListener("click", handleOutsideClick);
+      return () => {
+        document.removeEventListener("click", handleOutsideClick);
+      };
+    }
+  }, [isAccountVisible]);
+
   return (
-    <div className="header shadow bg-white pt-3 pb-2">
+    <div className="header shadow bg-white sticky-top ">
       <div className="container">
-        <div className="d-flex justify-content-between gap-5 align-items-center">
-          <h2 className="logo logo_text d-flex gap-3 justify-content-center align-items-center">
+        <div className="d-flex justify-content-between align-items-center">
+          <h2 className="d-flex gap-3 justify-content-center align-items-center">
             <div className="mobile-menu-icon" onClick={toggleMenu}>
               <RxHamburgerMenu />
             </div>
-            <div className="">GSR Handlooms</div>
+            <img src={Logo} alt="sds" className="nav_logo" />
           </h2>
-          <div className="d-flex justify-content-center align-items-center gap-5">
-            <InputGroup className="input rounded border border-2 border-dark border-2">
-              <Input
-                type="search"
-                name=""
-                id=""
-                placeholder="Search your product..."
-                className="rounded"
-              />
-            </InputGroup>
-            <div className="d-flex gap-3 justify-content-center align-items-center text-center">
-              <div
-                className="d-flex justify-content-center align-items-center gap-3"
-                style={{ cursor: "pointer" }}
-              >
+          <div className="d-flex gap-3 justify-content-center align-items-center">
+            <div className="  " onClick={toggleSearchContainer}>
+              <BsSearch size={22} />
+            </div>
+            <div
+              className=" profil "
+              onClick={toggleAccount}
+              ref={accountCardRef}
+            >
+              <CgProfile size={22} />
+              {isAccountVisible && (
                 <div
-                  className="d-flex flex-column justify-content-center align-items-center"
-                  onClick={openLoginModal}
+                  className="card-hover"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <HiOutlineUserCircle size={25} />
-                  <p className="">My Account</p>
+                  <AccountCard />
                 </div>
-                <div className="d-flex flex-column justify-content-center align-items-center">
-                  <FiShoppingCart size={22} />
-                  <p className="">Cart</p>
-                </div>
-                <div className="d-flex flex-column justify-content-center align-items-center">
-                  <BsSuitHeart size={22} />
-                  <p className="">Wishlist</p>
-                </div>
-              </div>
+              )}
+            </div>
+            <div
+              className="d-flex justify-content-center align-items-center gap-2"
+              style={{ cursor: "pointer" }}
+            >
+              <FiShoppingCart size={22} />
             </div>
           </div>
         </div>
       </div>
-      <Modal isOpen={loginModalOpen} toggle={() => setLoginModalOpen(false)}>
-        <div
-          className="d-flex justify-content-end p-4"
-          onClick={() => setLoginModalOpen(false)}
-        >
-          <X style={{ cursor: "pointer" }} />
+      {isSearchContainerVisible && (
+        <div className="container pb-3 d-flex justify-content-center search-container">
+          <InputGroup className="d-flex justify-content-center align-items-center input">
+            <Input
+              type="search"
+              name=""
+              id=""
+              placeholder="Search your product..."
+              className="border border-end-0 input-search"
+            />
+            <InputGroupText className="p-2 input-text">
+              <BsSearch size={20} className="" />
+            </InputGroupText>
+          </InputGroup>
         </div>
-        <Login />
-      </Modal>
-
-      <Offcanvas isOpen={menuOpen} toggle={toggleMenu} scrollable>
-        <OffcanvasHeader toggle={toggleMenu} className="text-center">
-          GSR Handlooms
-        </OffcanvasHeader>
-        <OffcanvasBody className="bg-transparent">
-          {/* Add your menu items here */}
-          <div className="d-flex flex-column justify-content-center align-items-center gap-5 pt-5">
-            <div>Home</div>
-            <div>About Us</div>
-            <div>Products</div>
-            <div>Contact Us</div>
-            {/* Add more menu items as needed */}
-          </div>
-        </OffcanvasBody>
-      </Offcanvas>
+      )}
+      <NavbarMenu isOpen={menuOpen} toggleMenu={toggleMenu} />
     </div>
   );
 };

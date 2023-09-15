@@ -1,6 +1,6 @@
 .footer {
   Input {
-    width: 400px !important;
+    width: 500px !important;
     @media screen and (max-device-width: 480px) and (orientation: portrait) {
       width: 300px !important;
     }
@@ -8,19 +8,29 @@
       width: 200px !important;
     }
   }
+
   .footer-list-heading {
     font-size: 20px;
     text-transform: uppercase;
     font-weight: 600;
   }
-  .footer-list-items {
+  li {
     font-weight: 400;
     text-transform: capitalize;
+    padding-top: 12px;
     cursor: pointer;
   }
   .footer-section {
     @media screen and (max-device-width: 480px) and (orientation: portrait) {
       text-align: center;
     }
+    hr{
+      display: none;
+      @media screen and (max-device-width: 480px) and (orientation: portrait) {
+      display: block;
+      }
+
+    }
+    }
   }
-}
+
