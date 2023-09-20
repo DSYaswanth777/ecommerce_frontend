@@ -35,7 +35,6 @@
       display: block;
     }
   }
-
   .mobile-menu-icon {
     display: none;
     @media screen and (max-device-width: 480px) and (orientation: portrait) {
@@ -52,8 +51,19 @@
   top: 90%;
   @media screen and (max-device-width: 480px) and (orientation: portrait) {
     left: 5%;
+  }
+  @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    left: 50%;
 
-
+  }
+}
+.cart-card{
+  width: 405px;
+  position: absolute;
+  left:72%;
+  top: 90%;
+  @media screen and (max-device-width: 480px) and (orientation: portrait) {
+    left: 5%;
   }
   @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
     left: 50%;

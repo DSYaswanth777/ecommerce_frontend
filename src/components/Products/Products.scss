@@ -1,0 +1,27 @@
+
+.productsGrid{
+display: grid;
+grid-template-columns: auto auto auto;
+gap: 30px;
+@media screen and (max-device-width: 480px) and (orientation: portrait) {
+grid-template-columns: auto auto;
+  }
+  @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    width: 200px;
+    height: 200px;
+
+  }
+    .productImg{
+        width: 400px;
+        height: 600px;
+        @media screen and (max-device-width: 480px) and (orientation: portrait) {
+            width: 100px;
+            height: 150px;
+          }
+          @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+            width: 225px;
+            height: 300px;
+        
+          }
+    }
+}

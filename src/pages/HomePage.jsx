@@ -4,23 +4,23 @@ import HeroSection from "../components/HeroSection/HeroSection";
 import PosterSlider from "../components/PosterSlider/PosterSlider";
 import Categories from "../components/Categories/Categories";
 import Footer from "../components/Footer/Footer";
-import Navbar from "../components/Navbar/Navbar"
+import Navbar from "../components/Navbar/Navbar";
+import Poster from "../components/Poster/Poster";
 function Home() {
   return (
     <div>
       <Header />
-      {/* <Navbar/> */}
       <HeroSection />
       <PosterSlider />
-      <PosterSlider />
+      <Categories/>
+      <Poster />
+      <Poster />
+      <Poster />
 
-      {/* <PosterSlider /> */}
-      {/* <PosterSlider /> */}
       <Footer />
-      {/* <PosterSlider /> */}
-      {/* <PosterSlider /> */}
+
     </div>
-  )
+  );
 }
 
 export default Home;

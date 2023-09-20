@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux"; 
 import { loginAsync } from "../../redux/slice/authSlice";
 import Logo from "../../assets/icons/brand_logo.svg";
@@ -23,28 +23,32 @@ const Login = () => {
     setSignupModalOpen(true);
   };
   const navigate = useNavigate();
+  useEffect(() => {
+    // Check if the user is authenticated and navigate accordingly
+    if (user.isAuthenticated === true) {
+      navigate("/");
+    }
+  }, [user, navigate]);
   const handleLogin = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    dispatch(loginAsync({ username: email, password }));
-    if (user.isAuthenticated === true) {
-      navigate("/");
-    } else {
-      navigate("/login");
-    }
+  
+    dispatch(loginAsync({ username: email, password }))
+ 
   };
+  
 
   return (
-    <div className="px-5 pb-2">
+    <div className=" pb-2 container d-flex justify-content-center align-items-center pt-5 mt-5 ">
       <div className="auth-inner ">
         <div className="mb-0 ">
           <CardBody>
             <div className="d-flex text-center justify-content-center align-items-center">
               <img src={Logo} style={{ width: "200px" }} alt="Logo" />
             </div>
-            <CardTitle tag="h4" className="mb-1">
-              Welcome to GSR HandLooms! 👋
+            <CardTitle tag="h4" className="mb-2 mt-5">
+              Welcome to GSR HandLooms!
             </CardTitle>
             <CardText className="mb-2">
               Please sign-in to your account and start shopping.
@@ -67,7 +71,7 @@ const Login = () => {
                   <Label className="form-label" htmlFor="login-password">
                     Password
                   </Label>
-                  <small>Forgot Password?</small>
+                  <small> <a href="/forgotpassword">Forgot Password?</a></small>
                 </div>
                 <InputPasswordToggle
                   className="input-group-merge mb-5"
@@ -86,7 +90,7 @@ const Login = () => {
                 onClick={openSigUpModal}
                 style={{ cursor: "pointer" }}
               >
-                <u>Create an account</u>
+                <a href="/signup">Create an account</a>
               </span>
             </p>
           </CardBody>

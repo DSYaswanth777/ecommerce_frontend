@@ -1,9 +1,9 @@
 import React from 'react'
 
-function Categories() {
+function Orders() {
   return (
     <div></div>
   )
 }
 
-export default Categories
+export default Orders

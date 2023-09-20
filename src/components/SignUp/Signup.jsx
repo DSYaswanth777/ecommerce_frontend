@@ -1,41 +1,26 @@
 import Logo from "../../assets/icons/brand_logo.svg";
-
 // ** Custom Components
 import InputPasswordToggle from "../Input-password/Index";
-
 // ** Reactstrap Imports
 import {
-  Card,
-  CardBody,
-  CardTitle,
-  CardText,
-  Form,
+  CardTitle, Form,
   Label,
   Input,
-  Button,
-  Modal,
+  Button
 } from "reactstrap";
 import "./Signup.scss";
-import Login from "../Login/Login";
-import { useState } from "react";
-import { X } from "react-feather";
-// ** Styles
+
 
 const Signup = () => {
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
-
-  const openLoginModal = () => {
-    setLoginModalOpen(true);
-  };
   return (
     <div className="auth-wrapper auth-basic px-2 ">
       <div className="auth-inner my-2">
         <div className="mb-0  p-2">
           <div>
             <div className="d-flex text-center justify-content-center align-items-center">
-              <img src={Logo} style={{ height: "150px" }} />
+              <img src={Logo}  />
             </div>
-            <CardTitle tag="h4" className="mb-1">
+            <CardTitle tag="h4" className="mb-2 mt-3">
               Your Shopping Starts here!🛒
             </CardTitle>
             <Form
@@ -107,21 +92,12 @@ const Signup = () => {
               <span className="me-2">Already have an account ?</span>
               <span onClick={openLoginModal}>
                 {" "}
-                <u className="">Signin Instead</u>
+                <a href="/login" className="">Signin Instead</a>
               </span>
             </p>
           </div>
         </div>
       </div>
-      <Modal isOpen={loginModalOpen} toggle={() => setLoginModalOpen(false)}>
-        <div
-          className="d-flex justify-content-end p-4"
-          onClick={() => setLoginModalOpen(false)}
-        >
-          <X style={{ cursor: "pointer" }} />
-        </div>
-        <Login />
-      </Modal>
     </div>
   );
 };

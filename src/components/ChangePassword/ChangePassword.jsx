@@ -11,8 +11,9 @@ import {
 } from "reactstrap";
 import Logo from "../../assets/icons/brand_logo.svg";
 import InputPasswordToggle from "../Input-password/Index";
+import { CgPassword } from "react-icons/cg";
 
-function ResetPassword() {
+function ChangePassword() {
   return (
     <div className="auth-wrapper auth-basic px-2">
       <div className="auth-inner my-2">
@@ -21,39 +22,23 @@ function ResetPassword() {
             <div className="d-flex text-center justify-content-center align-items-center">
               <img src={Logo} style={{ width: "200px" }} />
             </div>
- 
+
             <CardTitle tag="h4" className="mb-1 mt-5">
-              Reset Password? 🔒
+              Change Password <CgPassword />
             </CardTitle>
             <Form
               className="auth-login-form mt-2"
               onSubmit={(e) => e.preventDefault()}
             >
               <div className="mb-1">
-                <Label className="form-label" for="ResetPassword-number">
-                  Mobile Number
-                </Label>
-                <Input
-                  type="mobile"
-                  id="login-email"
-                  placeholder="+91 xxxxxxxx "
-                  autoFocus
-                  disabled
-                />
-              </div>
-              <div className="py-2 text-end">
-
-              <Button>Send OTP</Button>
-              </div>
-              <div className="mb-1">
-                <Label className="form-label" for="ResetPassword-number">
-                  OTP
-                </Label>
-                <Input
-                  type="number"
-                  id="login-email"
-                  placeholder="Enter Your 4 Digits OTP "
-                  autoFocus
+                <div className="d-flex justify-content-between mt-3">
+                  <Label className="form-label" for="login-password">
+                    Current Password
+                  </Label>
+                </div>
+                <InputPasswordToggle
+                  className="input-group-merge"
+                  id="login-password"
                 />
               </div>
               <div className="mb-1">
@@ -68,7 +53,7 @@ function ResetPassword() {
                 />
               </div>
               <Button color="primary" block className="mb-4 mt-4">
-                Reset Password{" "}
+               Change Password{" "}
               </Button>
             </Form>
           </CardBody>
@@ -78,4 +63,4 @@ function ResetPassword() {
   );
 }
 
-export default ResetPassword;
+export default ChangePassword;

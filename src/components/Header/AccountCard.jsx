@@ -30,7 +30,7 @@ const AccountCard = () => {
             {user.isAuthenticated ? (
               user.user.name
             ) : (
-              <a className="text-primary text-center" href="/login">
+              <a className="text-primary text-center underline-none" href="/login">
                 Login
               </a>
             )}
@@ -46,7 +46,7 @@ const AccountCard = () => {
               <span className="me-2">
                 <CgProfile size={20} />
               </span>
-              My Profile
+              <a href="/profile">My Profile</a>
             </div>
             <div
               className="border-bottom border-black pb-2"
@@ -56,7 +56,7 @@ const AccountCard = () => {
               <span className="me-2">
                 <img src={OrdersIcon} width={20} height={20} />
               </span>
-              Orders
+           <a href="/orders">My Orders</a>  
             </div>
             <div
               className="border-bottom border-black pb-2"
