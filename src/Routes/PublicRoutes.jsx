@@ -10,6 +10,7 @@ import ChangePassword from "../components/ChangePassword/ChangePassword";
 import CheckOutCart from "../components/CheckoutCart/CheckOutCart";
 import Search from "../components/Search/Search";
 import Orders from "../components/Orders/Orders";
+import Wishlist from "../components/Wishlist/Wishlist";
 const PublicRoutes = () => {
   return (
     <>
@@ -25,6 +26,7 @@ const PublicRoutes = () => {
           <Route path="/checkoutcart" element={<CheckOutCart/>}/>
           <Route path="/search" element={<Search/>}/>
           <Route path="/orders" element={<Orders/>}/>
+          <Route path="/wishlist" element={<Wishlist/>}/>
         </Routes>
       </BrowserRouter>
     </>

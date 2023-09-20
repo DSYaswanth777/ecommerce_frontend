@@ -67,7 +67,7 @@ const AccountCard = () => {
                 {" "}
                 <BsFillSuitHeartFill />
               </span>
-              Wishlist
+       <a href="/wishlist">Wishlist</a>       
             </div>
             <div
               className="border-bottom border-black pb-2"
