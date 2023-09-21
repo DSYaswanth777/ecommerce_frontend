@@ -154,7 +154,6 @@ const Header = () => {
                   <h5 className="offcanvas-title" id="staticBackdropLabel">
                     My Cart (2 Items)
                   </h5>
-
                   <button
                     type="button"
                     className="btn-close"

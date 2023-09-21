@@ -90,7 +90,7 @@ const Signup = () => {
             </Form>
             <p className="text-center mt-2">
               <span className="me-2">Already have an account ?</span>
-              <span onClick={openLoginModal}>
+              <span>
                 {" "}
                 <a href="/login" className="">Signin Instead</a>
               </span>
