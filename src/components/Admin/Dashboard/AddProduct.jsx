@@ -7,9 +7,8 @@ function AddProduct({ isOpen, toggle, onSave, isEdit, product }) {
     ? product
     : {
         productName: "",
-        productImg: "", // Updated to hold the file data
-        productMRP: "",
-        productDiscount: "",
+        productImg: "",
+        productPrice: "",
         productInfo: "",
         productColorOptions: "",
         subcategoryId: "",
@@ -29,7 +28,6 @@ function AddProduct({ isOpen, toggle, onSave, isEdit, product }) {
   };
 
   const handleSave = () => {
-    // Perform validation if needed
     onSave(formData);
     toggle();
   };

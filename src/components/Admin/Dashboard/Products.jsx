@@ -137,21 +137,9 @@ function Products() {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const handleAddProduct = (formData) => {
-    // Perform add logic and update productData
-    // Example:
-    // setProductData([...productData, formData]);
   };
 
   const handleEditProduct = (formData) => {
-    // Perform edit logic and update productData
-    // Example:
-    // const updatedProductData = productData.map((product) => {
-    //   if (product.id === formData.id) {
-    //     return formData;
-    //   }
-    //   return product;
-    // });
-    // setProductData(updatedProductData);
   };
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
@@ -174,11 +162,6 @@ function Products() {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          // Perform delete logic and update productData
-          // Example:
-          // const updatedProductData = productData.filter((item) => item.id !== product.id);
-          // setProductData(updatedProductData);
-
           Swal.fire("Deleted!", "Your file has been deleted.", "success");
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire("Cancelled", "Your Product is Safe :)", "error");
@@ -188,8 +171,8 @@ function Products() {
 
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
-    setSelectedProduct(null); // Reset selected product
-    setEdit(false); // Reset edit mode
+    setSelectedProduct(null);
+    setEdit(false);
   };
 
   const handleEditClick = (product) => {

@@ -56,8 +56,8 @@ function Dashboard() {
     <div>
       <Header />
       <h1 className="text-center py-4">Admin Panel</h1>
-      <div className="  h-100 d-flex flex-column justify-content-center align-items-center">
-        <div className="  h-100 w-50 d-flex justify-content-center gap-3 pb-4">
+      <div className="  h-100 d-flex flex-column container">
+        <div className="  h-100  d-flex justify-content-center gap-3 pb-4">
           <Button
             onClick={() => handleSectionChange("Products")}
             color={activeSection === "Products" ? "success" : "light"}
