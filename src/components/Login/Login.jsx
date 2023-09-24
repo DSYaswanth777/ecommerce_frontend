@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux"; 
+import { useDispatch, useSelector } from "react-redux";
 import { loginAsync } from "../../redux/slice/authSlice";
 import Logo from "../../assets/icons/brand_logo.svg";
 import InputPasswordToggle from "../Input-password/Index";
@@ -15,85 +15,145 @@ import {
 import "./Login.scss";
 
 import { useNavigate } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
+import { validationSchema } from "../../schema/validationSchema";
+import Lottie from "lottie-react";
+import loginAnimation from "../../assets/icons/login.json";
 const Login = () => {
-  const dispatch = useDispatch(); // Get the dispatch function from Redux
-  const isLoading = useSelector((state) => state.auth.isLoading); // Get isLoading state from Redux
+  const dispatch = useDispatch();
+  const isLoading = useSelector((state) => state.auth.isLoading);
   const user = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   const openSigUpModal = () => {
     setSignupModalOpen(true);
   };
-  const navigate = useNavigate();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur", // Validate on blur
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
   useEffect(() => {
-    // Check if the user is authenticated and navigate accordingly
     if (user.isAuthenticated === true) {
       navigate("/");
     }
   }, [user, navigate]);
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-  
-    dispatch(loginAsync({ username: email, password }))
- 
+
+  const handleLogin = async (data) => {
+    const { email, password } = data;
+    dispatch(loginAsync({ username: email, password }));
   };
-  
 
   return (
-    <div className=" pb-2 container d-flex justify-content-center align-items-center pt-5 mt-5 ">
-      <div className="auth-inner ">
-        <div className="mb-0 ">
-          <CardBody>
-            <div className="d-flex text-center justify-content-center align-items-center">
-              <img src={Logo} style={{ width: "200px" }} alt="Logo" />
-            </div>
-            <CardTitle tag="h4" className="mb-2 mt-5">
-              Welcome to GSR HandLooms!
-            </CardTitle>
-            <CardText className="mb-2">
-              Please sign-in to your account and start shopping.
-            </CardText>
-            <Form className="auth-login-form mt-2" onSubmit={handleLogin}>
-              <div className="mb-1">
-                <Label className="form-label" htmlFor="login-email">
-                  Email
-                </Label>
-                <Input
-                  type="email"
-                  id="login-email"
-                  name="email"
-                  placeholder="john@gmail.com"
-                  autoFocus
-                />
-              </div>
-              <div className="mb-1">
-                <div className="d-flex justify-content-between mt-3">
-                  <Label className="form-label" htmlFor="login-password">
-                    Password
-                  </Label>
-                  <small> <a href="/forgotpassword">Forgot Password?</a></small>
+    <div className="bg-light login-container">
+      <div className=" h-100 container d-flex justify-content-center align-items-center  login-box  ">
+        <div className="auth-inner mh-100  shadow p-4 rounded-3 ">
+          {isLoading ? (
+            <Lottie animationData={loginAnimation} />
+          ) : (
+            <div className=" ">
+              <CardBody className="">
+                <div className="d-flex text-center justify-content-center align-items-center mb-4">
+                  <img src={Logo} style={{ width: "200px" }} alt="Logo" />
                 </div>
-                <InputPasswordToggle
-                  className="input-group-merge mb-5"
-                  id="login-password"
-                  name="password"
-                />
-              </div>
-              <Button color="primary" block type="submit" disabled={isLoading}>
-                {isLoading ? "Signing in..." : "Sign in"}
-              </Button>
-            </Form>
-            <p className="text-center mt-4">
-              <span className="me-2">New on our store?</span>
-              <span
-                className=""
-                onClick={openSigUpModal}
-                style={{ cursor: "pointer" }}
-              >
-                <a href="/signup">Create an account</a>
-              </span>
-            </p>
-          </CardBody>
+                <CardText className="mb-4 fs-6 fw-medium">
+                  Please sign-in to your account and start shopping.
+                </CardText>
+                <Form
+                  className="auth-login-form mt-2"
+                  onSubmit={handleSubmit(handleLogin)}
+                >
+                  <div className="mb-1">
+                    <Label
+                      className="form-label fw-medium"
+                      htmlFor="login-email"
+                    >
+                      Email
+                    </Label>
+                    <Controller
+                      name="email"
+                      control={control}
+                      render={({ field }) => (
+                        <>
+                          <Input
+                            type="email"
+                            id="login-email"
+                            placeholder="john@gmail.com"
+                            autoFocus
+                            {...field}
+                          />
+                          {errors.email && (
+                            <span className="error-text text-danger">
+                              {errors.email.message}
+                            </span>
+                          )}
+                        </>
+                      )}
+                      rules={validationSchema.email}
+                    />
+                  </div>
+                  <div className="mb-1">
+                    <div className="d-flex justify-content-between mt-3">
+                      <Label
+                        className="form-label fw-medium"
+                        htmlFor="login-password"
+                      >
+                        Password
+                      </Label>
+                      <small>
+                        <a href="/forgotpassword" className="text-dark fw-bold">
+                          Forgot Password?
+                        </a>
+                      </small>
+                    </div>
+                    <Controller
+                      name="password"
+                      control={control}
+                      render={({ field }) => (
+                        <>
+                          <InputPasswordToggle
+                            className="input-group-merge mb-5"
+                            id="login-password"
+                            {...field}
+                          />
+                          {errors.password && (
+                            <span className="error-text text-danger">
+                              {errors.password.message}
+                            </span>
+                          )}
+                        </>
+                      )}
+                      rules={validationSchema.password}
+                    />
+                  </div>
+                  <Button
+                    className="signinBtn"
+                    block
+                    type="submit"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Signing in..." : "Sign in"}
+                  </Button>
+                </Form>
+                <p className="text-center mt-4">
+                  <span className="me-2">New Customer?</span>
+                  <span
+                    className=""
+                    onClick={openSigUpModal}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <a href="/signup">Create an account</a>
+                  </span>
+                </p>
+              </CardBody>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -7,29 +7,20 @@ import "./Header.scss";
 import Logo from "../../assets/icons/brand_logo.svg";
 import NavbarMenu from "../NavbarMenu/NavbarMenu";
 import AccountCard from "./AccountCard";
-import {
-  Badge,
-  Button,
-  Input,
-  InputGroup,
-  InputGroupText,
-  // Offcanvas,
-  // OffcanvasBody,
-  // OffcanvasHeader,
-} from "reactstrap";
+import { Button, Input, InputGroup, InputGroupText } from "reactstrap";
 import Cart from "../Cart/Cart";
-import { Offcanvas } from "bootstrap";
-import { OffcanvasBody } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSearchContainerVisible, setSearchContainerVisible] = useState(false);
   const [isAccountVisible, setAccountVisible] = useState(false);
   const [isCartVisible, setCartVisible] = useState(false);
+  const user = useSelector((state) => state.auth);
+
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
-
   const toggleSearchContainer = (e) => {
     setSearchContainerVisible(!isSearchContainerVisible);
     e.stopPropagation();
@@ -77,7 +68,7 @@ const Header = () => {
       };
     }
   }, [isAccountVisible]);
-  const SearchCardRef = useRef(null);
+  const SearchCardRef =   (null);
 
   useEffect(() => {
     if (isSearchContainerVisible) {
@@ -116,12 +107,21 @@ const Header = () => {
             >
               <BsSearch size={22} />
             </div>
-            <div
-              className=" profil "
-              onClick={toggleAccount}
-              ref={accountCardRef}
-            >
-              <CgProfile size={22} />
+            <div className=" profil ">
+              {user.isAuthenticated ? (
+                <CgProfile
+                  size={22}
+                  onClick={toggleAccount}
+                  ref={accountCardRef}
+                />
+              ) : (
+                <div className="text-primary text-center underline-none">
+                  <Button color="success" size="md">
+                    <a href="/login" className="text-white">Login</a>
+                  </Button>
+                </div>
+              )}
+
               {isAccountVisible && (
                 <div
                   className="card-hover"

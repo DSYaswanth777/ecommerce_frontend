@@ -17,7 +17,6 @@ const AccountCard = () => {
     dispatch(logoutSuccess());
     redirect("/login");
   };
-  console.log(user);
   return (
     <div>
       {" "}
@@ -27,13 +26,7 @@ const AccountCard = () => {
             className="d-flex gap-5 bg-white fw-bold justify-content-center  "
             style={{ cursor: "pointer" }}
           >
-            {user.isAuthenticated ? (
-              user.user.name
-            ) : (
-              <a className="text-primary text-center underline-none" href="/login">
-                Login
-              </a>
-            )}
+            {user.user?.name}
           </div>
         </CardTitle>
         <CardBody>
@@ -56,7 +49,7 @@ const AccountCard = () => {
               <span className="me-2">
                 <img src={OrdersIcon} width={20} height={20} />
               </span>
-           <a href="/orders">My Orders</a>  
+              <a href="/orders">My Orders</a>
             </div>
             <div
               className="border-bottom border-black pb-2"
@@ -67,7 +60,7 @@ const AccountCard = () => {
                 {" "}
                 <BsFillSuitHeartFill />
               </span>
-       <a href="/wishlist">Wishlist</a>       
+              <a href="/wishlist">Wishlist</a>
             </div>
             <div
               className="border-bottom border-black pb-2"

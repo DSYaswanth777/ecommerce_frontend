@@ -6,7 +6,7 @@ export const loginAsync = createAsyncThunk(
   async (credentials) => {
     try {
       // Make your API call here using fetch or axios
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch("http://localhost:3000/api/v1/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +35,103 @@ export const loginAsync = createAsyncThunk(
     }
   }
 );
+export const signupAsync = createAsyncThunk(
+  "auth/signupAsync",
+  async (userData) => {
+    try {
+      // Make your API call here using fetch or axios
+      const response = await fetch("http://localhost:3000/api/v1/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+      if (!response.ok) {
+        // Handle errors here (e.g., duplicate email)
+        throw new Error("Signup failed");
+      }
+      // You may receive an OTP in the response, depending on your API design
+      const data = await response.json();
+      // Assuming your API response structure includes an OTP field
+      const { otp } = data;
+      return { otp };
+    } catch (error) {
+      // Handle any network or API errors here
+      throw error;
+    }
+  }
+);
+export const forgotPasswordAsync = createAsyncThunk(
+  "auth/signupAsync",
+  async (userData) => {
+    try {
+      // Make your API call here using fetch or axios
+      const response = await fetch("http://localhost:3000/api/v1/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to Send OTP");
+      }
+      // You may receive an OTP in the response, depending on your API design
+      const data = await response.json();
+      return data
+    } catch (error) {
+      throw error;
+    }
+  }
+)
+export const resetPasswordAsync = createAsyncThunk(
+  "auth/signupAsync",
+  async (userData) => {
+    try {
+      // Make your API call here using fetch or axios
+      const response = await fetch("http://localhost:3000/api/v1/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to Send OTP");
+      }
+      // You may receive an OTP in the response, depending on your API design
+      const data = await response.json();
+      return data
+    } catch (error) {
+      throw error;
+    }
+  }
+)
+export const verifyOtpAsync = createAsyncThunk(
+  "auth/verifyOtpAsync",
+  async ({ mobile, otp }) => {
+    try {
+      const response = await fetch("http://localhost:3000/api/v1/verify-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ mobile, otp }),
+      });
 
+      if (!response.ok) {
+        throw new Error("OTP verification failed");
+      }
+
+      // OTP verification succeeded, no need to return any data
+      return null;
+    } catch (error) {
+      // Handle OTP verification error
+      throw error;
+    }
+  }
+);
 const loadUserFromLocalStorage = () => {
   const token = localStorage.getItem("token");
   const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
@@ -62,6 +158,7 @@ const authSlice = createSlice({
     isAdmin: loadUserFromLocalStorage()?.isAdmin || false, // Load isAdmin state from local storage or default to false
     isLoading: false,
     loginMessage: "",
+    isUserNotVerified: false
   },
   reducers: {
     // Your existing reducers here
