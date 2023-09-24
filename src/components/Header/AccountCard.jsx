@@ -8,14 +8,14 @@ import { IoIosLogOut } from "react-icons/io";
 import "./Header.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutSuccess } from "../../redux/slice/authSlice";
-import { redirect } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 const AccountCard = () => {
   const user = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const handleLogout = () => {
     dispatch(logoutSuccess());
-    redirect("/login");
+    navigate("/login");
   };
   return (
     <div>

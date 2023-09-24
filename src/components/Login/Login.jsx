@@ -23,6 +23,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.auth.isLoading);
   const user = useSelector((state) => state.auth);
+  console.log(user);
   const navigate = useNavigate();
   const openSigUpModal = () => {
     setSignupModalOpen(true);

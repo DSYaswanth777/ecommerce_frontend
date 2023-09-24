@@ -35,7 +35,22 @@ function Categories() {
   });
   const [mode, setMode] = useState("Add"); // Add or Edit mode
   const [selectedCardIndex, setSelectedCardIndex] = useState(null);
-
+  
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/v1/categories");
+      if (!response.ok) {
+        throw new Error("Failed to fetch categories.");
+      }
+      const data = await response.json();
+      console.log(data)
+      // setCards(data.categories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      // You can handle the error here, e.g., show an error message
+    }
+  };
+ 
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
   };

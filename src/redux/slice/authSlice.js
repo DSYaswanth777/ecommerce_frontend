@@ -6,7 +6,7 @@ export const loginAsync = createAsyncThunk(
   async (credentials) => {
     try {
       // Make your API call here using fetch or axios
-      const response = await fetch("http://localhost:3000/api/v1/login", {
+      const response = await fetch("https://animated-rhythm-399204.el.r.appspot.com/api/v1/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

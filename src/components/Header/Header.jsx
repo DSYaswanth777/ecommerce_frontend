@@ -17,13 +17,14 @@ const Header = () => {
   const [isAccountVisible, setAccountVisible] = useState(false);
   const [isCartVisible, setCartVisible] = useState(false);
   const user = useSelector((state) => state.auth);
+  const searchIcon = document.getElementById("searchBox");
+  const profileBox = document.getElementById("profileBox");
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
   const toggleSearchContainer = (e) => {
     setSearchContainerVisible(!isSearchContainerVisible);
-    e.stopPropagation();
   };
   const toggleAccount = (e) => {
     setAccountVisible(!isAccountVisible);
@@ -31,61 +32,21 @@ const Header = () => {
   };
   const toggleCart = (e) => {
     setCartVisible(!isCartVisible);
-    // e.stopPropagation();
+    e.stopPropagation();
   };
-  const cartCardRef = useRef(null);
-  useEffect(() => {
-    if (isAccountVisible) {
-      const handleOutsideClick = (event) => {
-        if (
-          cartCardRef.current &&
-          !cartCardRef.current.contains(event.target)
-        ) {
-          setCartVisible(false);
-        }
-      };
-      document.addEventListener("click", handleOutsideClick);
-      return () => {
-        document.removeEventListener("click", handleOutsideClick);
-      };
-    }
-  }, [isCartVisible]);
 
-  const accountCardRef = useRef(null);
-  useEffect(() => {
-    if (isAccountVisible) {
-      const handleOutsideClick = (event) => {
-        if (
-          accountCardRef.current &&
-          !accountCardRef.current.contains(event.target)
-        ) {
-          setAccountVisible(false);
-        }
-      };
-      document.addEventListener("click", handleOutsideClick);
-      return () => {
-        document.removeEventListener("click", handleOutsideClick);
-      };
+  document.addEventListener("click", (e) => {
+    if (e.target !== searchIcon) {
+      console.log("Search");
+      setSearchContainerVisible(false);
+      // setAccountVisible(false);
     }
-  }, [isAccountVisible]);
-  const SearchCardRef =   (null);
+    if (e.target != profileBox) {
+      console.log("Profile");
+      setAccountVisible(false);
+    }
+  });
 
-  useEffect(() => {
-    if (isSearchContainerVisible) {
-      const handleOutsideClick = (event) => {
-        if (
-          SearchCardRef.current &&
-          !SearchCardRef.current.contains(event.target)
-        ) {
-          setSearchContainerVisible(false);
-        }
-      };
-      document.addEventListener("click", handleOutsideClick);
-      return () => {
-        document.removeEventListener("click", handleOutsideClick);
-      };
-    }
-  }, [isSearchContainerVisible]);
   return (
     <div className="header shadow bg-white sticky-top ">
       <div className="container">
@@ -102,8 +63,9 @@ const Header = () => {
           <div className="d-flex gap-3 justify-content-center align-items-center">
             <div
               className="  "
+              id="searchBox"
               onClick={(e) => (toggleSearchContainer(), e.stopPropagation())}
-              ref={SearchCardRef}
+              // ref={SearchCardRef}
             >
               <BsSearch size={22} />
             </div>
@@ -112,16 +74,18 @@ const Header = () => {
                 <CgProfile
                   size={22}
                   onClick={toggleAccount}
-                  ref={accountCardRef}
+                  id="profileBox"
+                  // ref={accountCardRef}
                 />
               ) : (
                 <div className="text-primary text-center underline-none">
                   <Button color="success" size="md">
-                    <a href="/login" className="text-white">Login</a>
+                    <a href="/login" className="text-white">
+                      Login
+                    </a>
                   </Button>
                 </div>
               )}
-
               {isAccountVisible && (
                 <div
                   className="card-hover"
@@ -135,7 +99,7 @@ const Header = () => {
               className="d-flex justify-content-center align-items-center gap-2"
               style={{ cursor: "pointer" }}
               onClick={toggleCart}
-              ref={cartCardRef}
+              // ref={cartCardRef}
             >
               <FiShoppingCart
                 size={22}
