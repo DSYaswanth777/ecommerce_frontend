@@ -16,6 +16,7 @@ const Header = () => {
   const [isSearchContainerVisible, setSearchContainerVisible] = useState(false);
   const [isAccountVisible, setAccountVisible] = useState(false);
   const [isCartVisible, setCartVisible] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const user = useSelector((state) => state.auth);
   const searchIcon = document.getElementById("searchBox");
   const profileBox = document.getElementById("profileBox");
@@ -32,9 +33,8 @@ const Header = () => {
   };
   const toggleCart = (e) => {
     setCartVisible(!isCartVisible);
-    e.stopPropagation();
+    e.value.stopPropagation();
   };
-
   document.addEventListener("click", (e) => {
     if (e.target !== searchIcon) {
       setSearchContainerVisible(false);
@@ -63,7 +63,6 @@ const Header = () => {
               className="  "
               id="searchBox"
               onClick={(e) => (toggleSearchContainer(), e.stopPropagation())}
-              // ref={SearchCardRef}
             >
               <BsSearch size={22} />
             </div>
@@ -73,7 +72,6 @@ const Header = () => {
                   size={22}
                   onClick={toggleAccount}
                   id="profileBox"
-                  // ref={accountCardRef}
                 />
               ) : (
                 <div className="text-primary text-center underline-none">
@@ -97,7 +95,6 @@ const Header = () => {
               className="d-flex justify-content-center align-items-center gap-2"
               style={{ cursor: "pointer" }}
               onClick={toggleCart}
-              // ref={cartCardRef}
             >
               <FiShoppingCart
                 size={22}
@@ -108,7 +105,7 @@ const Header = () => {
               <div
                 className="offcanvas offcanvas-end"
                 data-bs-backdrop="static"
-                tabindex="-1"
+                tabIndex="-1"
                 id="staticBackdrop"
                 aria-labelledby="staticBackdropLabel"
               >
@@ -140,7 +137,8 @@ const Header = () => {
               id=""
               placeholder="Search your product..."
               className="border border-end-0 input-search"
-              onClick={(e) => e.stopPropagation()}
+              defaultValue={searchValue}
+              onClick={(e) => e.stopPropagation()}            
             />
             <InputGroupText className="p-2 input-text">
               <BsSearch size={20} className="" />

@@ -1,10 +1,16 @@
 // Validation schema
 export const validationSchema = {
   email: {
-    required: "Email is required",
-    pattern: {
-      value: /^\S+@\S+$/i,
-      message: "Invalid email address",
+    required: "Email or Mobile number is required",
+    custom: {
+      isValid: (value) => {
+        // Regular expressions for email and mobile number validation
+        const emailRegex = /^\S+@\S+$/i;
+        const mobileRegex = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/;
+
+        return emailRegex.test(value) || mobileRegex.test(value);
+      },
+      message: "Invalid email address or mobile number",
     },
   },
   password: {

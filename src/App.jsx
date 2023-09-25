@@ -1,16 +1,9 @@
-
-import PublicRoutes from "./Routes/PublicRoutes";
+import Routes from "./Routes/Routes";
 
 function App() {
   return (
     <>
-{/* <Home/> */}
-{/* <Login/> */}
-{/* <Signup/> */}
-{/* <ForgotPassword/> */}
-{/* <ResetPassword/> */}
-{/* <AddProduct/> */}
-<PublicRoutes/>
+      <Routes />
     </>
   );
 }

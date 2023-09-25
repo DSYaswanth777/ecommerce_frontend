@@ -131,40 +131,42 @@ function Orders() {
   const columns = [
     {
       name: "#Order",
-      selector: "productName",
+      selector: (row) => row.productName,
       sortable: true,
     },
     {
       name: "Product",
-      selector: "productMRP",
+      selector: (row) => row.productMRP,
       sortable: true,
     },
     {
       name: "Product Category",
-      selector: "productDiscount",
+      selector: (row) => row.productDiscount,
       sortable: true,
     },
     {
       name: "Payment",
-      selector: "productInfo",
+      selector: (row) => row.productInfo,
     },
     {
       name: "Order Date",
-      selector: "productInfo",
+      selector: (row) => row.orderDate,
+      sortable: true,
     },
     {
       name: "Order Status",
-      selector: "productColorOptions",
+      selector: (row) => row.productColorOptions,
     },
     {
       name: "Actions",
       cell: (row) => (
         <div className="text-primary">
-          <FaDownload size={18} onClick={() => handleEditClick(row)} />
+          <FaDownload size={18} onClick={() => handleDownloadClick(row)} />
         </div>
       ),
     },
   ];
+  
 
 
   return (

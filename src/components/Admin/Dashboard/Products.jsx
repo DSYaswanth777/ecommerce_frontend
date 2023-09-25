@@ -184,7 +184,7 @@ function Products() {
   const columns = [
     {
       name: "Product Name",
-      selector: "productName",
+      selector: (row) => row.productName,
       sortable: true,
     },
     {
@@ -199,30 +199,30 @@ function Products() {
     },
     {
       name: "MRP",
-      selector: "productMRP",
+      selector: (row) => row.productMRP,
       sortable: true,
     },
     {
       name: "Discount",
-      selector: "productDiscount",
+      selector: (row) => row.productDiscount,
       sortable: true,
     },
     {
       name: "Product Info",
-      selector: "productInfo",
+      selector: (row) => row.productInfo,
     },
     {
       name: "Color Options",
-      selector: "productColorOptions",
+      selector: (row) => row.productColorOptions,
     },
     {
       name: "Subcategory ID",
-      selector: "subcategoryId",
+      selector: (row) => row.subcategoryId,
       sortable: true,
     },
     {
       name: "Stock",
-      selector: "productStock",
+      selector: (row) => row.productStock,
       sortable: true,
     },
     {
@@ -242,6 +242,7 @@ function Products() {
       ),
     },
   ];
+  
 
   return (
     <div className=" mb-5 shadow w-100 justify-content-center align-items-center gap-2 mt-2 border p-5 pt-2">

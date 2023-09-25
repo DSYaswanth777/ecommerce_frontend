@@ -127,26 +127,26 @@ function Customers() {
   const columns = [
     {
       name: "Name",
-      selector: "productName",
+      selector: (row) => row.productName, // Use a selector function
       sortable: true,
     },
     {
       name: "Email",
-      selector: "productMRP",
+      selector: (row) => row.productMRP, // Use a selector function
       sortable: true,
     },
     {
       name: "Mobile Number",
-      selector: "productInfo",
+      selector: (row) => row.productInfo, // Use a selector function
     },
     {
       name: "Orders",
-      selector: "productDiscount",
+      selector: (row) => row.productDiscount, // Use a selector function
       sortable: true,
     },
     {
       name: "Joined Date",
-      selector: "productInfo",
+      selector: (row) => row.productInfo, // Use a selector function
     },
   ];
   return (

@@ -4,13 +4,11 @@ import { loginAsync } from "../../redux/slice/authSlice";
 import Logo from "../../assets/icons/brand_logo.svg";
 import InputPasswordToggle from "../Input-password/Index";
 import {
-  CardBody,
-  CardTitle,
-  CardText,
+  CardBody, CardText,
   Form,
   Label,
   Input,
-  Button,
+  Button
 } from "reactstrap";
 import "./Login.scss";
 
@@ -82,15 +80,15 @@ const Login = () => {
                       render={({ field }) => (
                         <>
                           <Input
-                            type="email"
+                            type="emailMobile"
                             id="login-email"
                             placeholder="john@gmail.com"
                             autoFocus
                             {...field}
                           />
-                          {errors.email && (
+                          {errors.emailMobile && (
                             <span className="error-text text-danger">
-                              {errors.email.message}
+                              {errors.emailMobile.message}
                             </span>
                           )}
                         </>
