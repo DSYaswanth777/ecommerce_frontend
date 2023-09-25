@@ -20,6 +20,12 @@ import { FaEdit } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
 import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import {
+  deleteCategoryAsync,
+  fetchCategoriesAsync,
+} from "../../../redux/slice/categoriesSlice";
 function Categories() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [CategoryData, setCategoryData] = useState({
@@ -35,22 +41,12 @@ function Categories() {
   });
   const [mode, setMode] = useState("Add"); // Add or Edit mode
   const [selectedCardIndex, setSelectedCardIndex] = useState(null);
-  
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/api/v1/categories");
-      if (!response.ok) {
-        throw new Error("Failed to fetch categories.");
-      }
-      const data = await response.json();
-      console.log(data)
-      // setCards(data.categories);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      // You can handle the error here, e.g., show an error message
-    }
-  };
- 
+  const { categories, isLoading, error } = useSelector((state) => state);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchCategoriesAsync());
+  }, [dispatch]);
+
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
   };
@@ -97,7 +93,7 @@ function Categories() {
     });
     toggleModal();
   };
-  const handleDelete = (product) => {
+  const handleDelete = (categoryId) => {
     swalWithBootstrapButtons
       .fire({
         title: "Are you sure?",
@@ -110,12 +106,22 @@ function Categories() {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          // Dispatch the deleteCategoryAsync action with the categoryId to delete
+          dispatch(deleteCategoryAsync(categoryId))
+            .then(() => {
+              // After successfully deleting the category, refresh the categories data
+              dispatch(fetchCategoriesAsync());
+            })
+            .catch((error) => {
+              // Handle any errors that occur during the deletion process
+              console.error("Error deleting category:", error);
+            });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire("Cancelled", "Your Category Code is Safe :)", "error");
         }
       });
   };
+
   const cards = [
     // Add your card data here (you can use a map function)
     // Example:
@@ -163,12 +169,8 @@ function Categories() {
       </div>
       <div className="container">
         <div className="row d-flex justify-content-center align-items-center gap-3">
-          {cards.map((card, index) => (
-            <Card
-              className="col-lg-4"
-              key={card.id}
-            
-            >
+          {categories.categories.map((card, index) => (
+            <Card className="col-lg-4" key={card.id}>
               <CardBody>
                 <div className="d-flex justify-content-between">
                   <div className="fw-bold fs-4">
@@ -177,15 +179,26 @@ function Categories() {
                   </div>
                   <div className="d-flex gap-3">
                     <div className="text-primary">
-                      <FaEdit size={20}   onClick={() => handleEditIconClick(index)}/>
+                      <FaEdit
+                        size={20}
+                        onClick={() => handleEditIconClick(index)}
+                      />
                     </div>
                     <div className="text-danger">
-                      <AiOutlineDelete size={22} onClick={() => handleDelete(index)} />
+                      <AiOutlineDelete
+                        size={22}
+                        onClick={() => handleDelete(card._id)}
+                      />
                     </div>
                   </div>
                 </div>
                 <div className="pt-3">
-                  Sub-Categories <Badge>{card.subCategories}</Badge>
+                  Sub-Categories :{" "}
+                  {card.subcategories.map((subcategory) => (
+                    <Badge key={subcategory._id} className="me-2">
+                      {subcategory.name}
+                    </Badge>
+                  ))}
                 </div>
               </CardBody>
             </Card>

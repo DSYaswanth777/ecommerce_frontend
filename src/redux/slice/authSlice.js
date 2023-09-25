@@ -6,7 +6,7 @@ export const loginAsync = createAsyncThunk(
   async (credentials) => {
     try {
       // Make your API call here using fetch or axios
-      const response = await fetch("https://animated-rhythm-399204.el.r.appspot.com/api/v1/login", {
+      const response = await fetch("http://localhost:3000/api/v1/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,10 +25,10 @@ export const loginAsync = createAsyncThunk(
       const { user, token, message } = data;
 
       // Determine if the user is an admin based on their role
-      const isAdmin = user && user.role === "admin";
+      // const isAdmin = user && user.role === "admin";
 
       // Return the user, token, isAdmin, and message to be used as the payload
-      return { user, token, isAdmin, message };
+      return { user, token, message };
     } catch (error) {
       // Handle any network or API errors here
       throw error;
@@ -135,12 +135,10 @@ export const verifyOtpAsync = createAsyncThunk(
 const loadUserFromLocalStorage = () => {
   const token = localStorage.getItem("token");
   const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
-  const isAdmin = localStorage.getItem("isAdmin") === "true"; // Load isAdmin state from local storage
-
   if (token && isAuthenticated) {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      return { user, isAdmin };
+      return { user };
     } catch (error) {
       console.error("Error parsing user data from local storage:", error);
     }
@@ -155,7 +153,6 @@ const authSlice = createSlice({
     user: loadUserFromLocalStorage()?.user,
     token: localStorage.getItem("token"),
     isAuthenticated: loadUserFromLocalStorage() !== null,
-    isAdmin: loadUserFromLocalStorage()?.isAdmin || false, // Load isAdmin state from local storage or default to false
     isLoading: false,
     loginMessage: "",
     isUserNotVerified: false
@@ -166,11 +163,9 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
-      state.isAdmin = false; // Reset isAdmin to false on logout
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       localStorage.setItem("isAuthenticated", "false");
-      localStorage.setItem("isAdmin", "false"); // Reset isAdmin in local storage
     },
   },
   extraReducers: (builder) => {
@@ -182,14 +177,12 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.isAuthenticated = true;
-        state.isAdmin = action.payload.isAdmin; // Update isAdmin based on the response
         state.isLoading = false;
         state.loginMessage = action.payload.message;
         localStorage.setItem("token", action.payload.token);
         localStorage.setItem("user", JSON.stringify(action.payload.user));
         localStorage.setItem("isAuthenticated", "true");
-        localStorage.setItem("isAdmin", action.payload.isAdmin ? "true" : "false"); // Store isAdmin in local storage
-        // toast.success(state.loginMessage);
+  
       })
       .addCase(loginAsync.rejected, (state) => {
         state.isLoading = false;

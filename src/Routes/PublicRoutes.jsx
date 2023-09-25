@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux"; // Assuming you're using Redux for state management
+import { useSelector } from "react-redux";
 import Login from "../components/Login/Login";
 import Home from "../pages/HomePage";
 import Signup from "../components/SignUp/Signup";
@@ -16,7 +16,7 @@ import Dashboard from "../components/Admin/Dashboard/Dashboard";
 
 const PublicRoutes = () => {
   const user = useSelector((state) => state.auth);
-
+  const userRole = useSelector((state) => state.auth.user?.role);
   return (
     <BrowserRouter>
       <Routes>
@@ -33,12 +33,17 @@ const PublicRoutes = () => {
             <Route path="/checkoutcart" element={<CheckOutCart />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/wishlist" element={<Wishlist />} />
-            {user.isAdmin && (
-              <Route path="/admin/dashboard" element={<Dashboard />} />
-            )}
           </>
         ) : (
           <Route path="*" element={<Navigate to="/login" />} />
+        )}
+        <></>
+        {user.isAuthenticated && userRole === "admin" ? (
+          <>
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+          </>
+        ) : (
+          <Route path="*" element={<Navigate to="/" />} />
         )}
       </Routes>
     </BrowserRouter>

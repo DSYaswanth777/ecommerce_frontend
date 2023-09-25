@@ -37,12 +37,10 @@ const Header = () => {
 
   document.addEventListener("click", (e) => {
     if (e.target !== searchIcon) {
-      console.log("Search");
       setSearchContainerVisible(false);
       // setAccountVisible(false);
     }
     if (e.target != profileBox) {
-      console.log("Profile");
       setAccountVisible(false);
     }
   });
