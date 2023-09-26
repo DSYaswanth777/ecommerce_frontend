@@ -16,22 +16,31 @@ import {
   Label,
   Input as ModalInput,
 } from "reactstrap";
-import { FaEdit } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
 import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import {
+  categoryAddAsync,
   deleteCategoryAsync,
+  deleteSubCategoryAsync,
   fetchCategoriesAsync,
+  subCategoryAddAsync,
 } from "../../../redux/slice/categoriesSlice";
 function Categories() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [CategoryData, setCategoryData] = useState({
     name: "",
-    expiration: "",
   });
+  const [isSubcategoryModalOpen, setSubcategoryModalOpen] = useState(false);
+  const [iscategoryModalOpen, setcategoryModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [subcategoryData, setSubcategoryData] = useState({
+    name: "",
+    categoryId: "", 
+  });
+
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
       confirmButton: "btn btn-success",
@@ -39,10 +48,9 @@ function Categories() {
     },
     buttonsStyling: false,
   });
-  const [mode, setMode] = useState("Add"); // Add or Edit mode
-  const [selectedCardIndex, setSelectedCardIndex] = useState(null);
   const { categories, isLoading, error } = useSelector((state) => state);
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(fetchCategoriesAsync());
   }, [dispatch]);
@@ -56,42 +64,48 @@ function Categories() {
       name: e.target.value,
     });
   };
-  const handleCategoryExpirationChange = (e) => {
-    setCategoryData({
-      ...CategoryData,
-      expiration: e.target.value,
-    });
-  };
-  const handleAddCategory = () => {
-    // Add your logic to handle adding a new Category here
-    // You can access the Category data in `CategoryData`
-    // Close the modal after adding the Category
-    toggleModal();
-  };
-  const handleEditCategory = () => {
-    // Add your logic to handle editing an existing Category here
-    // You can access the Category data in `CategoryData`
-    // Close the modal after editing the Category
-    toggleModal();
-  };
-  const handleAddNewCategoryClick = () => {
-    setMode("Add");
+  const handleAddCategory = async () => {
     setCategoryData({
       name: "",
-      expiration: "",
     });
+    await dispatch(categoryAddAsync(CategoryData));
+    // After adding the category, refresh the categories data
+    dispatch(fetchCategoriesAsync());
     toggleModal();
   };
-
-  const handleEditIconClick = (index) => {
-    setMode("Edit");
-    setSelectedCardIndex(index);
-    const cardData = cards[index]; // Assuming you have an array of cards
+  const handleAddSubCategory = async () => {
     setCategoryData({
-      name: cardData.name,
-      expiration: cardData.expiration,
+      name: "",
     });
-    toggleModal();
+    await dispatch(
+      subCategoryAddAsync({
+        body: {
+          name: subcategoryData.name,
+        },
+        categoryId: subcategoryData.categoryId,
+      })
+    );
+    dispatch(fetchCategoriesAsync());
+    toggleSubcategoryModal();
+  };
+  const handleDeleteSubCategory = async (categoryId, subcategoryId) => {
+    try {
+      await dispatch(
+        deleteSubCategoryAsync({
+          categoryId,
+          subcategoryId,
+        })
+      );
+      
+      // Close the subcategory modal
+      togglecategoryModal();
+      
+      // Fetch updated categories data to refresh the page
+      await dispatch(fetchCategoriesAsync());
+    } catch (error) {
+      // Handle any errors that occur during deletion
+      console.error("Error deleting subcategory:", error);
+    }
   };
   const handleDelete = (categoryId) => {
     swalWithBootstrapButtons
@@ -121,31 +135,29 @@ function Categories() {
         }
       });
   };
-
-  const cards = [
-    // Add your card data here (you can use a map function)
-    // Example:
-    {
-      id: 1,
-      name: "Cotton",
-      subCategories: "Super1, Super2, Super3",
-    },
-    {
-      id: 2,
-      name: "Cotton 2",
-      subCategories: "Super1, Super2, Super3",
-    },
-    {
-      id: 3,
-      name: "Cotton 3",
-      subCategories: "Super1, Super2, Super3",
-    },
-    {
-      id: 4,
-      name: "Cotton 3",
-      subCategories: "Super1, Super2, Super3",
-    },
-  ];
+  const togglecategoryModal = () => {
+    setcategoryModalOpen(!iscategoryModalOpen);
+  };
+  const toggleSubcategoryModal = () => {
+    setSubcategoryModalOpen(!isSubcategoryModalOpen);
+    fetchCategoriesAsync()
+  };
+  const handleSubcategoryNameChange = (e) => {
+    setSubcategoryData({
+      ...subcategoryData,
+      name: e.target.value,
+    });
+  };
+  const handleCategoryDropdownChange = (e) => {
+    setSubcategoryData({
+      ...subcategoryData,
+      categoryId: e.target.value,
+    });
+  };
+  const handleCategoryCardClick = (category) => {
+    setSelectedCategory(category);
+    togglecategoryModal();
+  };
 
   return (
     <div>
@@ -163,14 +175,24 @@ function Categories() {
             <BsSearch size={20} className="" />
           </InputGroupText>
         </InputGroup>
-        <Button className="h-50" onClick={handleAddNewCategoryClick}>
-          Add New Category
-        </Button>
+        <div className="d-flex">
+          <Button className="h-50" onClick={() => toggleModal()}>
+            Add New Category
+          </Button>
+          <Button className="h-50 ms-3" onClick={toggleSubcategoryModal}>
+            Add a Subcategory
+          </Button>
+        </div>
       </div>
       <div className="container">
         <div className="row d-flex justify-content-center align-items-center gap-3">
           {categories.categories.map((card, index) => (
-            <Card className="col-lg-4" key={card.id}>
+            <Card
+              className="col-lg-4"
+              key={card.id}
+              style={{ cursor: "pointer" }}
+              onClick={() => handleCategoryCardClick(card)}
+            >
               <CardBody>
                 <div className="d-flex justify-content-between">
                   <div className="fw-bold fs-4">
@@ -178,12 +200,6 @@ function Categories() {
                     <span className="fs-5 text-primary">{card.name}</span>
                   </div>
                   <div className="d-flex gap-3">
-                    <div className="text-primary">
-                      <FaEdit
-                        size={20}
-                        onClick={() => handleEditIconClick(index)}
-                      />
-                    </div>
                     <div className="text-danger">
                       <AiOutlineDelete
                         size={22}
@@ -206,9 +222,7 @@ function Categories() {
         </div>
       </div>
       <Modal isOpen={isModalOpen} toggle={toggleModal}>
-        <ModalHeader toggle={toggleModal}>
-          {mode === "Add" ? "Add Category" : "Edit Category"}
-        </ModalHeader>
+        <ModalHeader toggle={toggleModal}>Add</ModalHeader>
         <ModalBody>
           <FormGroup>
             <Label for="CategoryName">Category Name</Label>
@@ -219,27 +233,83 @@ function Categories() {
               onChange={handleCategoryNameChange}
             />
           </FormGroup>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={handleAddCategory}>
+            Add
+          </Button>
+          <Button color="secondary" onClick={toggleModal}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
+      <Modal isOpen={isSubcategoryModalOpen} toggle={toggleSubcategoryModal}>
+        <ModalHeader toggle={toggleSubcategoryModal}>
+          Add a Subcategory
+        </ModalHeader>
+        <ModalBody>
           <FormGroup>
-            <Label for="CategoryExpiration">Category Expiration (Date)</Label>
+            <Label for="SubcategoryName">Subcategory Name</Label>
             <ModalInput
-              type="date"
-              id="CategoryExpiration"
-              value={CategoryData.expiration}
-              onChange={handleCategoryExpirationChange}
+              type="text"
+              id="SubcategoryName"
+              value={subcategoryData.name}
+              onChange={handleSubcategoryNameChange}
             />
+          </FormGroup>
+          <FormGroup>
+            <Label for="CategoryDropdown">Select a Category</Label>
+            <Input
+              type="select"
+              name="category"
+              id="CategoryDropdown"
+              value={subcategoryData.categoryId}
+              onChange={handleCategoryDropdownChange}
+            >
+              <option value="">Select a category</option>
+              {categories.categories.map((category) => (
+                <option key={category._id} value={category._id}>
+                  {category.name}
+                </option>
+              ))}
+            </Input>
           </FormGroup>
         </ModalBody>
         <ModalFooter>
-          {mode === "Add" ? (
-            <Button color="primary" onClick={handleAddCategory}>
-              Add
-            </Button>
-          ) : (
-            <Button color="primary" onClick={handleEditCategory}>
-              Edit
-            </Button>
-          )}
-          <Button color="secondary" onClick={toggleModal}>
+          <Button color="primary" onClick={handleAddSubCategory}>
+            Add
+          </Button>
+          <Button color="secondary" onClick={toggleSubcategoryModal}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
+      <Modal isOpen={iscategoryModalOpen} toggle={togglecategoryModal}>
+        <ModalHeader toggle={togglecategoryModal}>
+          {selectedCategory && selectedCategory.name}
+        </ModalHeader>
+        <ModalBody>
+          {selectedCategory &&
+            selectedCategory.subcategories.map((subcategory) => (
+              <div
+                key={subcategory._id}
+                className="d-flex justify-content-between"
+              >
+                <h4>{subcategory.name}</h4>
+                <div className="text-danger">
+                  <AiOutlineDelete
+                    size={22}
+                    onClick={() =>handleDeleteSubCategory(selectedCategory._id,subcategory._id)}
+                  />
+                </div>
+              </div>
+            ))}
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={togglecategoryModal}>
+            Save
+          </Button>
+          <Button color="secondary" onClick={togglecategoryModal}>
             Cancel
           </Button>
         </ModalFooter>

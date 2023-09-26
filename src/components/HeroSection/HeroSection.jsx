@@ -18,12 +18,12 @@ const HeroSection = () => {
         infiniteLoop
         className="px-2"
       >
-        <div className="d-flex gap-2">
+        <div className="">
           <img src={heroSliderImg} className="slider-image" />
           {/* <img src={heroSliderImg2} className="slider-image" /> */}
         </div>
 
-        <div className="d-flex gap-2">
+        <div className="">
           <img src={heroSliderImg2} className="slider-image" />
           {/* <img src={heroSliderImg} className="slider-image" /> */}
         </div>

@@ -51,17 +51,10 @@ function AddProduct({ isOpen, toggle, onSave, isEdit, product }) {
         />
         <Input
           type="text"
-          name="productMRP"
-          value={formData.productMRP}
+          name="productPrice"
+          value={formData.productPrice}
           onChange={handleChange}
-          placeholder="MRP"
-        />
-        <Input
-          type="text"
-          name="productDiscount"
-          value={formData.productDiscount}
-          onChange={handleChange}
-          placeholder="Discount"
+          placeholder="Price "
         />
         <Input
           type="textarea"
@@ -70,19 +63,13 @@ function AddProduct({ isOpen, toggle, onSave, isEdit, product }) {
           onChange={handleChange}
           placeholder="Product Info"
         />
-        <Input
-          type="text"
-          name="productColorOptions"
-          value={formData.productColorOptions}
-          onChange={handleChange}
-          placeholder="Color Options"
-        />
+  
         <Input
           type="text"
           name="subcategoryId"
           value={formData.subcategoryId}
           onChange={handleChange}
-          placeholder="Subcategory ID"
+          placeholder="Subcategory"
         />
         <Input
           type="number"
