@@ -51,9 +51,7 @@ function Categories() {
   const { categories, isLoading, error } = useSelector((state) => state);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchCategoriesAsync());
-  }, [dispatch]);
+
 
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
@@ -186,10 +184,10 @@ function Categories() {
       </div>
       <div className="container">
         <div className="row d-flex justify-content-center align-items-center gap-3">
-          {categories.categories.map((card, index) => (
+          {categories.categories.map((card) => (
             <Card
               className="col-lg-4"
-              key={card.id}
+              key={card._id}
               style={{ cursor: "pointer" }}
               onClick={() => handleCategoryCardClick(card)}
             >

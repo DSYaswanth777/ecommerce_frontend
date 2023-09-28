@@ -77,7 +77,6 @@ export const subCategoryAddAsync = createAsyncThunk(
 export const deleteSubCategoryAsync = createAsyncThunk(
   "categories/deleteSubCategoryAsync",
   async ( {categoryId, subcategoryId} , { getState }) => {
-  console.log(categoryId,subcategoryId)
     const token = getState().auth.token;
     try {
       // Make your API call here using fetch or axios

@@ -1,122 +1,45 @@
-// Products.js
-import React, { useState } from "react";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import DataTable from "react-data-table-component";
+import {
+  deleteProductAsync,
+  fetchProducts,
+  searchProductsAsync,
+} from "../../../redux/slice/productSlice";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { Button, Input, InputGroup, InputGroupText } from "reactstrap";
-import Logo from "../../../assets/icons/brand_logo.svg";
+import { useState } from "react";
 import Swal from "sweetalert2";
-import "sweetalert2/src/sweetalert2.scss";
 import AddProduct from "./AddProduct";
+import { Button, Input, InputGroup, InputGroupText } from "reactstrap";
 import { BsSearch } from "react-icons/bs";
+import Logo from "../../../assets/icons/brand_logo.svg";
+import debounce from "lodash.debounce"; // Import lodash.debounce
 
 function Products() {
-  const [productData, setProductData] = useState([
-    {
-      productName: "Product 1",
-      productImg: "https://via.placeholder.com/50",
-      productPrice: "$20",
-      productInfo: "Lorem ipsum dolor sit amet",
-      subcategoryId: "123",
-      productStock: 50,
-    },
-    {
-      productName: "Product 2",
-      productImg: "https://via.placeholder.com/50",
-      productPrice: "$30",
-      productInfo: "Consectetur adipiscing elit",
-      subcategoryId: "456",
-      productStock: 25,
-    },
-    {
-      productName: "Product 3",
-      productImg: "https://via.placeholder.com/50",
-      productPrice: "$25",
-      productInfo: "Sed do eiusmod tempor",
-      subcategoryId: "789",
-      productStock: 100,
-    },
-    {
-      productName: "Product 1",
-      productImg: "https://via.placeholder.com/50",
-      productPrice: "$20",
-      productInfo: "Lorem ipsum dolor sit amet",
-      subcategoryId: "123",
-      productStock: 50,
-    },
-    {
-      productName: "Product 2",
-      productImg: "https://via.placeholder.com/50",
-      productPrice: "$30",
-      productInfo: "Consectetur adipiscing elit",
-      subcategoryId: "456",
-      productStock: 25,
-    },
-    {
-      productName: "Product 3",
-      productImg: "https://via.placeholder.com/50",
-      productPrice: "$25",
-      productInfo: "Sed do eiusmod tempor",
-      subcategoryId: "789",
-      productStock: 100,
-    },
-    {
-      productName: "Product 1",
-      productImg: "https://via.placeholder.com/50",
-      productPrice: "$20",
-      productInfo: "Lorem ipsum dolor sit amet",
-      subcategoryId: "123",
-      productStock: 50,
-    },
-    {
-      productName: "Product 2",
-      productImg: "https://via.placeholder.com/50",
-      productPrice: "$30",
-      productInfo: "Consectetur adipiscing elit",
-      subcategoryId: "456",
-      productStock: 25,
-    },
-    {
-      productName: "Product 3",
-      productImg: "https://via.placeholder.com/50",
-      productPrice: "$25",
-      productInfo: "Sed do eiusmod tempor",
-      subcategoryId: "789",
-      productStock: 100,
-    },
-    {
-      productName: "Product 1",
-      productImg: "https://via.placeholder.com/50",
-      productPrice: "$20",
-      productInfo: "Lorem ipsum dolor sit amet",
-      subcategoryId: "123",
-      productStock: 50,
-    },
-    {
-      productName: "Product 2",
-      productImg: "https://via.placeholder.com/50",
-      productPrice: "$30",
-      productInfo: "Consectetur adipiscing elit",
-      subcategoryId: "456",
-      productStock: 25,
-    },
-    {
-      productName: "Product 3",
-      productImg: "https://via.placeholder.com/50",
-      productPrice: "$25",
-      productInfo: "Sed do eiusmod tempor",
-      subcategoryId: "789",
-      productStock: 100,
-    },
-  ]); // Your initial product data
+  const dispatch = useDispatch();
+  const productData = useSelector((state) => state.products?.products);
+  const status = useSelector((state) => state.products?.status);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [isEdit, setEdit] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const handleAddProduct = (formData) => {
-  };
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchProducts());
+    }
+  }, [status, dispatch]);
+  const debouncedHandleSearch = debounce(() => {
+    // Dispatch the searchProductsAsync action with the debounced search query
+    dispatch(searchProductsAsync(debouncedSearchQuery));
+  }, 300); // Adjust the delay time as needed
 
-  const handleEditProduct = (formData) => {
-  };
+  useEffect(() => {
+    // Only perform the search when debouncedSearchQuery changes
+    if (debouncedSearchQuery) {
+      debouncedHandleSearch();
+    }
+  }, [debouncedSearchQuery]) 
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
       confirmButton: "btn btn-success",
@@ -124,8 +47,11 @@ function Products() {
     },
     buttonsStyling: false,
   });
-
-  const handleDelete = (product) => {
+  const openAddModal = () => {
+    setSelectedProduct(null); // Clear selectedProduct to indicate an add action
+    setModalOpen(true);
+  };
+  const handleDelete = (row) => {
     swalWithBootstrapButtons
       .fire({
         title: "Are you sure?",
@@ -138,25 +64,28 @@ function Products() {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          // Dispatch the deleteCategoryAsync action with the productId to delete
+          dispatch(deleteProductAsync(row._id))
+            .then(() => {
+              // After successfully deleting the product, refresh the product data
+              dispatch(fetchProducts());
+            })
+            .catch((error) => {
+              // Handle any errors that occur during the deletion process
+              console.error("Error deleting category:", error);
+            });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-          Swal.fire("Cancelled", "Your Product is Safe :)", "error");
+          Swal.fire("Cancelled", "Your Category Code is Safe :)", "error");
         }
       });
   };
-
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
-    setSelectedProduct(null);
-    setEdit(false);
   };
-
-  const handleEditClick = (product) => {
-    setSelectedProduct(product);
-    setEdit(true);
-    toggleModal();
+  const handleEditClick = (row) => {
+    setSelectedProduct(row);
+    setModalOpen(true);
   };
-
   const columns = [
     {
       name: "Product Name",
@@ -167,7 +96,7 @@ function Products() {
       name: "Product Image",
       cell: (row) => (
         <img
-          src={row.productImg}
+          src={row.productImages[0]}
           alt={row.productName}
           style={{ width: "50px", height: "50px" }}
         />
@@ -178,14 +107,14 @@ function Products() {
       selector: (row) => row.productPrice,
       sortable: true,
     },
-
     {
       name: "Product Info",
       selector: (row) => row.productInfo,
     },
     {
-      name: "Subcategory ID",
-      selector: (row) => row.subcategoryId,
+      name: "Subcategory",
+      selector: (row) => row.subcategoryId.name,
+
       sortable: true,
     },
     {
@@ -210,45 +139,53 @@ function Products() {
       ),
     },
   ];
-  
-
   return (
     <div className=" mb-5 shadow w-100 justify-content-center align-items-center gap-2 mt-2 border p-5 pt-2">
       <div className="d-flex justify-content-between gap-5 align-items-center">
         <img src={Logo} alt="" />
         <InputGroup className="d-flex justify-content-center align-items-center inpu w-50">
-            <Input
-              type="search"
-              name=""
-              id=""
-              placeholder="Search your product..."
-              className="border border-end-0 input-searc w-50"
-              onClick={(e) => e.stopPropagation()}
-            />
-            <InputGroupText className="p-2 input-tex">
-              <BsSearch size={20} className="" />
-            </InputGroupText>
-          </InputGroup>
-        <Button className="h-50" onClick={toggleModal}>
+          <Input
+            type="search"
+            name=""
+            id=""
+            placeholder="Search your product..."
+            className="border border-end-0 input-searc w-50"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setDebouncedSearchQuery(e.target.value); // Update the debounced query
+            }}
+
+            onClick={(e) => e.stopPropagation()}
+          />
+          <InputGroupText className="p-2 input-tex">
+            <BsSearch size={20} className="" onClick={debouncedHandleSearch} />
+          </InputGroupText>
+        </InputGroup>
+        <Button className="h-50" onClick={openAddModal}>
           Add New Product
         </Button>
       </div>
-      <DataTable
-        title="Product List"
-        columns={columns}
-        data={productData}
-        pagination
-        fixedHeader
-        pointerOnHover
-        paginationPerPage={10}
-      />
+      {status === "loading" && <p>Loading...</p>}
+      {status === "failed" && <p>Error: Unable to fetch products.</p>}
+      {status === "succeeded" && (
+        <DataTable
+          title="Product List"
+          columns={columns}
+          data={productData}
+          pagination
+          fixedHeader
+          pointerOnHover
+          paginationPerPage={10}
+          paginationPerPageOptions={[10, 20, 30]}
+        />
+      )}
 
       <AddProduct
         isOpen={isModalOpen}
         toggle={toggleModal}
-        onSave={isEdit ? handleEditProduct : handleAddProduct}
-        isEdit={isEdit}
-        product={selectedProduct}
+        isEditing={!!selectedProduct} // Pass isEditing as true when a product is selected for editing
+        productData={selectedProduct}
       />
     </div>
   );
