@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import {
   Badge,
@@ -20,12 +20,27 @@ import { FaEdit } from "react-icons/fa";
 import { AiOutlineDelete } from "react-icons/ai";
 import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { addCouponAsync, deleteCouponAsync, fetchCoupons } from "../../../redux/slice/couponSlice";
+import { formatCurrency } from "../../../utilities/formatCurrency";
 function Coupons() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [couponData, setCouponData] = useState({
-    name: "",
-    expiration: "",
+    code: null,
+    expirationDate: null,
+    discountedAmount:null,
+    maxUses: null,
   });
+  const { coupons, isLoading, error } = useSelector((state) => state);
+  const dispatch = useDispatch();
+  const [editingCouponData, setEditingCouponData] = useState(null);
+  console.log("Coupon Data:", couponData);
+
+  useEffect(() => {
+    dispatch(fetchCoupons());
+  }, [dispatch]);
+
+  const [mode, setMode] = useState("Add");
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
       confirmButton: "btn btn-success",
@@ -33,8 +48,6 @@ function Coupons() {
     },
     buttonsStyling: false,
   });
-  const [mode, setMode] = useState("Add"); // Add or Edit mode
-  const [selectedCardIndex, setSelectedCardIndex] = useState(null);
 
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
@@ -42,47 +55,102 @@ function Coupons() {
   const handleCouponNameChange = (e) => {
     setCouponData({
       ...couponData,
-      name: e.target.value,
+      code: e.target.value,
     });
   };
   const handleCouponExpirationChange = (e) => {
     setCouponData({
       ...couponData,
-      expiration: e.target.value,
+      expirationDate: e.target.value,
     });
   };
-  const handleAddCoupon = () => {
-    // Add your logic to handle adding a new coupon here
-    // You can access the coupon data in `couponData`
-    // Close the modal after adding the coupon
-    toggleModal();
+  const handleCouponDiscountedAmount = (e) => {
+    setCouponData({
+      ...couponData,
+      discountedAmount: e.target.value,
+    });
   };
+  const handleCouponMaxUses = (e) => {
+    setCouponData({
+      ...couponData,
+      maxUses: e.target.value,
+    });
+  };
+
+  const handleAddCoupon = async () => {
+    const authToken = localStorage.getItem("token");
+    if (!authToken) {
+      console.error("Authentication token not found in localStorage");
+      return;
+    }
+  
+    // Prepare the data object to send in the request body
+    const requestData = {
+      code: couponData.code,
+      maxUses: parseInt(couponData.maxUses),
+      expirationDate: couponData.expirationDate,
+      discountedAmount: parseFloat(couponData.discountedAmount),
+    };
+  
+    // Make the API call with the Authorization header
+    fetch("http://localhost:3000/api/v1/admin/add/coupon", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`, // Include the token here
+      },
+      body: JSON.stringify(requestData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to add coupon");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Handle the response data as needed
+        console.log("Coupon added successfully", data);
+  
+        // You may want to refresh the list of coupons after adding
+        dispatch(fetchCoupons());
+  
+        // Close the modal
+        toggleModal();
+      })
+      .catch((error) => {
+        // Handle any errors
+        console.error("Error adding coupon:", error);
+      });
+
+  };
+  
+  
   const handleEditCoupon = () => {
-    // Add your logic to handle editing an existing coupon here
-    // You can access the coupon data in `couponData`
-    // Close the modal after editing the coupon
+    setMode("Edit");
+    setEditingCouponData(coupons.coupons[index]);
     toggleModal();
   };
   const handleAddNewCouponClick = () => {
     setMode("Add");
     setCouponData({
-      name: "",
-      expiration: "",
+      code: null,
+      expirationDate: null,
+      discountedAmount: null,
+      maxUses: null,
     });
     toggleModal();
   };
-
-  const handleEditIconClick = (index) => {
+  const handleEditIconClick = () => {
     setMode("Edit");
-    setSelectedCardIndex(index);
-    const cardData = cards[index]; // Assuming you have an array of cards
     setCouponData({
-      name: cardData.name,
-      expiration: cardData.expiration,
+      code: "",
+      expirationDate: "",
+      discountedAmount: "",
+      maxUses: "",
     });
     toggleModal();
   };
-  const handleDelete = (product) => {
+  const handleDelete = (couponId) => {
     swalWithBootstrapButtons
       .fire({
         title: "Are you sure?",
@@ -95,37 +163,21 @@ function Coupons() {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          // Dispatch the deleteCategoryAsync action with the categoryId to delete
+          dispatch(deleteCouponAsync(couponId))
+            .then(() => {
+              // After successfully deleting the category, refresh the categories data
+              dispatch(fetchCoupons());
+            })
+            .catch((error) => {
+              // Handle any errors that occur during the deletion process
+              console.error("Error deleting coupon:", error);
+            });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire("Cancelled", "Your Coupon Code is Safe :)", "error");
         }
       });
   };
-  const cards = [
-    // Add your card data here (you can use a map function)
-    // Example:
-    {
-      id: 1,
-      name: "Cotton",
-      expiration: "2023-12-31",
-    },
-    {
-      id: 2,
-      name: "Cotton 2",
-      expiration: "2023-12-31",
-    },
-    {
-      id: 3,
-      name: "Cotton 3",
-      expiration: "2023-12-31",
-    },
-    {
-      id: 4,
-      name: "Cotton 3",
-      expiration: "2023-12-31",
-    },
-    // Add more cards as needed
-  ];
 
   return (
     <div>
@@ -149,29 +201,41 @@ function Coupons() {
       </div>
       <div className="container">
         <div className="row d-flex justify-content-center align-items-center gap-3">
-          {cards.map((card, index) => (
-            <Card
-              className="col-lg-4"
-              key={card.id}
-            
-            >
+          {coupons.coupons?.map((card, index) => (
+            <Card className="col-lg-4" key={card.id}>
               <CardBody>
                 <div className="d-flex justify-content-between">
                   <div className="fw-bold fs-4">
                     Coupon Name:{" "}
-                    <span className="fs-5 text-primary">{card.name}</span>
+                    <span className="fs-5 text-primary">{card.code}</span>
+                    <div className="fw-bold fs-4">
+                      Coupon Discount:{" "}
+                      <span className="fs-5 text-primary">
+                        {formatCurrency(card.discountedAmount)}
+                      </span>
+                    </div>
+                    <div className="fw-bold fs-4">
+                      Maximum Usage:{" "}
+                      <span className="fs-5 text-primary">{card.maxUses}</span>
+                    </div>
                   </div>
                   <div className="d-flex gap-3">
                     <div className="text-primary">
-                      <FaEdit size={20}   onClick={() => handleEditIconClick(index)}/>
+                      <FaEdit
+                        size={20}
+                        onClick={() => handleEditIconClick(index)}
+                      />
                     </div>
                     <div className="text-danger">
-                      <AiOutlineDelete size={22} onClick={() => handleDelete(index)} />
+                      <AiOutlineDelete
+                        size={22}
+                        onClick={() => handleDelete(card._id)}
+                      />
                     </div>
                   </div>
                 </div>
                 <div className="pt-3">
-                  Coupon Expiration <Badge>{card.expiration}</Badge>
+                  Coupon Expiration <Badge>{card.expirationDate}</Badge>
                 </div>
               </CardBody>
             </Card>
@@ -186,9 +250,14 @@ function Coupons() {
           <FormGroup>
             <Label for="couponName">Coupon Name</Label>
             <ModalInput
+              name="code"
               type="text"
               id="couponName"
-              value={couponData.name}
+              value={
+                mode === "Edit" && editingCouponData
+                  ? editingCouponData.name
+                  : couponData.name
+              }
               onChange={handleCouponNameChange}
             />
           </FormGroup>
@@ -196,9 +265,42 @@ function Coupons() {
             <Label for="couponExpiration">Coupon Expiration (Date)</Label>
             <ModalInput
               type="date"
+              name="expirationDate"
               id="couponExpiration"
-              value={couponData.expiration}
+              value={
+                mode === "Edit" && editingCouponData
+                  ? editingCouponData.expiration
+                  : couponData.expiration
+              }
               onChange={handleCouponExpirationChange}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="couponUsages">Coupon Usage</Label>
+            <ModalInput
+              type="number"
+              name="maxUses"
+              id="couponUsages"
+              value={
+                mode === "Edit" && editingCouponData
+                  ? editingCouponData.maxUses
+                  : couponData.maxUses
+              }
+              onChange={handleCouponMaxUses}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="couponDiscount">Discount Amount</Label>
+            <ModalInput
+              type="number"
+              name="discountedAmount"
+              id="couponDiscount"
+              value={
+                mode === "Edit" && editingCouponData
+                  ? editingCouponData.discountedAmount
+                  : couponData.discountedAmount
+              }
+              onChange={handleCouponDiscountedAmount}
             />
           </FormGroup>
         </ModalBody>

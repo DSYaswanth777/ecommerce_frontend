@@ -20,7 +20,6 @@ import { AiOutlineDelete } from "react-icons/ai";
 import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
 import {
   categoryAddAsync,
   deleteCategoryAsync,
