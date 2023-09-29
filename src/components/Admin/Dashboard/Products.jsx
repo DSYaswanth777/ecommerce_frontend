@@ -14,6 +14,7 @@ import { Button, Input, InputGroup, InputGroupText } from "reactstrap";
 import { BsSearch } from "react-icons/bs";
 import Logo from "../../../assets/icons/brand_logo.svg";
 import debounce from "lodash.debounce"; // Import lodash.debounce
+import { Loader } from "react-feather";
 
 function Products() {
   const dispatch = useDispatch();
@@ -166,8 +167,8 @@ function Products() {
           Add New Product
         </Button>
       </div>
-      {status === "loading" && <p>Loading...</p>}
-      {status === "failed" && <p>Error: Unable to fetch products.</p>}
+      {status === "loading" && <Loader>Loading...</Loader>}
+      {status === "failed" && <Loader>Error: Unable to fetch products.</Loader>}
       {status === "succeeded" && (
         <DataTable
           title="Product List"

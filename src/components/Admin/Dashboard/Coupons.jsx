@@ -34,8 +34,6 @@ function Coupons() {
   const { coupons, isLoading, error } = useSelector((state) => state);
   const dispatch = useDispatch();
   const [editingCouponData, setEditingCouponData] = useState(null);
-  console.log("Coupon Data:", couponData);
-
   useEffect(() => {
     dispatch(fetchCoupons());
   }, [dispatch]);

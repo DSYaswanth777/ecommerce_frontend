@@ -7,12 +7,14 @@ import categoriesReducer from '../slice/categoriesSlice';
 import thunk from "redux-thunk"; 
 import productSlice from '../slice/productSlice';
 import couponSlice from '../slice/couponSlice';
+import customerSlice from '../slice/customerSlice';
 const store = configureStore({
   reducer: {
     auth: authReducer,
     categories: categoriesReducer,
     products:productSlice,
-    coupons:couponSlice
+    coupons:couponSlice,
+    customers:customerSlice
   },
   middleware: [thunk],
 //   enhancers: [composeWithDevTools()]
