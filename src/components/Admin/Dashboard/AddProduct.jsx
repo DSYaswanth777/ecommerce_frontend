@@ -4,8 +4,7 @@ import { Form, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategoriesAsync } from "../../../redux/slice/categoriesSlice";
 import {
-  addProductAsync,
-  fetchProducts,
+  addProductAsync, fetchProducts
 } from "../../../redux/slice/productSlice";
 
 function AddProduct({ isOpen, toggle, isEditing, productData }) {
@@ -102,7 +101,7 @@ function AddProduct({ isOpen, toggle, isEditing, productData }) {
         if (!response.ok) {
           throw new Error("Failed to edit the product");
         }
-        // await dispatch(editProductAsync(productId, editProductData))
+        // await dispatch(editProductAsync({id:productId,...editProductData}))
       } else {
         // Use addProductAsync action for adding
         await dispatch(addProductAsync(productDataToSend));
@@ -178,7 +177,6 @@ function AddProduct({ isOpen, toggle, isEditing, productData }) {
               </Input>
 
               {!isEditing && (
-                // Conditionally render the image upload field when not editing
                 <>
                   <Label>Product Images</Label>
                   <Input

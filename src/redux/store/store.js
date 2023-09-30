@@ -17,7 +17,6 @@ const store = configureStore({
     customers:customerSlice
   },
   middleware: [thunk],
-//   enhancers: [composeWithDevTools()]
 });
 
 export default store;

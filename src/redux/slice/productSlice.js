@@ -65,8 +65,8 @@ export const deleteProductAsync = createAsyncThunk(
 );
 export const editProductAsync = createAsyncThunk(
   "products/editProduct",
-  async (productId, editProductData, { getState }) => {
-
+  async (editProductData, { getState }) => {
+    const { id, ...requestData } = editProductData;
     try {
       const token = getState().auth.token;
       const config = {
@@ -74,10 +74,10 @@ export const editProductAsync = createAsyncThunk(
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(editProductData),
+        body: JSON.stringify(requestData),
       };
       const response = await fetch(
-        `http://localhost:3000/api/v1/admin/products/edit/${productId}`,
+        `http://localhost:3000/api/v1/admin/products/edit/${editProductData.id}`,
         config
       );
 
@@ -164,7 +164,7 @@ const productSlice = createSlice({
       .addCase(searchProductsAsync.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      })
+      });
   },
 });
 

@@ -26,7 +26,7 @@ export const addCouponAsync = createAsyncThunk(
   "coupons/addCoupon",
   async (couponData, { getState }) => {
     try {
-      const token = getState().auth.token; // Retrieve the token from the auth state
+      const token = getState().auth.token; 
 
       const config = {
         method: "POST",
@@ -78,39 +78,55 @@ export const deleteCouponAsync = createAsyncThunk(
   }
 );
 export const editCouponAsync = createAsyncThunk(
-  "coupons/editProduct",
-  async (couponId, editCouponData, { getState }) => {
+  "coupons/editCoupon",
+  async (editCouponData, { getState }) => {
+    console.log(editCouponData)
     try {
       const token = getState().auth.token;
+      // Extract any other necessary data from editCouponData
+
       const config = {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(editCouponData),
+        body: JSON.stringify(editCouponData), // Assuming editCouponData is a JSON object
       };
+
       const response = await fetch(
-        `http://localhost:3000/api/v1/admin/coupon/edit/${couponId}`,
+        `http://localhost:3000/api/v1/admin/coupon/edit/${editCouponData.id}`, // Make sure to adjust the URL and access the coupon ID
         config
       );
 
       if (!response.ok) {
-        throw new Error("Failed to edit the product");
+        throw new Error("Failed to edit the Coupon");
       }
       // If the product is successfully edited, you can return a success message or status
-      return "Product edited successfully";
+      return "Coupon edited successfully";
     } catch (error) {
       throw error;
     }
   }
 );
+
 export const searchCouponAsync = createAsyncThunk(
   "coupons/searchcoupons",
-  async (couponName) => {
+  async (couponName,{getState}) => {
+    const token = getState().auth.token;
+
     try {
       // You can pass the productName as a query parameter to your API endpoint
+      const config = {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      };
       const response = await fetch(
-        `http://localhost:3000/api/v1/coupons/search?productName=${couponName}`
+`        http://localhost:3000/api/v1/admin/coupons/search?couponCode=${couponName}`,
+        config
       );
 
       if (!response.ok) {

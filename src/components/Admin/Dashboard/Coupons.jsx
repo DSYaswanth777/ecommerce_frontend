@@ -1,44 +1,51 @@
-import React, { useEffect, useState } from "react";
-import { BsSearch } from "react-icons/bs";
-import {
-  Badge,
-  Card,
-  CardBody,
-  Input,
-  InputGroupText,
-  InputGroup,
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  FormGroup,
-  Label,
-  Input as ModalInput,
-} from "reactstrap";
-import { FaEdit } from "react-icons/fa";
-import { AiOutlineDelete } from "react-icons/ai";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import DataTable from "react-data-table-component";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { useState } from "react";
 import Swal from "sweetalert2";
-import "sweetalert2/src/sweetalert2.scss";
-import { useDispatch, useSelector } from "react-redux";
-import { addCouponAsync, deleteCouponAsync, fetchCoupons } from "../../../redux/slice/couponSlice";
-import { formatCurrency } from "../../../utilities/formatCurrency";
-function Coupons() {
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [couponData, setCouponData] = useState({
-    code: null,
-    expirationDate: null,
-    discountedAmount:null,
-    maxUses: null,
-  });
-  const { coupons, isLoading, error } = useSelector((state) => state);
-  const dispatch = useDispatch();
-  const [editingCouponData, setEditingCouponData] = useState(null);
-  useEffect(() => {
-    dispatch(fetchCoupons());
-  }, [dispatch]);
 
-  const [mode, setMode] = useState("Add");
+import { Button, Input, InputGroup, InputGroupText } from "reactstrap";
+import { BsSearch } from "react-icons/bs";
+import Logo from "../../../assets/icons/brand_logo.svg";
+import debounce from "lodash.debounce";
+import { Loader } from "react-feather";
+import {
+  deleteCouponAsync,
+  fetchCoupons,
+  searchCouponAsync,
+} from "../../../redux/slice/couponSlice";
+import AddCoupon from "./AddCoupon";
+import { format } from "date-fns";
+function Coupons() {
+  const dispatch = useDispatch();
+  const couponData = useSelector((state) => state.coupons?.coupons);
+  
+  const status = useSelector((state) => state.coupons?.status);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedCoupon, setselectedCoupon] = useState(null);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const formatDateForInput = (isoDate) => {
+    const date = new Date(isoDate);
+    return format(date, "yyyy-MM-dd");
+  };
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchCoupons());
+    }
+  }, [status, dispatch]);
+  const debouncedHandleSearch = debounce(() => {
+    // Dispatch the searchCouponsAsync action with the debounced search query
+    dispatch(searchCouponAsync(debouncedSearchQuery));
+  }, 300); 
+
+  useEffect(() => {
+    // Only perform the search when debouncedSearchQuery changes
+    if (debouncedSearchQuery) {
+      debouncedHandleSearch();
+    }
+  }, [debouncedSearchQuery]);
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
       confirmButton: "btn btn-success",
@@ -46,109 +53,11 @@ function Coupons() {
     },
     buttonsStyling: false,
   });
-
-  const toggleModal = () => {
-    setModalOpen(!isModalOpen);
+  const openAddModal = () => {
+    setselectedCoupon(null); 
+    setModalOpen(true);
   };
-  const handleCouponNameChange = (e) => {
-    setCouponData({
-      ...couponData,
-      code: e.target.value,
-    });
-  };
-  const handleCouponExpirationChange = (e) => {
-    setCouponData({
-      ...couponData,
-      expirationDate: e.target.value,
-    });
-  };
-  const handleCouponDiscountedAmount = (e) => {
-    setCouponData({
-      ...couponData,
-      discountedAmount: e.target.value,
-    });
-  };
-  const handleCouponMaxUses = (e) => {
-    setCouponData({
-      ...couponData,
-      maxUses: e.target.value,
-    });
-  };
-
-  const handleAddCoupon = async () => {
-    const authToken = localStorage.getItem("token");
-    if (!authToken) {
-      console.error("Authentication token not found in localStorage");
-      return;
-    }
-  
-    // Prepare the data object to send in the request body
-    const requestData = {
-      code: couponData.code,
-      maxUses: parseInt(couponData.maxUses),
-      expirationDate: couponData.expirationDate,
-      discountedAmount: parseFloat(couponData.discountedAmount),
-    };
-  
-    // Make the API call with the Authorization header
-    fetch("http://localhost:3000/api/v1/admin/add/coupon", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`, // Include the token here
-      },
-      body: JSON.stringify(requestData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to add coupon");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Handle the response data as needed
-        console.log("Coupon added successfully", data);
-  
-        // You may want to refresh the list of coupons after adding
-        dispatch(fetchCoupons());
-  
-        // Close the modal
-        toggleModal();
-      })
-      .catch((error) => {
-        // Handle any errors
-        console.error("Error adding coupon:", error);
-      });
-
-  };
-  
-  
-  const handleEditCoupon = () => {
-    setMode("Edit");
-    setEditingCouponData(coupons.coupons[index]);
-    toggleModal();
-  };
-  const handleAddNewCouponClick = () => {
-    setMode("Add");
-    setCouponData({
-      code: null,
-      expirationDate: null,
-      discountedAmount: null,
-      maxUses: null,
-    });
-    toggleModal();
-  };
-  const handleEditIconClick = () => {
-    setMode("Edit");
-    setCouponData({
-      code: "",
-      expirationDate: "",
-      discountedAmount: "",
-      maxUses: "",
-    });
-    toggleModal();
-  };
-  const handleDelete = (couponId) => {
+  const handleDelete = (row) => {
     swalWithBootstrapButtons
       .fire({
         title: "Are you sure?",
@@ -161,162 +70,113 @@ function Coupons() {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          // Dispatch the deleteCategoryAsync action with the categoryId to delete
-          dispatch(deleteCouponAsync(couponId))
+          // Dispatch the deleteCategoryAsync action with the productId to delete
+          dispatch(deleteCouponAsync(row._id))
             .then(() => {
-              // After successfully deleting the category, refresh the categories data
+              // After successfully deleting the product, refresh the product data
               dispatch(fetchCoupons());
             })
             .catch((error) => {
               // Handle any errors that occur during the deletion process
-              console.error("Error deleting coupon:", error);
+              console.error("Error deleting Coupon:", error);
             });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire("Cancelled", "Your Coupon Code is Safe :)", "error");
         }
       });
   };
+  const toggleModal = () => {
+    setModalOpen(!isModalOpen);
+  };
+  const handleEditClick = (row) => {
+    setselectedCoupon(row);
+    setModalOpen(true);
+  };
+  const columns = [
+    {
+      name: "Coupon Name",
+      selector: (row) => row.code,
+      sortable: true,
+    },
+    {
+      name: "Coupon Discount",
+      selector: (row) => row.discountedAmount,
+      sortable: true,
+    },
+    {
+      name: "Coupon Max Usage",
+      selector: (row) => row.maxUses,
+    },
+    {
+      name: "Coupon Expiration",
+      selector: (row) => formatDateForInput(row.expirationDate),
 
+      sortable: true,
+    },
+    {
+      name: "Edit",
+      cell: (row) => (
+        <div className="text-primary">
+          <FaEdit size={18} onClick={() => handleEditClick(row)} />
+        </div>
+      ),
+    },
+    {
+      name: "Delete",
+      cell: (row) => (
+        <div className="text-danger">
+          <FaTrash size={18} onClick={() => handleDelete(row)} />
+        </div>
+      ),
+    },
+  ];
   return (
-    <div>
-      <div className="d-flex justify-content-between gap-5 align-items-center pb-5">
+    <div className=" mb-5 shadow w-100 justify-content-center align-items-center gap-2 mt-2 border p-5 pt-2">
+      <div className="d-flex justify-content-between gap-5 align-items-center">
+        <img src={Logo} alt="" />
         <InputGroup className="d-flex justify-content-center align-items-center inpu w-50">
           <Input
             type="search"
             name=""
             id=""
-            placeholder="Search your Coupon.."
+            placeholder="Search your product..."
             className="border border-end-0 input-searc w-50"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setDebouncedSearchQuery(e.target.value);
+            }}
             onClick={(e) => e.stopPropagation()}
           />
           <InputGroupText className="p-2 input-tex">
-            <BsSearch size={20} className="" />
+            <BsSearch size={20} className="" onClick={debouncedHandleSearch} />
           </InputGroupText>
         </InputGroup>
-        <Button className="h-50" onClick={handleAddNewCouponClick}>
+        <Button className="h-50" onClick={openAddModal}>
           Add New Coupon
         </Button>
       </div>
-      <div className="container">
-        <div className="row d-flex justify-content-center align-items-center gap-3">
-          {coupons.coupons?.map((card, index) => (
-            <Card className="col-lg-4" key={card.id}>
-              <CardBody>
-                <div className="d-flex justify-content-between">
-                  <div className="fw-bold fs-4">
-                    Coupon Name:{" "}
-                    <span className="fs-5 text-primary">{card.code}</span>
-                    <div className="fw-bold fs-4">
-                      Coupon Discount:{" "}
-                      <span className="fs-5 text-primary">
-                        {formatCurrency(card.discountedAmount)}
-                      </span>
-                    </div>
-                    <div className="fw-bold fs-4">
-                      Maximum Usage:{" "}
-                      <span className="fs-5 text-primary">{card.maxUses}</span>
-                    </div>
-                  </div>
-                  <div className="d-flex gap-3">
-                    <div className="text-primary">
-                      <FaEdit
-                        size={20}
-                        onClick={() => handleEditIconClick(index)}
-                      />
-                    </div>
-                    <div className="text-danger">
-                      <AiOutlineDelete
-                        size={22}
-                        onClick={() => handleDelete(card._id)}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="pt-3">
-                  Coupon Expiration <Badge>{card.expirationDate}</Badge>
-                </div>
-              </CardBody>
-            </Card>
-          ))}
-        </div>
-      </div>
-      <Modal isOpen={isModalOpen} toggle={toggleModal}>
-        <ModalHeader toggle={toggleModal}>
-          {mode === "Add" ? "Add Coupon" : "Edit Coupon"}
-        </ModalHeader>
-        <ModalBody>
-          <FormGroup>
-            <Label for="couponName">Coupon Name</Label>
-            <ModalInput
-              name="code"
-              type="text"
-              id="couponName"
-              value={
-                mode === "Edit" && editingCouponData
-                  ? editingCouponData.name
-                  : couponData.name
-              }
-              onChange={handleCouponNameChange}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="couponExpiration">Coupon Expiration (Date)</Label>
-            <ModalInput
-              type="date"
-              name="expirationDate"
-              id="couponExpiration"
-              value={
-                mode === "Edit" && editingCouponData
-                  ? editingCouponData.expiration
-                  : couponData.expiration
-              }
-              onChange={handleCouponExpirationChange}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="couponUsages">Coupon Usage</Label>
-            <ModalInput
-              type="number"
-              name="maxUses"
-              id="couponUsages"
-              value={
-                mode === "Edit" && editingCouponData
-                  ? editingCouponData.maxUses
-                  : couponData.maxUses
-              }
-              onChange={handleCouponMaxUses}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="couponDiscount">Discount Amount</Label>
-            <ModalInput
-              type="number"
-              name="discountedAmount"
-              id="couponDiscount"
-              value={
-                mode === "Edit" && editingCouponData
-                  ? editingCouponData.discountedAmount
-                  : couponData.discountedAmount
-              }
-              onChange={handleCouponDiscountedAmount}
-            />
-          </FormGroup>
-        </ModalBody>
-        <ModalFooter>
-          {mode === "Add" ? (
-            <Button color="primary" onClick={handleAddCoupon}>
-              Add
-            </Button>
-          ) : (
-            <Button color="primary" onClick={handleEditCoupon}>
-              Edit
-            </Button>
-          )}
-          <Button color="secondary" onClick={toggleModal}>
-            Cancel
-          </Button>
-        </ModalFooter>
-      </Modal>
+      {status === "loading" && <Loader>Loading...</Loader>}
+      {status === "failed" && <Loader>Error: Unable to fetch Coupons.</Loader>}
+      {status === "succeeded" && (
+        <DataTable
+          title="Coupon List"
+          columns={columns}
+          data={couponData}
+          pagination
+          fixedHeader
+          pointerOnHover
+          paginationPerPage={10}
+          paginationPerPageOptions={[10, 20, 30]}
+        />
+      )}
+
+      <AddCoupon
+        isOpen={isModalOpen}
+        toggle={toggleModal}
+        isEditing={!!selectedCoupon}
+        couponData={selectedCoupon}
+      />
     </div>
   );
 }
