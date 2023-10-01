@@ -2,7 +2,7 @@
   a{
     text-decoration: none;
   }
-  background-color: #f9f4f4 !important;
+  // background-color: #f9f4f4 !important;
   .nav_logo {
     @media screen and (max-device-width: 480px) and (orientation: portrait) {
       width: 100px;
@@ -73,4 +73,8 @@
 
   }
 }
+}
+.login-btn{
+  background-color: #2D7B8B;
+  color: #ffff;
 }

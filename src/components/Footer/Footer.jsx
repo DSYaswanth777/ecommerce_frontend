@@ -7,25 +7,6 @@ const Footer = () => {
   return (
     <footer className="bg-light pt-5 pb-5 footer">
       <div className="container">
-        <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
-          <div className="d-flex flex-column gap-2">
-            <h5 className="fw-bold">NEWSLETTER SUBSCRIPTION</h5>
-            <p>
-              Sign up for GSR Handlooms updates to receive information about new
-              arrivals and updates!
-            </p>
-          </div>
-          <div className="d-flex flex-column flex-sm-row gap-sm-2 gap-2">
-            <InputGroup className="rounded border">
-              <Input
-                type="search"
-                placeholder="Enter Your Email"
-                className="rounded"
-              />
-            </InputGroup>
-            <Button className="btn-subscribe">Subscribe!</Button>
-          </div>
-        </div>
         <div className="d-flex flex-wrap justify-content-between pt-4 flex-column flex-sm-row">
           <div className="footer-section col-lg-3 col-md-6 mt-md-4 mt-4 mt-sm-4 mt-lg-0 col-sm-12">
             <h5 className="footer-list-heading text-uppercase">Useful Links</h5>

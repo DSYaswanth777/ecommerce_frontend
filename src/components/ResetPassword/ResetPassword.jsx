@@ -60,21 +60,18 @@ function ResetPassword() {
     })
   };
   const handleOTPGenerate = () => {
-    console.log(typeof mobile);
-    // const mobileNumber = parseInt(mobile);
-    // console.log(mobileNumber)
     dispatch(forgotPasswordAsync({ mobile }));
   };
 
   return (
     <div className="auth-wrapper auth-basic px-2">
-      <div className="auth-inner p-4 signup-content shadow">
+      <div className="auth-inner p-4 signup-content shadow-sm border">
         <div className="mb-0">
           <CardBody>
             <div className="d-flex text-center justify-content-center align-items-center">
               <img src={Logo} style={{ width: "200px" }} alt="Logo" />
             </div>
-            <CardTitle tag="h4" className="mb-1 mt-5">
+            <CardTitle tag="h4" className="mb-4 mt-4 text-center">
               Reset Password? 🔒
             </CardTitle>
             <Form

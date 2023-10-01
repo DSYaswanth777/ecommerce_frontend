@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { FiShoppingCart } from "react-icons/fi";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { BsSearch } from "react-icons/bs";
-import { CgProfile } from "react-icons/cg";
 import "./Header.scss";
 import Logo from "../../assets/icons/brand_logo.svg";
 import NavbarMenu from "../NavbarMenu/NavbarMenu";
@@ -10,6 +9,7 @@ import AccountCard from "./AccountCard";
 import { Button, Input, InputGroup, InputGroupText } from "reactstrap";
 import Cart from "../Cart/Cart";
 import { useSelector } from "react-redux";
+import { User } from "react-feather";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -24,7 +24,7 @@ const Header = () => {
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
-  const toggleSearchContainer = (e) => {
+  const toggleSearchContainer = () => {
     setSearchContainerVisible(!isSearchContainerVisible);
   };
   const toggleAccount = (e) => {
@@ -46,7 +46,7 @@ const Header = () => {
   });
 
   return (
-    <div className="header shadow bg-white sticky-top ">
+    <div className="header  bg-white sticky-top border-bottom ">
       <div className="container">
         <div className="d-flex justify-content-between align-items-center">
           <h2 className="d-flex gap-3 justify-content-center align-items-center">
@@ -66,20 +66,16 @@ const Header = () => {
             >
               <BsSearch size={22} />
             </div>
-            <div className=" profil ">
+            <div className=" profile ">
               {user.isAuthenticated ? (
-                <CgProfile
-                  size={22}
-                  onClick={toggleAccount}
-                  id="profileBox"
-                />
+                <User onClick={toggleAccount} id="profileBox" />
               ) : (
                 <div className="text-primary text-center underline-none">
-                  <Button color="success" size="md">
+                  <div className="login-btn py-2 px-3 rounded">
                     <a href="/login" className="text-white">
                       Login
                     </a>
-                  </Button>
+                  </div>
                 </div>
               )}
               {isAccountVisible && (
@@ -91,17 +87,21 @@ const Header = () => {
                 </div>
               )}
             </div>
+
             <div
               className="d-flex justify-content-center align-items-center gap-2"
               style={{ cursor: "pointer" }}
               onClick={toggleCart}
             >
+              <div>
+
               <FiShoppingCart
                 size={22}
                 data-bs-toggle="offcanvas"
                 data-bs-target="#staticBackdrop"
                 aria-controls="staticBackdrop"
               />
+              </div>
               <div
                 className="offcanvas offcanvas-end"
                 data-bs-backdrop="static"
@@ -138,7 +138,7 @@ const Header = () => {
               placeholder="Search your product..."
               className="border border-end-0 input-search"
               defaultValue={searchValue}
-              onClick={(e) => e.stopPropagation()}            
+              onClick={(e) => e.stopPropagation()}
             />
             <InputGroupText className="p-2 input-text">
               <BsSearch size={20} className="" />

@@ -120,9 +120,7 @@ $auth-1-inner-max-width: 400px !default;
 }
 .login-container{
   height: 100vh;
-  background-image: url('../../assets/images/wave.svg');
-  background-repeat: no-repeat;
-  background-position: center;
+  // background-image: url('../../assets/images/wave.svg');
 }
 @media (min-width: 1200px) {
   .auth-wrapper {

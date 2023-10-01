@@ -55,8 +55,8 @@ const Signup = () => {
       });
   };
   return (
-    <div className="auth-wrapper auth-basic">
-      <div className="signup-content shadow p-4">
+    <div className="auth-wrapper auth-basic  w-100">
+      <div className="signup-content shadow-sm border p-4 m-3">
         {signupSuccess ? (
           <div>
             <h4 className="mb-2 mt-3">Mobile Verification</h4>
@@ -100,8 +100,8 @@ const Signup = () => {
               <div className="d-flex text-center justify-content-center align-items-center">
                 <img src={Logo} alt="Logo" />
               </div>
-              <CardTitle tag="h4" className="mb-2 mt-3">
-                Your Shopping Starts here!🛒
+              <CardTitle tag="h4" className="mb-2 mt-3 text-center fw-medium">
+               Create an Account!
               </CardTitle>
               <Form
                 className="auth-login-form mt-2"

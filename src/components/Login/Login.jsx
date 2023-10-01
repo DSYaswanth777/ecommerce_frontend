@@ -51,7 +51,7 @@ const Login = () => {
   return (
     <div className="bg-light login-container">
       <div className=" h-100 container d-flex justify-content-center align-items-center  login-box  ">
-        <div className="auth-inner mh-100  shadow p-4 rounded-3 ">
+        <div className="auth-inner mh-100  border shadow-sm p-4 rounded-3 ">
           {isLoading ? (
             <Lottie animationData={loginAnimation} />
           ) : (

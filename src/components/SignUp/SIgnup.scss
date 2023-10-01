@@ -8,12 +8,7 @@ $auth-1-inner-max-width: 400px !default;
   flex-basis: 100%;
   min-height: 100vh;
   min-height: calc(var(--vh, 1vh) * 100);
-  width: 100%;
-  background-image: url("../../assets/images/wave.svg");
-  background-repeat: no-repeat;
-  background-position: center;
   .auth-inner {
-    width: 100%;
     backdrop-filter: blur(5px);
     background: transparent;
   }
@@ -178,4 +173,5 @@ $auth-1-inner-max-width: 400px !default;
 }
 .signup-content{
   backdrop-filter: blur(5px);
+  width:30%;
 }
