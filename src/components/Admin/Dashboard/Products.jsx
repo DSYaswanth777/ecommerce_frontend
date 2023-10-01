@@ -185,7 +185,7 @@ function Products() {
       <AddProduct
         isOpen={isModalOpen}
         toggle={toggleModal}
-        isEditing={!!selectedProduct} // Pass isEditing as true when a product is selected for editing
+        isEditing={!!selectedProduct}
         productData={selectedProduct}
       />
     </div>

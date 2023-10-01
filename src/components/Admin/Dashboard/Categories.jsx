@@ -9,14 +9,13 @@ import AddCategory from "./AddCategory";
 import { Badge, Button, Input, InputGroup, InputGroupText } from "reactstrap";
 import { BsSearch } from "react-icons/bs";
 import Logo from "../../../assets/icons/brand_logo.svg";
-import debounce from "lodash.debounce"; // Import lodash.debounce
+import debounce from "lodash.debounce"; 
 import { Loader } from "react-feather";
 import { deleteCategoryAsync, fetchCategoriesAsync, searchCategoriesAsync } from "../../../redux/slice/categoriesSlice";
 
 function Categories() {
   const dispatch = useDispatch();
   const categoriesData = useSelector((state) => state.categories?.categories);
-  console.log(categoriesData)
   const status = useSelector((state) => state.categories?.status);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedCategory, setselectedCategory] = useState(null);
@@ -28,26 +27,27 @@ function Categories() {
       dispatch(fetchCategoriesAsync());
     }
   }, [status, dispatch]);
+
   const debouncedHandleSearch = debounce(() => {
-    // Dispatch the searchcategoriesAsync action with the debounced search query
     dispatch(searchCategoriesAsync(debouncedSearchQuery));
-  }, 300); // Adjust the delay time as needed
+  }, 300);
 
   useEffect(() => {
-    // Only perform the search when debouncedSearchQuery changes
     if (debouncedSearchQuery) {
       debouncedHandleSearch();
     }
   }, [debouncedSearchQuery]) 
+
+
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
-      confirmButton: "btn btn-success",
+      confirmButton: "btn btn-success me-3",
       cancelButton: "btn btn-danger",
     },
     buttonsStyling: false,
   });
   const openAddModal = () => {
-    setselectedCategory(null); // Clear selectedCategory to indicate an add action
+    setselectedCategory(null); 
     setModalOpen(true);
   };
   const handleDelete = (row) => {
@@ -134,7 +134,7 @@ function Categories() {
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
-              setDebouncedSearchQuery(e.target.value); // Update the debounced query
+              setDebouncedSearchQuery(e.target.value);
             }}
 
             onClick={(e) => e.stopPropagation()}
@@ -165,7 +165,7 @@ function Categories() {
       <AddCategory
         isOpen={isModalOpen}
         toggle={toggleModal}
-        isEditing={!!selectedCategory} // Pass isEditing as true when a product is selected for editing
+        isEditing={!!selectedCategory} 
         categoriesData={selectedCategory}
       />
     </div>

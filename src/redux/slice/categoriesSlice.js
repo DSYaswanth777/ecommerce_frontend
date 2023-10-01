@@ -17,12 +17,12 @@ export const fetchCategoriesAsync = createAsyncThunk(
 );
 export const categoryAddAsync = createAsyncThunk(
   "categories/categoryAddAsync",
-  async (name, { getState }) => {
+  async (categoryName, { getState }) => {
     const token = getState().auth.token;
     try {
       // Make your API call here using fetch or axios
       const response = await fetch(
-        "http://localhost:3000/api/v1//admin/add/category",
+        "http://localhost:3000/api/v1/admin/add/category",
         {
           method: "POST",
 
@@ -30,7 +30,7 @@ export const categoryAddAsync = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`, // Include the bearer token in the request headers
           },
-          body: JSON.stringify(name),
+          body: JSON.stringify(categoryName),
         }
       );
       if (!response.ok) {
@@ -39,14 +39,15 @@ export const categoryAddAsync = createAsyncThunk(
       const data = await response.json();
       return data;
     } catch (error) {
-      // Handle any network or API errors here
+      // Handle any network or API errors
       throw error;
     }
   }
 );
 export const subCategoryAddAsync = createAsyncThunk(
   "categories/subCategoryAddAsync",
-  async ({ body, categoryId }, { getState }) => {
+  async ({ categoryId,subCategoryName }, { getState }) => {
+    console.log(categoryId,"redux")
     const token = getState().auth.token;
     try {
       // Make your API call here using fetch or axios
@@ -60,7 +61,7 @@ export const subCategoryAddAsync = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`, // Include the bearer token in the request headers
           },
-          body: JSON.stringify(body),
+          body: JSON.stringify(subCategoryName),
         }
       );
       if (!response.ok) {
@@ -76,7 +77,7 @@ export const subCategoryAddAsync = createAsyncThunk(
 );
 export const deleteSubCategoryAsync = createAsyncThunk(
   "categories/deleteSubCategoryAsync",
-  async ({ categoryId, subcategoryId }, { getState }) => {
+  async ({categoryId, subcategoryId}, { getState }) => {
     const token = getState().auth.token;
     try {
       // Make your API call here using fetch or axios
@@ -91,7 +92,7 @@ export const deleteSubCategoryAsync = createAsyncThunk(
         }
       );
       if (!response.ok) {
-        throw new Error("Error While sub category Deleting Category");
+        throw new Error("Error While deleting subcategory");
       }
       const data = await response.json();
       return data;

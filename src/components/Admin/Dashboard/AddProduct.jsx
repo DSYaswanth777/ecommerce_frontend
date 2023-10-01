@@ -20,7 +20,6 @@ function AddProduct({ isOpen, toggle, isEditing, productData }) {
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState("");
   const [isUploading, setIsUploading] = useState(false);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
