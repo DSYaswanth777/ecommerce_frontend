@@ -13,6 +13,7 @@ import Search from "../components/Search/Search";
 import Orders from "../components/Orders/Orders";
 import Wishlist from "../components/Wishlist/Wishlist";
 import Dashboard from "../components/Admin/Dashboard/Dashboard";
+import ViewProduct from "../components/Products/ViewProduct";
 
 const PublicRoutes = () => {
   const user = useSelector((state) => state.auth);
@@ -33,6 +34,7 @@ const PublicRoutes = () => {
             <Route path="/checkoutcart" element={<CheckOutCart />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/viewproduct" element={<ViewProduct/>}/>
           </>
         ) : (
           <Route path="*" element={<Navigate to="/login" />} />

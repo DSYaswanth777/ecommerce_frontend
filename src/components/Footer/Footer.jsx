@@ -67,7 +67,7 @@ const Footer = () => {
               <p className="text-center fw-medium">Desgined and Developed By </p>
               <div>
 
-              <img src={Dev} alt=""  /> <a href="https://www.yaswanthdasari.in/" className="list-style-none text-dark">Yaswanth Dasari</a>
+              <img src={Dev} alt=""  /> <a href="https://www.yaswanthdasari.in/" target="_blank" className="list-style-none text-dark">Yaswanth Dasari</a>
               </div>
             </div>
           </div>
