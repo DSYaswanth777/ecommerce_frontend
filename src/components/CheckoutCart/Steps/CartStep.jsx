@@ -7,25 +7,25 @@ function CartStep({ handlePreviousStep, handleNextStep }) {
     <>
       <div className="d-flex container justify-content-between pt-5 flex-column flex-lg-row flex-md-column flex gap-5   pb-5">
         <div className="d-flex flex-column   gap-3 pb-5">
-          <Card className=" shadow p-3 h-100 w-100">
+          <Card className=" border shadow-sm p-3 h-60 w-100">
             <CardBody>
               <div className="d-flex justify-content-between flex-column flex-sm-row gap-5 align-items-center">
-                <img src={ProductImg} alt="" width={200} height={200} />
+                <img src={ProductImg} alt="" width={150} height={150} />
                 <div className="d-flex flex-column justify-content-center align-items-center gap-4">
                   <div className="productName text-center">
                     Posh Wine with Bronze Lace <br /> and Self Blouse Fabric
                   </div>
                   <h5>
-                    <Badge>InStock</Badge>
+                    <Badge color="success">InStock</Badge>
                   </h5>
                   <div className="d-flex justify-content-around align-items-center gap-3">
-                    <Button className="btn-sm">-</Button>
+                    <Button className="btn-sm bg-danger border-0">-</Button>
                     <Input
                       className=""
                       value={2}
                       style={{ width: "40px", height: "30px" }}
                     ></Input>
-                    <Button className="btn-sm">+</Button>
+                    <Button className="btn-sm border-0 bg-success">+</Button>
                   </div>
                 </div>
                 <div className="d-flex flex-column gap-3 justify-content-center ">
@@ -35,47 +35,15 @@ function CartStep({ handlePreviousStep, handleNextStep }) {
                     {formatCurrency("2500")}
                   </h5>
 
-                  <Button className="bg-danger">Remove</Button>
-                  <Button className="bg-warning">Add to Wishlist</Button>
+                  <Button className="bg-danger border-0">Remove</Button>
+                  <Button className="border-0 bg-success ">Add to Wishlist</Button>
                 </div>
               </div>
             </CardBody>
           </Card>
-          <Card className=" shadow p-3 h-100">
-            <CardBody>
-              <div className="d-flex justify-content-between flex-column flex-sm-row gap-5 align-items-center">
-                <img src={ProductImg} alt="" width={200} height={200} />
-                <div className="d-flex flex-column justify-content-center align-items-center gap-4">
-                  <div className="productName text-center">
-                    Posh Wine with Bronze Lace <br /> and Self Blouse Fabric
-                  </div>
-                  <h5>
-                    <Badge>InStock</Badge>
-                  </h5>
-                  <div className="d-flex justify-content-around align-items-center gap-3">
-                    <Button className="btn-sm">-</Button>
-                    <Input
-                      className=""
-                      value={2}
-                      style={{ width: "40px", height: "30px" }}
-                    ></Input>
-                    <Button className="btn-sm">+</Button>
-                  </div>
-                </div>
-                <div className="d-flex flex-column gap-3 justify-content-center ">
-                  <h5 className="productPrice">
-                    {" "}
-                    <span className="me-2">Total :</span>
-                    {formatCurrency("2500")}
-                  </h5>
-                  <Button className="bg-danger">Remove</Button>
-                  <Button className="bg-warning">Add to Wishlist</Button>
-                </div>
-              </div>
-            </CardBody>
-          </Card>
+
         </div>
-        <div className="d-flex justify-content-center align-items-center">
+        <div className="d-flex justify-content-center align-items-center shadow-sm">
           <Card className="bg-light py-4 w-100 ">
             <CardTitle className="px-3 ">Cart Total</CardTitle>
             <CardBody className="totalCard">
@@ -107,7 +75,7 @@ function CartStep({ handlePreviousStep, handleNextStep }) {
                     <div>Total</div>
                     <div className="">{formatCurrency("2500")}</div>
                   </div>
-                  <Button onClick={handleNextStep}>Place Order</Button>
+                  <Button onClick={handleNextStep} color="success">Place Order</Button>
                 </div>
               </div>
             </CardBody>

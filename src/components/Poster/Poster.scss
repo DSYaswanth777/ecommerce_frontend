@@ -1,12 +1,20 @@
-.displaySliderdisplaySlider{
-    width: 300px ;
-    .displaySlider{
-        width: 60px;
-        height: 500px;
-    }
+.displaySliderdisplaySlider {
+  width: 300px;
+  .displaySlider {
+    width: 60px;
+    height: 500px;
+  }
+}
+.addToCartBtn {
+  //   width: 0px;
+  font-size: 15px;
+  background-color: #2d7b8b;
+  border: none;
 
 }
-.addToCartBtn{
-//   width: 0px;
-font-size:15px ;
+.addToCartBtn:hover{
+    background-color: #A14863;
+}
+.slider-content{
+    cursor: pointer;
 }

@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, Input, InputGroup } from "reactstrap";
 import { BsInstagram, BsYoutube, BsWhatsapp, BsFacebook } from "react-icons/bs";
+import Dev from "../../assets/icons/favicon.svg";
+import Logo from "../../assets/icons/brand_logo.svg"
 import "./Footer.scss";
 
 const Footer = () => {
@@ -34,8 +35,11 @@ const Footer = () => {
             </ul>
           </div>
           <hr/>
-          <div className=" col-lg-3 col-md-6 mt-md-4 mt-4 mt-sm-4 mt-lg-0 col-sm-12">
-            <h5 className="footer-list-heading text-uppercase">GSR Handlooms</h5>
+          <div className=" col-lg-3 col-md-6  col-sm-12">
+            <div className="text-center pb-3">
+
+            <img src={Logo} alt="" />
+            </div>
             <p>
               <span className="fw-bold">Manufacturer Details:</span> GSR
               Handlooms
@@ -58,6 +62,13 @@ const Footer = () => {
               <BsInstagram size={25} className="me-2" />{" "}
               <BsYoutube size={25} className="me-2" />
               <BsWhatsapp size={25} className="me-2" />{" "}
+            </div>
+            <div className="pt-4 d-flex flex-column justify-content-center align-items-center">
+              <p className="text-center fw-medium">Desgined and Developed By </p>
+              <div>
+
+              <img src={Dev} alt=""  /> <a href="https://www.yaswanthdasari.in/" className="list-style-none text-dark">Yaswanth Dasari</a>
+              </div>
             </div>
           </div>
         </div>

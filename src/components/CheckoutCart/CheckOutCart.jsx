@@ -6,7 +6,6 @@ import Footer from "../Footer/Footer";
 import "./CheckOutCard.scss";
 import AddressStep from "./Steps/AddressStep";
 import { AiOutlineShoppingCart, AiOutlineHome } from "react-icons/ai";
-import { LiaGreaterThanSolid } from "react-icons/lia";
 
 function CheckOutCart() {
   const [activeStep, setActiveStep] = useState(0);
@@ -47,21 +46,19 @@ function CheckOutCart() {
     <div className=" ">
       <Header />
       <h2 className=" py-3 text-center ">Checkout</h2>
-      <div className="d-flex justify-content-center gap-3 align-items-center container">
-
-          <button className="btn-success btn text-white p-2 rounded "
-                    onClick={handlePreviousStep}
-                    disabled={activeStep === 0}
-          >
-            <AiOutlineShoppingCart size={30} />
-          </button>
-          <div className="">
-            <h4>Cart</h4>
-          </div>
-
-        <div className="text-success fs-3">
-          --------------------------------------------------
+      <div className="d-flex justify-content-between gap-3 align-items-center container">
+        <div className="d-flex justify-content-center align-items-center gap-2">
+        <button
+          className="btn-success btn text-white p-2 rounded "
+          onClick={handlePreviousStep}
+          disabled={activeStep === 0}
+        >
+          <AiOutlineShoppingCart size={30} />
+        </button>
+          <h4>Cart</h4>
         </div>
+        <div className="d-flex justify-content-center align-items-center gap-2">
+
         <button
           className="btn btn-success"
           onClick={handleNextStep}
@@ -70,6 +67,7 @@ function CheckOutCart() {
           <AiOutlineHome size={25} />
         </button>
         <h4>Address</h4>
+        </div>
       </div>
       {steps[activeStep].content}
       <Footer />

@@ -9,12 +9,20 @@ function Home() {
     <div>
       <Header />
       <HeroSection />
-      <Categories/>
-      <Poster />
-      <Poster />
-      <Poster />
+      <Categories />
+      <Poster 
+      title="Just In"
+      subtitle="New Arrivals for You" 
+      />
+      <Poster
+        title="Dress Materials Collection"
+        subtitle="Create Your Perfect Outfit"
+      />
+      <Poster 
+      title="Huge Discount" 
+      subtitle="Amazing Deals Await" 
+      />
       <Footer />
-
     </div>
   );
 }

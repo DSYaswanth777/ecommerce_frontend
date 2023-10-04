@@ -1,14 +1,23 @@
 import React from "react";
-import SliderImg from "../../assets/images/heroSliderImg.jpg";
+import SliderImg from "../../assets/images/long_frocks.png";
 import "./Poster.scss";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import {
+  Card,
+  CardTitle,
+  CardSubtitle,
+  CardText,
+  CardBody,
+  Button,
+} from "reactstrap";
 import { formatCurrency } from "../../utilities/formatCurrency";
 import { FaCartPlus } from "react-icons/fa";
 import { BsSuitHeart } from "react-icons/bs";
-const Poster = () => {
+import { Eye } from "react-feather";
+const Poster = ({title,subtitle}) => {
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
@@ -29,135 +38,148 @@ const Poster = () => {
   };
   return (
     <>
-      <div className=" container  ">
-        <h4 className="text-center">Our New Collection</h4>
-        <h2 className="text-center">Our Newest Additions to our Collection</h2>
-        <Carousel responsive={responsive} autoPlay>
-          <div className="   pb-3  border border-2 shadow-sm  me-2 rounded-3">
-            <div className="displaySlider   mb-2    rounded-2">
-              <img
-                src={SliderImg}
-                alt=""
-                className="displaySliderImg "
-                style={{ height: "400px", width: "308px" }}
-              />
-              <div className=" ps-4  d-flex flex-column justify-content-center align-items-start pt-3 ">
-                <div className="d-flex justify-content-between align-items-center gap-5 ">
-                  <p className="text-center me-5 pe-4 ">Saree</p>
-                  <div className="border border-2 rounded-circle  p-2 ms-5 ">
-                    <BsSuitHeart size={20} />
-                  </div>
+      <div className=" container mt-5 pt-3 mb-5 pb-5 ">
+        <h4 className="text-center title">{title}</h4>
+        <h2 className="text-center mb-5 subtitle">{subtitle}</h2>
+        <Carousel responsive={responsive} autoPlay >
+          <Card
+            className="slider-content  "
+            style={{
+              width: "18rem",
+            }}
+          >
+            <img alt="Sample" src={SliderImg} />
+            <CardBody >
+              <CardTitle tag="h5">   Shiffon Cotton Saree with Floral Print</CardTitle>
+              <CardSubtitle className="mb-2 text-muted" tag="h6">
+                <div className="d-flex justify-content-between ">
+                  Saree
+                  <BsSuitHeart size={25} />
                 </div>
-
-                <h6 className=" ">A beautiful Red Saree</h6>
-                <h5>MRP {formatCurrency("2500")}</h5>
-                <button className="text-uppercase addToCartBtn d-flex justify-content-center align-items-center p-2 rounded bg-white">
-                  {" "}
-                  <FaCartPlus className="me-2" /> Add To Cart
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="   pb-3 border border-2 shadow-sm me-2 rounded-3">
-            <div className="displaySlider   mb-2    rounded-2">
-              <img
-                src={SliderImg}
-                alt=""
-                className="displaySliderImg "
-                style={{ height: "400px", width: "308px" }}
-              />
-              <div className=" ps-4  d-flex flex-column justify-content-center align-items-start pt-3 ">
-                <div className="d-flex justify-content-between align-items-center gap-5 ">
-                  <p className="text-center me-5 pe-4 ">Saree</p>
-                  <div className="border border-2 rounded-circle  p-2 ms-5 ">
-                    <BsSuitHeart size={20} />
-                  </div>
+              </CardSubtitle>
+              <CardText className="fw-medium fs-5">
+                Price :{formatCurrency("5000")}
+              </CardText>
+              <Button className="addToCartBtn d-flex justify-content-center align-items-center">
+                <FaCartPlus className="me-2" /> Add To Cart
+              </Button>
+            </CardBody>
+          </Card>
+          <Card
+            className="slider-content  "
+            style={{
+              width: "18rem",
+            }}
+          >
+            <img alt="Sample" src={SliderImg} />
+            <CardBody>
+              <CardTitle tag="h5">   Shiffon Cotton Saree with Floral Print</CardTitle>
+              <CardSubtitle className="mb-2 text-muted" tag="h6">
+                <div className="d-flex justify-content-between ">
+                  Saree
+                  <BsSuitHeart size={25} style={{cursor:"pointer"}}/>
                 </div>
-
-                <h6 className=" ">A beautiful Red Saree</h6>
-                <h5>MRP {formatCurrency("2500")}</h5>
-                <button className="text-uppercase addToCartBtn d-flex justify-content-center align-items-center p-2 rounded bg-white">
-                  {" "}
-                  <FaCartPlus className="me-2" /> Add To Cart
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="   pb-3 border border-2 shadow-sm me-2 rounded-3">
-            <div className="displaySlider   mb-2    rounded-2">
-              <img
-                src={SliderImg}
-                alt=""
-                className="displaySliderImg "
-                style={{ height: "400px", width: "308px" }}
-              />
-              <div className=" ps-4  d-flex flex-column justify-content-center align-items-start pt-3 ">
-                <div className="d-flex justify-content-between align-items-center gap-5 ">
-                  <p className="text-center me-5 pe-4 ">Saree</p>
-                  <div className="border border-2 rounded-circle  p-2 ms-5 ">
-                    <BsSuitHeart size={20} />
-                  </div>
+              </CardSubtitle>
+              <CardText className="fw-medium fs-5">
+                Price :{formatCurrency("5000")}
+              </CardText>
+              <Button className="addToCartBtn d-flex justify-content-center align-items-center">
+                <FaCartPlus className="me-2" /> Add To Cart
+              </Button>
+            </CardBody>
+          </Card>
+          <Card
+            className="slider-content  "
+            style={{
+              width: "18rem",
+            }}
+          >
+            <img alt="Sample" src={SliderImg} />
+            <CardBody>
+              <CardTitle tag="h5">   Shiffon Cotton Saree with Floral Print</CardTitle>
+              <CardSubtitle className="mb-2 text-muted" tag="h6">
+                <div className="d-flex justify-content-between ">
+                  Saree
+                  <BsSuitHeart size={25} />
                 </div>
-
-                <h6 className=" ">A beautiful Red Saree</h6>
-                <h5>MRP {formatCurrency("2500")}</h5>
-                <button className="text-uppercase addToCartBtn d-flex justify-content-center align-items-center p-2 rounded bg-white">
-                  {" "}
-                  <FaCartPlus className="me-2" /> Add To Cart
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="   pb-3 border border-2 shadow-sm me-2 rounded-3">
-            <div className="displaySlider   mb-2    rounded-2">
-              <img
-                src={SliderImg}
-                alt=""
-                className="displaySliderImg "
-                style={{ height: "400px", width: "308px" }}
-              />
-              <div className=" ps-4  d-flex flex-column justify-content-center align-items-start pt-3 ">
-                <div className="d-flex justify-content-between align-items-center gap-5 ">
-                  <p className="text-center me-5 pe-4 ">Saree</p>
-                  <div className="border border-2 rounded-circle  p-2 ms-5 ">
-                    <BsSuitHeart size={20} />
-                  </div>
+              </CardSubtitle>
+              <CardText className="fw-medium fs-5">
+                Price :{formatCurrency("5000")}
+              </CardText>
+              <Button className="addToCartBtn d-flex justify-content-center align-items-center">
+                <FaCartPlus className="me-2" /> Add To Cart
+              </Button>
+            </CardBody>
+          </Card>
+          <Card
+            className="slider-content  "
+            style={{
+              width: "18rem",
+            }}
+          >
+            <img alt="Sample" src={SliderImg} />
+            <CardBody>
+              <CardTitle tag="h5">   Shiffon Cotton Saree with Floral Print</CardTitle>
+              <CardSubtitle className="mb-2 text-muted" tag="h6">
+                <div className="d-flex justify-content-between ">
+                  Saree
+                  <BsSuitHeart size={25} />
                 </div>
-
-                <h6 className=" ">A beautiful Red Saree</h6>
-                <h5>MRP {formatCurrency("2500")}</h5>
-                <button className="text-uppercase addToCartBtn d-flex justify-content-center align-items-center p-2 rounded bg-white">
-                  {" "}
-                  <FaCartPlus className="me-2" /> Add To Cart
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="   pb-3 border border-2 shadow-sm me-2 rounded-3">
-            <div className="displaySlider   mb-2    rounded-2">
-              <img
-                src={SliderImg}
-                alt=""
-                className="displaySliderImg "
-                style={{ height: "400px", width: "308px" }}
-              />
-              <div className=" ps-4  d-flex flex-column justify-content-center align-items-start pt-3 ">
-                <div className="d-flex justify-content-between align-items-center gap-5 ">
-                  <p className="text-center me-5 pe-4 ">Saree</p>
-                  <div className="border border-2 rounded-circle  p-2 ms-5 ">
-                    <BsSuitHeart size={20} />
-                  </div>
+              </CardSubtitle>
+              <CardText className="fw-medium fs-5">
+                Price :{formatCurrency("5000")}
+              </CardText>
+              <Button className="addToCartBtn d-flex justify-content-center align-items-center">
+                <FaCartPlus className="me-2" /> Add To Cart
+              </Button>
+            </CardBody>
+          </Card>
+          <Card
+            className="slider-content  "
+            style={{
+              width: "18rem",
+            }}
+          >
+            <img alt="Sample" src={SliderImg} />
+            <CardBody>
+              <CardTitle tag="h5">   Shiffon Cotton Saree with Floral Print</CardTitle>
+              <CardSubtitle className="mb-2 text-muted" tag="h6">
+                <div className="d-flex justify-content-between ">
+                  Saree
+                  <BsSuitHeart size={25} />
                 </div>
-
-                <h6 className=" ">A beautiful Red Saree</h6>
-                <h5>MRP {formatCurrency("2500")}</h5>
-                <button className="text-uppercase addToCartBtn d-flex justify-content-center align-items-center p-2 rounded bg-white">
-                  {" "}
-                  <FaCartPlus className="me-2" /> Add To Cart
-                </button>
-              </div>
-            </div>
-          </div>
+              </CardSubtitle>
+              <CardText className="fw-medium fs-5">
+                Price :{formatCurrency("5000")}
+              </CardText>
+              <Button className="addToCartBtn d-flex justify-content-center align-items-center">
+                <FaCartPlus className="me-2" /> Add To Cart
+              </Button>
+            </CardBody>
+          </Card>
+          <Card
+            className="slider-content  "
+            style={{
+              width: "18rem",
+            }}
+          >
+            <img alt="Sample" src={SliderImg} />
+            <CardBody>
+              <CardTitle tag="h5">   Shiffon Cotton Saree with Floral Print</CardTitle>
+              <CardSubtitle className="mb-2 text-muted" tag="h6">
+                <div className="d-flex justify-content-between ">
+                  Saree
+                  <BsSuitHeart size={25} />
+                </div>
+              </CardSubtitle>
+              <CardText className="fw-medium fs-5">
+                Price :{formatCurrency("5000")}
+              </CardText>
+              <Button className="addToCartBtn d-flex justify-content-center align-items-center">
+                <FaCartPlus className="me-2" /> Add To Cart
+              </Button>
+            </CardBody>
+          </Card>
         </Carousel>
       </div>
     </>
