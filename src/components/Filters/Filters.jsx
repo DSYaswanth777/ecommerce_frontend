@@ -1,51 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
+import { useState } from "react";
 import {
-    Input,
-    Label,
-    Offcanvas,
-    OffcanvasBody,
-    OffcanvasHeader,
+  Offcanvas,
+  OffcanvasBody,
+  OffcanvasHeader,
+  Input,
+  Label,
 } from "reactstrap";
 
-function CategoryCheckbox({ category, checked, onChange }) {
-  return (
-    <Label className="d-flex align-items-center">
-      <Input
-        type="checkbox"
-        value={category}
-        checked={checked}
-        onChange={onChange}
-        className="me-2"
-      />
-      {category}
-    </Label>
-  );
-}
-function Filters({ isOpen, toggleMenu, }) {
-    const filterCategories = [
-        "Saree",
-        "Saree with Blouse Fabric",
-        "Blouse",
-        "Dress Materials",
-        "Category 5",
-        "Category 6",
-    ]      
-  // Initialize state for selected categories
-  const [selectedCategories, setSelectedCategories] = useState(
-    filterCategories.reduce((acc, category) => {
-      acc[category] = false; // Initialize all categories as unchecked
-      return acc;
-    }, {})
-  );
-
-  // Function to handle category checkbox changes
-  const handleCategoryChange = (category) => {
-    setSelectedCategories((prevSelectedCategories) => ({
-      ...prevSelectedCategories,
-      [category]: !prevSelectedCategories[category], // Toggle the selected state
-    }));
-  };
-
+function Filters({
+  isOpen,
+  toggleMenu,
+  categories,
+}) {
   return (
     <div>
       <Offcanvas
@@ -62,13 +29,24 @@ function Filters({ isOpen, toggleMenu, }) {
           <div>
             <h4>Categories</h4>
             <hr />
-            {filterCategories.map((category) => (
-              <CategoryCheckbox
-                key={category}
-                category={category}
-                checked={selectedCategories[category]}
-                onChange={() => handleCategoryChange(category)}
-              />
+            {categories?.map((category) => (
+              <div key={category._id}>
+                <h5 className="bg-success text-white p-2 rounded">
+                  {category.name}
+                </h5>
+                {category.subcategories.map((subcategory) => (
+                  <div key={subcategory._id}>
+                    <Label className="ms-2">
+                      <Input
+                        type="checkbox"
+                        value={subcategory.name}
+                        className="border-dark me-2"
+                      />
+                      {subcategory.name}
+                    </Label>
+                  </div>
+                ))}
+              </div>
             ))}
           </div>
         </OffcanvasBody>

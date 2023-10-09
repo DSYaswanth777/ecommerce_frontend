@@ -13,8 +13,9 @@ import AddProduct from "./AddProduct";
 import { Button, Input, InputGroup, InputGroupText } from "reactstrap";
 import { BsSearch } from "react-icons/bs";
 import Logo from "../../../assets/icons/brand_logo.svg";
-import debounce from "lodash.debounce"; // Import lodash.debounce
+import debounce from "lodash.debounce"; 
 import { Loader } from "react-feather";
+import { formatCurrency } from "../../../utilities/formatCurrency";
 
 function Products() {
   const dispatch = useDispatch();
@@ -41,15 +42,16 @@ function Products() {
       debouncedHandleSearch();
     }
   }, [debouncedSearchQuery]) 
+  
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
-      confirmButton: "btn btn-success",
+      confirmButton: "btn btn-success me-5",
       cancelButton: "btn btn-danger",
     },
     buttonsStyling: false,
   });
   const openAddModal = () => {
-    setSelectedProduct(null); // Clear selectedProduct to indicate an add action
+    setSelectedProduct(null);
     setModalOpen(true);
   };
   const handleDelete = (row) => {
@@ -105,7 +107,7 @@ function Products() {
     },
     {
       name: "Price",
-      selector: (row) => row.productPrice,
+      selector: (row) =>(formatCurrency(row.productPrice)) ,
       sortable: true,
     },
     {
@@ -154,7 +156,7 @@ function Products() {
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
-              setDebouncedSearchQuery(e.target.value); // Update the debounced query
+              setDebouncedSearchQuery(e.target.value);
             }}
 
             onClick={(e) => e.stopPropagation()}

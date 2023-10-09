@@ -33,7 +33,7 @@ const Header = () => {
   };
   const toggleCart = (e) => {
     setCartVisible(!isCartVisible);
-    e.value.stopPropagation();
+    e.stopPropagation();
   };
   document.addEventListener("click", (e) => {
     if (e.target !== searchIcon) {

@@ -137,7 +137,6 @@ const productSlice = createSlice({
       })
       .addCase(addProductAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // You can handle the success action here if needed
       })
       .addCase(addProductAsync.rejected, (state, action) => {
         state.status = "failed";
@@ -148,7 +147,6 @@ const productSlice = createSlice({
       })
       .addCase(editProductAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // You can handle the success action here if needed
       })
       .addCase(editProductAsync.rejected, (state, action) => {
         state.status = "failed";
@@ -164,7 +162,8 @@ const productSlice = createSlice({
       .addCase(searchProductsAsync.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      });
+      })
+
   },
 });
 

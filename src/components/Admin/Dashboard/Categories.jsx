@@ -96,7 +96,7 @@ function Categories() {
       cell: (row) => (
         <div>
           {row.subcategories.map((subcategory) => (
-            <Badge  key={subcategory._id} color="primary" className="me-2">
+            <Badge  key={subcategory._id} color="primary" className="me-2 mb-2 mt-1 text-center">
               {subcategory.name}
             </Badge>
           ))}
