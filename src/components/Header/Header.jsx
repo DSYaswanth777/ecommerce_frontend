@@ -11,7 +11,7 @@ import Cart from "../Cart/Cart";
 import { useSelector } from "react-redux";
 import { User } from "react-feather";
 
-const Header = () => {
+const Header = ({ searchQuery, setDebouncedSearchQuery, setSearchQuery }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSearchContainerVisible, setSearchContainerVisible] = useState(false);
   const [isAccountVisible, setAccountVisible] = useState(false);
@@ -94,13 +94,12 @@ const Header = () => {
               onClick={toggleCart}
             >
               <div>
-
-              <FiShoppingCart
-                size={22}
-                data-bs-toggle="offcanvas"
-                data-bs-target="#staticBackdrop"
-                aria-controls="staticBackdrop"
-              />
+                <FiShoppingCart
+                  size={22}
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#staticBackdrop"
+                  aria-controls="staticBackdrop"
+                />
               </div>
               <div
                 className="offcanvas offcanvas-end"
@@ -137,8 +136,13 @@ const Header = () => {
               id=""
               placeholder="Search your product..."
               className="border border-end-0 input-search"
-              defaultValue={searchValue}
-              onClick={(e) => e.stopPropagation()}
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setDebouncedSearchQuery(e.target.value);
+              }}
+            onClick={(e) => e.stopPropagation()}
+
             />
             <InputGroupText className="p-2 input-text">
               <BsSearch size={20} className="" />

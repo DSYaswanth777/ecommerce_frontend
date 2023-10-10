@@ -68,6 +68,8 @@ function AddProduct({ isOpen, toggle, isEditing, productData }) {
     productDataToSend.append("productInfo", formData.productInfo);
     productDataToSend.append("subcategoryId", selectedSubcategoryId);
     productDataToSend.append("productStock", formData.productStock);
+    productDataToSend.append("categoryId", selectedCategoryId);
+
 
     if (!isEditing) {
       // Append images only when adding a new product
@@ -100,9 +102,7 @@ function AddProduct({ isOpen, toggle, isEditing, productData }) {
         if (!response.ok) {
           throw new Error("Failed to edit the product");
         }
-        // await dispatch(editProductAsync({id:productId,...editProductData}))
       } else {
-        // Use addProductAsync action for adding
         await dispatch(addProductAsync(productDataToSend));
       }
       toggle();

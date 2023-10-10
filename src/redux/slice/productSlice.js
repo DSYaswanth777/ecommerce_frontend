@@ -3,10 +3,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
-  async (page) => {
-    // const response = await fetch("http://localhost:3000/api/v1/products");
+  async () => {
     const response = await fetch(`http://localhost:3000/api/v1/products`);
-
     const data = await response.json();
     return data;
   }
@@ -28,7 +26,6 @@ export const addProductAsync = createAsyncThunk(
         "http://localhost:3000/api/v1/admin/add/product",
         config
       );
-
       if (!response.ok) {
         throw new Error("Failed to add the product");
       }
@@ -111,10 +108,50 @@ export const searchProductsAsync = createAsyncThunk(
     }
   }
 );
+export const viewProductAsync = createAsyncThunk(
+  "product/viewproduct",
+  async (productId) => {
+    try {
+      // You can pass the productName as a query parameter to your API endpoint
+      const response = await fetch(
+        `http://localhost:3000/api/v1/products/viewproduct/${productId}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to search products");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+export const recentProductAsync = createAsyncThunk(
+  "products/recentProducts",
+  async () => {
+    const response = await fetch(`http://localhost:3000/api/v1/products/recentproducts`);
+    const data = await response.json();
+    return data;
+  }
+);
+export const sortproductsAsync = createAsyncThunk(
+  "products/sortProducts",
+  async () => {
+    const response = await fetch(`http://localhost:3000/api/v1/products/sort?sortBy=lowtohigh`);
+    const data = await response.json();
+    return data;
+  }
+)
+
+
 const productSlice = createSlice({
   name: "products",
   initialState: {
     products: null,
+    product: null,
+    sortedproducts:null,
     status: "idle",
     error: null,
   },
@@ -129,6 +166,28 @@ const productSlice = createSlice({
         state.products = action.payload;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(recentProductAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(recentProductAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.products = action.payload;
+      })
+      .addCase(recentProductAsync.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(sortproductsAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(sortproductsAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.sortedproducts = action.payload;
+      })
+      .addCase(sortproductsAsync.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
@@ -163,7 +222,17 @@ const productSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
-
+      .addCase(viewProductAsync.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(viewProductAsync.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(viewProductAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.product = action.payload;
+      });
   },
 });
 

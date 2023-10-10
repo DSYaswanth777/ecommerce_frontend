@@ -34,7 +34,7 @@ const PublicRoutes = () => {
             <Route path="/checkoutcart" element={<CheckOutCart />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/viewproduct" element={<ViewProduct/>}/>
+            <Route path="/products/viewproduct/:productId" element={<ViewProduct/>}/>
           </>
         ) : (
           <Route path="*" element={<Navigate to="/login" />} />

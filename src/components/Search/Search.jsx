@@ -11,13 +11,30 @@ import { Filter } from "react-feather";
 import Filters from "../Filters/Filters";
 import Products from "../Products/Products";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../../redux/slice/productSlice";
+import {
+  fetchProducts,
+  searchProductsAsync,
+} from "../../redux/slice/productSlice";
 import { useEffect } from "react";
 import { fetchCategoriesAsync } from "../../redux/slice/categoriesSlice";
+import debounce from "lodash.debounce";
 
 function Search() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedHandleSearch = debounce(() => {
+    //**Dispatch the searchProductsAsync action with the debounced search query */ 
+    dispatch(searchProductsAsync(debouncedSearchQuery));
+  }, 300); // Adjust the delay time as needed
+
+  useEffect(() => {
+    // Only perform the search when debouncedSearchQuery changes
+    if (debouncedSearchQuery || searchQuery === "") {
+      debouncedHandleSearch();
+    }
+  }, [debouncedSearchQuery, searchQuery]);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -44,7 +61,11 @@ function Search() {
 
   return (
     <div>
-      <Header />
+      <Header
+        searchQuery={searchQuery}
+        setDebouncedSearchQuery={setDebouncedSearchQuery}
+        setSearchQuery={setSearchQuery}
+      />
       <div className="container pt-3">
         <div className="d-flex justify-content-between pt-3">
           <Button onClick={toggleMenu}>

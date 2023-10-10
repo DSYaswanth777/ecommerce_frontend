@@ -25,10 +25,6 @@ const types = [
   { price: "under 1000" },
   { price: "under 1500" },
   { price: "under 2000" },
-  { price: "Tops" },
-  { price: "Long Frocks" },
-  { price: "Dress Materials" },
-  { price: "On Discount" },
 ];
 
 export default Categories;

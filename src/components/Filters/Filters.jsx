@@ -34,7 +34,7 @@ function Filters({
                 <h5 className="bg-success text-white p-2 rounded">
                   {category.name}
                 </h5>
-                {category.subcategories.map((subcategory) => (
+                {category?.subcategories?.map((subcategory) => (
                   <div key={subcategory._id}>
                     <Label className="ms-2">
                       <Input

@@ -4,23 +4,41 @@ import HeroSection from "../components/HeroSection/HeroSection";
 import Categories from "../components/Categories/Categories";
 import Footer from "../components/Footer/Footer";
 import Poster from "../components/Poster/Poster";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  recentProductAsync,
+  sortproductsAsync,
+} from "../redux/slice/productSlice";
 function Home() {
+  const recentProducts = useSelector((state) => state.products?.products);
+  const sortedproducts = useSelector((state) => state.products?.sortedproducts);
+  const status = useSelector((state) => state.products?.status);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(recentProductAsync());
+    }
+  }, [status, dispatch]);
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(sortproductsAsync());
+    }
+  }, [status, dispatch]);
   return (
     <div>
       <Header />
       <HeroSection />
       <Categories />
-      <Poster 
-      title="Just In"
-      subtitle="New Arrivals for You" 
+      <Poster
+        title="Just In"
+        subtitle="New Arrivals for You"
+        products={recentProducts}
       />
       <Poster
-        title="Dress Materials Collection"
-        subtitle="Create Your Perfect Outfit"
-      />
-      <Poster 
-      title="Huge Discount" 
-      subtitle="Amazing Deals Await" 
+        title="Items Under Budget"
+        subtitle="Get It fast"
+        products={sortedproducts}
       />
       <Footer />
     </div>

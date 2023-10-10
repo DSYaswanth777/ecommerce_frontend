@@ -6,11 +6,23 @@ import "slick-carousel/slick/slick-theme.css";
 import { Carousel } from "react-responsive-carousel";
 import SliderImg from "../../assets/images/dress_materials.png";
 import { formatCurrency } from "../../utilities/formatCurrency";
-import { Button, Input } from "reactstrap";
+import { Button, Input, Badge } from "reactstrap";
 import { FaCartPlus, FaHeart } from "react-icons/fa";
 import Poster from "../../components/Poster/Poster";
 import "./Products.scss";
+import { useParams } from "react-router";
+import { useEffect } from "react";
+import { viewProductAsync } from "../../redux/slice/productSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 function ViewProduct() {
+  const { productId } = useParams();
+  const dispatch = useDispatch();
+  const product = useSelector((state) => state.products?.product);
+  useEffect(() => {
+    dispatch(viewProductAsync(productId));
+  }, [dispatch, productId]);
+
   return (
     <>
       <Header />
@@ -23,29 +35,20 @@ function ViewProduct() {
             infiniteLoop
             showThumbs={false}
           >
-            <div className="">
-              <img src={SliderImg} alt="" width={400} height={400} />
-            </div>
-            <div className="">
-              <img src={SliderImg} alt="" width={400} height={400} />
-            </div>
-            <div className="">
-              <img src={SliderImg} alt="" width={400} height={400} />
-            </div>
+            {product?.productImages.map((img) => (
+              <img alt={product.name} src={img} width={400} height={400} />
+            ))}
           </Carousel>
         </div>
         <div className="img-carousel">
-          <div className="fs-3 text-start">
-            Shiffon Cotton Saree with Floral Print
-          </div>
-          <p className="text-muted fs-5">Saree </p>
-          <p>
-            Product Info: Lorem ipsum dolor sit, amet consectetur adipisicing
-            elit. Nesciunt totam voluptate eaque veniam tempora voluptas non eos
-            libero rerum laborum provident necessitatibus similique tenetur
-            dolore corporis aspernatur, esse distinctio iste!
-          </p>
-          <p className="fs-4">{formatCurrency("2000")}</p>
+          <div className="fs-3 text-start">{product?.productName}</div>
+          <p className="text-muted fs-5">{product?.subcategoryId.name}</p>
+          <p>{product?.productInfo}</p>
+          <Badge className="fs-6" color="success">
+            {" "}
+            Instock ({product?.productStock})
+          </Badge>
+          <p className="fs-4">{formatCurrency(product?.productPrice)}</p>
           <div className="d-flex gap-3">
             <Button className="btn-sm">-</Button>
             <Input type="text" style={{ width: "40px", height: "40px" }} />
