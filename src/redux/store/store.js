@@ -8,13 +8,17 @@ import thunk from "redux-thunk";
 import productSlice from '../slice/productSlice';
 import couponSlice from '../slice/couponSlice';
 import customerSlice from '../slice/customerSlice';
+import wishlistSlice from '../slice/wishlistSlice';
+import cartSlice from '../slice/cartSlice';
 const store = configureStore({
   reducer: {
     auth: authReducer,
     categories: categoriesReducer,
     products:productSlice,
     coupons:couponSlice,
-    customers:customerSlice
+    customers:customerSlice,
+    wishlist:wishlistSlice,
+    cart:cartSlice
   },
   middleware: [thunk],
 });

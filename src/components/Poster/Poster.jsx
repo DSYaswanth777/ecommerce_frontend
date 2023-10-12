@@ -1,6 +1,5 @@
 import React from "react";
 import Carousel from "react-multi-carousel";
-import Carousel2 from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import {
   Card,
@@ -15,7 +14,10 @@ import { FaCartPlus } from "react-icons/fa";
 import { BsSuitHeart } from "react-icons/bs";
 import { useNavigate } from "react-router";
 import "./Poster.scss";
+import { wishlistAddAsync } from "../../redux/slice/wishlistSlice";
+import { useDispatch } from "react-redux";
 const Poster = ({ title, subtitle, products }) => {
+  const dispatch= useDispatch()
   const navigate = useNavigate();
   const responsive = {
     superLargeDesktop: {
@@ -46,7 +48,6 @@ const Poster = ({ title, subtitle, products }) => {
             <Card
               key={product._id}
               className="slider-content"
-              onClick={() => navigate(`/products/viewproduct/${product._id}`)}
               style={{
                 width: "18rem",
               }}
@@ -56,6 +57,7 @@ const Poster = ({ title, subtitle, products }) => {
                 src={product?.productImages[0]}
                 width={285}
                 height={290}
+                onClick={() => navigate(`/products/viewproduct/${product._id}`)}
               />
 
               <CardBody>
@@ -63,14 +65,19 @@ const Poster = ({ title, subtitle, products }) => {
                 <CardSubtitle className="mb-2 text-muted" tag="h6">
                   <div className="d-flex justify-content-between">
                     {product?.subcategoryId.name}
-                    <BsSuitHeart size={25} />
+                    <BsSuitHeart
+                      size={25}
+                      onClick={() => dispatch(wishlistAddAsync(product._id))}
+                    />
                   </div>
                 </CardSubtitle>
                 <CardText className="fw-medium fs-5">
                   Price: {formatCurrency(product.productPrice)}
                 </CardText>
                 <Button className="addToCartBtn d-flex justify-content-center align-items-center">
-                  <FaCartPlus className="me-2" /> Add To Cart
+                  <FaCartPlus className="me-2"
+                  
+                  /> Add To Cart
                 </Button>
               </CardBody>
             </Card>

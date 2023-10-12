@@ -4,7 +4,6 @@ import Footer from "../Footer/Footer";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Carousel } from "react-responsive-carousel";
-import SliderImg from "../../assets/images/dress_materials.png";
 import { formatCurrency } from "../../utilities/formatCurrency";
 import { Button, Input, Badge } from "reactstrap";
 import { FaCartPlus, FaHeart } from "react-icons/fa";

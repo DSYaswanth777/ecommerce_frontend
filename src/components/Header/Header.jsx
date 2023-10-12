@@ -6,7 +6,7 @@ import "./Header.scss";
 import Logo from "../../assets/icons/brand_logo.svg";
 import NavbarMenu from "../NavbarMenu/NavbarMenu";
 import AccountCard from "./AccountCard";
-import { Button, Input, InputGroup, InputGroupText } from "reactstrap";
+import { Input, InputGroup, InputGroupText } from "reactstrap";
 import Cart from "../Cart/Cart";
 import { useSelector } from "react-redux";
 import { User } from "react-feather";
@@ -16,7 +16,6 @@ const Header = ({ searchQuery, setDebouncedSearchQuery, setSearchQuery }) => {
   const [isSearchContainerVisible, setSearchContainerVisible] = useState(false);
   const [isAccountVisible, setAccountVisible] = useState(false);
   const [isCartVisible, setCartVisible] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
   const user = useSelector((state) => state.auth);
   const searchIcon = document.getElementById("searchBox");
   const profileBox = document.getElementById("profileBox");
@@ -45,6 +44,7 @@ const Header = ({ searchQuery, setDebouncedSearchQuery, setSearchQuery }) => {
     }
   });
 
+  const cartQuantity = useSelector((state) => state?.cart.cart.cartItems?.length);
   return (
     <div className="header  bg-white sticky-top border-bottom ">
       <div className="container">
@@ -110,7 +110,7 @@ const Header = ({ searchQuery, setDebouncedSearchQuery, setSearchQuery }) => {
               >
                 <div className="offcanvas-header">
                   <h5 className="offcanvas-title" id="staticBackdropLabel">
-                    My Cart (2 Items)
+                    My Cart ({cartQuantity})
                   </h5>
                   <button
                     type="button"
