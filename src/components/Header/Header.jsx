@@ -8,8 +8,9 @@ import NavbarMenu from "../NavbarMenu/NavbarMenu";
 import AccountCard from "./AccountCard";
 import { Input, InputGroup, InputGroupText } from "reactstrap";
 import Cart from "../Cart/Cart";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { User } from "react-feather";
+import { fetchUsercartAsync } from "../../redux/slice/cartSlice";
 
 const Header = ({ searchQuery, setDebouncedSearchQuery, setSearchQuery }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -19,7 +20,7 @@ const Header = ({ searchQuery, setDebouncedSearchQuery, setSearchQuery }) => {
   const user = useSelector((state) => state.auth);
   const searchIcon = document.getElementById("searchBox");
   const profileBox = document.getElementById("profileBox");
-
+  const dispatch = useDispatch();
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -32,6 +33,7 @@ const Header = ({ searchQuery, setDebouncedSearchQuery, setSearchQuery }) => {
   };
   const toggleCart = (e) => {
     setCartVisible(!isCartVisible);
+    dispatch(fetchUsercartAsync());
     e.stopPropagation();
   };
   document.addEventListener("click", (e) => {
@@ -44,7 +46,9 @@ const Header = ({ searchQuery, setDebouncedSearchQuery, setSearchQuery }) => {
     }
   });
 
-  const cartQuantity = useSelector((state) => state?.cart.cart.cartItems?.length);
+  const cartQuantity = useSelector(
+    (state) => state?.cart.cart.cartItems?.length
+  );
   return (
     <div className="header  bg-white sticky-top border-bottom ">
       <div className="container">
@@ -141,8 +145,7 @@ const Header = ({ searchQuery, setDebouncedSearchQuery, setSearchQuery }) => {
                 setSearchQuery(e.target.value);
                 setDebouncedSearchQuery(e.target.value);
               }}
-            onClick={(e) => e.stopPropagation()}
-
+              onClick={(e) => e.stopPropagation()}
             />
             <InputGroupText className="p-2 input-text">
               <BsSearch size={20} className="" />

@@ -138,8 +138,8 @@ export const recentProductAsync = createAsyncThunk(
 );
 export const sortproductsAsync = createAsyncThunk(
   "products/sortProducts",
-  async () => {
-    const response = await fetch(`http://localhost:3000/api/v1/products/sort?sortBy=lowtohigh`);
+  async (sortBy) => {
+    const response = await fetch(`http://localhost:3000/api/v1/products/sort?sortBy=${sortBy}`);
     const data = await response.json();
     return data;
   }
@@ -185,7 +185,7 @@ const productSlice = createSlice({
       })
       .addCase(sortproductsAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.sortedproducts = action.payload;
+        state.products = action.payload;
       })
       .addCase(sortproductsAsync.rejected, (state, action) => {
         state.status = "failed";

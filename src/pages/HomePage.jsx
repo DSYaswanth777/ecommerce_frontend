@@ -12,7 +12,6 @@ import {
 } from "../redux/slice/productSlice";
 function Home() {
   const recentProducts = useSelector((state) => state.products?.products);
-  const sortedproducts = useSelector((state) => state.products?.sortedproducts);
   const status = useSelector((state) => state.products?.status);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -35,11 +34,11 @@ function Home() {
         subtitle="New Arrivals for You"
         products={recentProducts}
       />
-      <Poster
+      {/* <Poster
         title="Items Under Budget"
         subtitle="Get It fast"
         products={sortedproducts}
-      />
+      /> */}
       <Footer />
     </div>
   );

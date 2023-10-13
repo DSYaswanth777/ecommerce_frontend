@@ -2,18 +2,24 @@ import React from "react";
 import { Button, CardBody, Input, Badge } from "reactstrap";
 import { formatCurrency } from "../../utilities/formatCurrency";
 import { useEffect } from "react";
-import { fetchUsercartAsync } from "../../redux/slice/cartSlice";
+import {
+  cartQuantityDecreaseAsync,
+  cartQuantityIncreaseAsync,
+  fetchUsercartAsync,
+} from "../../redux/slice/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 function Cart() {
   const dispatch = useDispatch();
   const status = useSelector((state) => state.cart?.status);
   const cartData = useSelector((state) => state.cart?.cart?.cartItems);
   const cartTotalFee = useSelector((state) => state.cart?.cart.totalFee);
+  
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchUsercartAsync());
     }
   }, [status, dispatch]);
+
 
   return (
     <>
@@ -40,6 +46,9 @@ function Cart() {
                     <Button
                       className="btn-sm fw-bold"
                       style={{ backgroundColor: "#2D7B8B" }}
+                      onClick={() =>
+                        dispatch(cartQuantityDecreaseAsync(product._id))
+                      }
                     >
                       -
                     </Button>
@@ -52,6 +61,9 @@ function Cart() {
                     <Button
                       className="btn-sm fw-bold"
                       style={{ backgroundColor: "#2D7B8B" }}
+                      onClick={() =>
+                        dispatch(cartQuantityIncreaseAsync(product._id))
+                      }
                     >
                       +
                     </Button>

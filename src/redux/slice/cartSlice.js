@@ -34,7 +34,7 @@ export const cartAddAsync = createAsyncThunk(
 
       // Make the API call using fetch or axios
       const response = await fetch(
-        `http://localhost:3000/api/v1/cart/add`,
+        `http://localhost:3000/api/v1/user/cart/add`,
         {
           method: "POST",
           headers: {
@@ -70,7 +70,7 @@ export const cartQuantityIncreaseAsync = createAsyncThunk(
         const response = await fetch(
           `http://localhost:3000/api/v1/user/cart/increase`,
           {
-            method: "POST",
+            method: "PUT",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
@@ -104,7 +104,7 @@ export const cartQuantityIncreaseAsync = createAsyncThunk(
         const response = await fetch(
           `http://localhost:3000/api/v1/user/cart/decrease`,
           {
-            method: "POST",
+            method: "PUT",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,

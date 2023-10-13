@@ -12,6 +12,7 @@ import { Carousel } from "react-responsive-carousel";
 import { FaCartPlus } from "react-icons/fa";
 import "../Products/Products.scss";
 import { Trash } from "react-feather";
+import { cartAddAsync } from "../../redux/slice/cartSlice";
 function Wishlist() {
   const status = useSelector((state) => state.wishlist?.status);
   const wishlistData = useSelector((state) => state.wishlist?.wishlist);
@@ -73,15 +74,19 @@ function Wishlist() {
                 </CardText>
                 <div className="d-flex justify-content-between">
                   <Badge className="fs-6 mb-3">
-                    Ins Stock{product.product.productStock}
+                    In Stock {product.product.productStock}
                   </Badge>
                   <Trash
                     className="text-danger"
                     onClick={() => handleDeleteItem(product._id)}
                   />
                 </div>
-                <Button className="addToCartBtn d-flex justify-content-center align-items-center">
-                  <FaCartPlus className="me-2" /> Add To Cart
+                <Button className="addToCartBtn d-flex justify-content-center align-items-center"
+                  onClick={()=>(dispatch(cartAddAsync(product.product._id)))}
+                
+                >
+                  <FaCartPlus className="me-2" 
+                  /> Add To Cart
                 </Button>
               </CardBody>
             </Card>

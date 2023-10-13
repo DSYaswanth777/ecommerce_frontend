@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import Header from "../Header/Header";
-import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-} from "reactstrap";
+import { Button } from "reactstrap";
 import { Filter } from "react-feather";
 import Filters from "../Filters/Filters";
 import Products from "../Products/Products";
@@ -14,20 +8,26 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchProducts,
   searchProductsAsync,
+  sortproductsAsync,
 } from "../../redux/slice/productSlice";
 import { useEffect } from "react";
 import { fetchCategoriesAsync } from "../../redux/slice/categoriesSlice";
 import debounce from "lodash.debounce";
+import Select from "react-dropdown-select";
 
 function Search() {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedHandleSearch = debounce(() => {
-    //**Dispatch the searchProductsAsync action with the debounced search query */ 
-    dispatch(searchProductsAsync(debouncedSearchQuery));
-  }, 300); // Adjust the delay time as needed
+  const productData = useSelector((state) => state.products?.products);
+  const totalProducts = useSelector(
+    (state) => state.products?.products?.length
+  );
+
+  const dispatch = useDispatch();
+  const status = useSelector((state) => state.products?.status);
+  const categories = useSelector((state) => state?.categories?.categories);
+  const [selectedSortOption, setSelectedSortOption] = useState(null);
 
   useEffect(() => {
     // Only perform the search when debouncedSearchQuery changes
@@ -35,18 +35,15 @@ function Search() {
       debouncedHandleSearch();
     }
   }, [debouncedSearchQuery, searchQuery]);
-
+  const debouncedHandleSearch = debounce(() => {
+    //**Dispatch the searchProductsAsync action with the debounced search query */
+    
+    dispatch(searchProductsAsync(debouncedSearchQuery));
+  }, 300);
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
-  const productData = useSelector((state) => state.products?.products);
-  const totalProducts = useSelector(
-    (state) => state.products?.products?.length
-  );
-  const toggle = () => setDropdownOpen((prevState) => !prevState);
-  const status = useSelector((state) => state.products?.status);
-  const categories = useSelector((state) => state?.categories?.categories);
-  const dispatch = useDispatch();
+
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
@@ -54,11 +51,16 @@ function Search() {
   }, [status, dispatch]);
 
   useEffect(() => {
-    if (status === "idle") {
+    if (menuOpen === true) {
       dispatch(fetchCategoriesAsync());
     }
-  }, [status, dispatch]);
+  }, [menuOpen, dispatch]);
 
+  const sortOptions = [
+    { value: "featured", label: "Featured" },
+    { value: "lowtohigh", label: "Low to High" },
+    { value: "hightolow", label: "High to Low" },
+  ];
   return (
     <div>
       <Header
@@ -72,14 +74,21 @@ function Search() {
             {" "}
             <Filter /> <span>Filters</span>
           </Button>
-          <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-            <DropdownToggle caret>Sort By</DropdownToggle>
-            <DropdownMenu className="mt-2">
-              {["Featured", "Low to High", "High to Low"].map((option) => (
-                <DropdownItem key={option}>{option}</DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
+
+          <Select
+            value={selectedSortOption}
+            options={sortOptions}
+            onChange={(selectedOption) => {
+              dispatch(
+                sortproductsAsync(
+                  selectedOption ? selectedOption[0].value : null
+                )
+              );
+              setSelectedSortOption(selectedOption);
+            }}
+            placeholder="Sort By"
+            className="text-dark"
+          />
         </div>
         <Products productData={productData} />
         <h5 className="pt-5 text-center">
