@@ -1,15 +1,16 @@
-// store.js
+//**Store import */
 import { configureStore } from '@reduxjs/toolkit';
-// import { composeWithDevTools } from 'redux-devtools-extension';
+//**Thunk Middleware Import */
+import thunk from "redux-thunk";
+//**Reducer Imports */ 
 import authReducer from '../slice/authSlice';
 import categoriesReducer from '../slice/categoriesSlice';
-// import { composeWithDevTools } from 'redux-devtools-extension';
-import thunk from "redux-thunk"; 
 import productSlice from '../slice/productSlice';
 import couponSlice from '../slice/couponSlice';
 import customerSlice from '../slice/customerSlice';
 import wishlistSlice from '../slice/wishlistSlice';
 import cartSlice from '../slice/cartSlice';
+import ProfileSlice from '../slice/ProfileSlice';
 const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -18,7 +19,8 @@ const store = configureStore({
     coupons:couponSlice,
     customers:customerSlice,
     wishlist:wishlistSlice,
-    cart:cartSlice
+    cart:cartSlice,
+    profile:ProfileSlice
   },
   middleware: [thunk],
 });

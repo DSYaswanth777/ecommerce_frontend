@@ -90,7 +90,7 @@ export const cartQuantityIncreaseAsync = createAsyncThunk(
       }
     }
   );
-  export const cartQuantityDecreaseAsync = createAsyncThunk(
+export const cartQuantityDecreaseAsync = createAsyncThunk(
     "cart/cartQuantityDecreaseAsync",
     async (cartItemId, { getState }) => {
       const token = getState().auth.token;
