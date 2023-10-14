@@ -25,10 +25,9 @@ const PublicRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgotpassword" element={<ResetPassword />} />
-        <Route path="/search" element={<Search />} />
+        <Route path="/products" element={<Search />} />
         {user.isAuthenticated ? (
           <>
-            <Route path="/products" element={<Products />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/changepassword" element={<ChangePassword />} />
             <Route path="/checkoutcart" element={<CheckOutCart />} />

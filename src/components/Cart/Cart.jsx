@@ -1,26 +1,15 @@
 import React from "react";
 import { Button, CardBody, Input, Badge } from "reactstrap";
 import { formatCurrency } from "../../utilities/formatCurrency";
-import { useEffect } from "react";
 import {
   cartQuantityDecreaseAsync,
   cartQuantityIncreaseAsync,
-  fetchUsercartAsync,
+  deletecartAsync,
 } from "../../redux/slice/cartSlice";
-import { useDispatch, useSelector } from "react-redux";
-function Cart() {
+import { useDispatch } from "react-redux";
+import { X } from "react-feather";
+function Cart({ cartData, cartTotalFee }) {
   const dispatch = useDispatch();
-  const status = useSelector((state) => state.cart?.status);
-  const cartData = useSelector((state) => state.cart?.cart?.cartItems);
-  const cartTotalFee = useSelector((state) => state.cart?.cart.totalFee);
-  
-  useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchUsercartAsync());
-    }
-  }, [status, dispatch]);
-
-
   return (
     <>
       <div className="d-flex flex-column">
@@ -35,7 +24,12 @@ function Cart() {
                   height={120}
                 />
                 <div className="d-flex flex-column justify-content-start  gap-3 align-items-start ">
-                  <h6>{product.product.productName}</h6>
+                  <div className="d-flex justify-content-between gap-4 ">
+                    <h6>{product.product.productName} </h6>
+                    <X className="bg-danger text-white rounded-circle"
+                    onClick={()=> dispatch(deletecartAsync(product._id))}
+                    />
+                  </div>
                   <Badge
                     style={{ backgroundColor: "#2D7B8B" }}
                     color="bg-success"

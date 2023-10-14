@@ -7,18 +7,14 @@ import Products from "../Products/Products";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchProducts,
-  searchProductsAsync,
   sortproductsAsync,
 } from "../../redux/slice/productSlice";
 import { useEffect } from "react";
 import { fetchCategoriesAsync } from "../../redux/slice/categoriesSlice";
-import debounce from "lodash.debounce";
 import Select from "react-dropdown-select";
 
 function Search() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
   const productData = useSelector((state) => state.products?.products);
   const totalProducts = useSelector(
     (state) => state.products?.products?.length
@@ -29,17 +25,6 @@ function Search() {
   const categories = useSelector((state) => state?.categories?.categories);
   const [selectedSortOption, setSelectedSortOption] = useState(null);
 
-  useEffect(() => {
-    // Only perform the search when debouncedSearchQuery changes
-    if (debouncedSearchQuery || searchQuery === "") {
-      debouncedHandleSearch();
-    }
-  }, [debouncedSearchQuery, searchQuery]);
-  const debouncedHandleSearch = debounce(() => {
-    //**Dispatch the searchProductsAsync action with the debounced search query */
-    
-    dispatch(searchProductsAsync(debouncedSearchQuery));
-  }, 300);
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -47,6 +32,7 @@ function Search() {
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
+      dispatch(sortproductsAsync("featured"))
     }
   }, [status, dispatch]);
 
@@ -56,6 +42,12 @@ function Search() {
     }
   }, [menuOpen, dispatch]);
 
+  useEffect(() => {
+    if (selectedSortOption != null) {
+      dispatch(sortproductsAsync(selectedSortOption[0].value));
+    }
+  }, [selectedSortOption, dispatch]);
+
   const sortOptions = [
     { value: "featured", label: "Featured" },
     { value: "lowtohigh", label: "Low to High" },
@@ -63,11 +55,7 @@ function Search() {
   ];
   return (
     <div>
-      <Header
-        searchQuery={searchQuery}
-        setDebouncedSearchQuery={setDebouncedSearchQuery}
-        setSearchQuery={setSearchQuery}
-      />
+      <Header />
       <div className="container pt-3">
         <div className="d-flex justify-content-between pt-3">
           <Button onClick={toggleMenu}>

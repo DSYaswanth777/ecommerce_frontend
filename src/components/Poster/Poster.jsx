@@ -16,9 +16,22 @@ import { useNavigate } from "react-router";
 import "./Poster.scss";
 import { wishlistAddAsync } from "../../redux/slice/wishlistSlice";
 import { useDispatch } from "react-redux";
+import { cartAddAsync } from "../../redux/slice/cartSlice";
 const Poster = ({ title, subtitle, products }) => {
-  const dispatch= useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  // // const handleAddCartItem = (productId) => {
+  //   // Dispatch the delete action
+  //   dispatch(cartAddAsync(productId))
+  //     .then(() => {
+  //       // After successfully deleting, fetch the updated wishlist
+  //       dispatch(fetchUsercartAsync());
+  //     })
+  //     .catch((error) => {
+  //       // Handle any errors, if needed
+  //       console.log(error);
+  //     });
+  // };
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
@@ -75,9 +88,11 @@ const Poster = ({ title, subtitle, products }) => {
                   Price: {formatCurrency(product.productPrice)}
                 </CardText>
                 <Button className="addToCartBtn d-flex justify-content-center align-items-center">
-                  <FaCartPlus className="me-2"
-                  
-                  /> Add To Cart
+                  <FaCartPlus
+                    className="me-2"
+                    // onClick={handleAddCartItem(product._id)}
+                  />{" "}
+                  Add To Cart
                 </Button>
               </CardBody>
             </Card>

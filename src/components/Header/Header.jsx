@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiShoppingCart } from "react-icons/fi";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { BsSearch } from "react-icons/bs";
@@ -11,8 +11,11 @@ import Cart from "../Cart/Cart";
 import { useDispatch, useSelector } from "react-redux";
 import { User } from "react-feather";
 import { fetchUsercartAsync } from "../../redux/slice/cartSlice";
+import { searchProductsAsync } from "../../redux/slice/productSlice";
+import debounce from "lodash.debounce";
+import { useNavigate } from "react-router";
 
-const Header = ({ searchQuery, setDebouncedSearchQuery, setSearchQuery }) => {
+const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSearchContainerVisible, setSearchContainerVisible] = useState(false);
   const [isAccountVisible, setAccountVisible] = useState(false);
@@ -20,7 +23,18 @@ const Header = ({ searchQuery, setDebouncedSearchQuery, setSearchQuery }) => {
   const user = useSelector((state) => state.auth);
   const searchIcon = document.getElementById("searchBox");
   const profileBox = document.getElementById("profileBox");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const dispatch = useDispatch();
+  const status = useSelector((state) => state.cart?.status);
+  const cartData = useSelector((state) => state.cart?.cart?.cartItems);
+  const cartTotalFee = useSelector((state) => state.cart?.cart.totalFee);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isCartVisible && status === "idle") {
+      dispatch(fetchUsercartAsync());
+    }
+  }, [isCartVisible, status, dispatch]);
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -33,19 +47,30 @@ const Header = ({ searchQuery, setDebouncedSearchQuery, setSearchQuery }) => {
   };
   const toggleCart = (e) => {
     setCartVisible(!isCartVisible);
-    dispatch(fetchUsercartAsync());
     e.stopPropagation();
   };
   document.addEventListener("click", (e) => {
     if (e.target !== searchIcon) {
       setSearchContainerVisible(false);
-      // setAccountVisible(false);
     }
     if (e.target != profileBox) {
       setAccountVisible(false);
     }
   });
 
+  const debouncedHandleSearch = debounce(() => {
+    if (debouncedSearchQuery) {
+      dispatch(searchProductsAsync(debouncedSearchQuery));
+      navigate(`/products?search=${debouncedSearchQuery}`);
+    }
+  }, 300);
+  
+  useEffect(() => {
+    // Only perform the search when debouncedSearchQuery changes
+    if (debouncedSearchQuery || searchQuery === "") {
+      debouncedHandleSearch();
+    }
+  }, [debouncedSearchQuery, searchQuery]);
   const cartQuantity = useSelector(
     (state) => state?.cart.cart.cartItems?.length
   );
@@ -124,7 +149,7 @@ const Header = ({ searchQuery, setDebouncedSearchQuery, setSearchQuery }) => {
                   ></button>
                 </div>
                 <div className="offcanvas-body">
-                  <Cart />
+                  <Cart cartData={cartData} cartTotalFee={cartTotalFee} />
                 </div>
               </div>
             </div>
