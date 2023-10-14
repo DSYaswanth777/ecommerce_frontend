@@ -1,7 +1,6 @@
 import React from "react";
 import Header from "../components/Header/Header";
 import HeroSection from "../components/HeroSection/HeroSection";
-import Categories from "../components/Categories/Categories";
 import Footer from "../components/Footer/Footer";
 import Poster from "../components/Poster/Poster";
 import { useEffect } from "react";
@@ -28,17 +27,11 @@ function Home() {
     <div>
       <Header />
       <HeroSection />
-      <Categories />
       <Poster
         title="Just In"
         subtitle="New Arrivals for You"
         products={recentProducts}
       />
-      {/* <Poster
-        title="Items Under Budget"
-        subtitle="Get It fast"
-        products={sortedproducts}
-      /> */}
       <Footer />
     </div>
   );

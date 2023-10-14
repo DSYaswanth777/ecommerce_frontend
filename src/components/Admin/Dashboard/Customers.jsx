@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { fetchCustomers } from "../../../redux/slice/customerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "react-feather";
-import { Badge } from 'reactstrap';
+import { Badge } from "reactstrap";
 import { Spinner } from "react-bootstrap";
 
 function Customers() {
   const customersData = useSelector((state) => state.customers?.customers);
+  console.log(customersData);
   const status = useSelector((state) => state.customers?.status);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -15,7 +16,7 @@ function Customers() {
       dispatch(fetchCustomers());
     }
   }, [status, dispatch]);
-  // fetchCustomers()
+
   const columns = [
     {
       name: "Name",
@@ -31,20 +32,14 @@ function Customers() {
       name: "Mobile Number",
       selector: (row) => row.mobile, // Use a selector function
     },
-    {
-      name: "Wishlist",
-      selector: (row) => row.wishlist,
-    },
+  
     {
       name: "Verified",
       selector: (row) => (
-        <Badge
-          color={row.verfied ? "success" : "danger"}
-        >
+        <Badge color={row.verfied ? "success" : "danger"}>
           {row.verfied ? "Verified" : "Not Verified"}
         </Badge>
       ),
-        
     },
   ];
   return (

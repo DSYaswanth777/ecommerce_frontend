@@ -16,20 +16,20 @@ import debounce from "lodash.debounce";
 import { useNavigate } from "react-router";
 
 const Header = () => {
+  const user = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSearchContainerVisible, setSearchContainerVisible] = useState(false);
   const [isAccountVisible, setAccountVisible] = useState(false);
   const [isCartVisible, setCartVisible] = useState(false);
-  const user = useSelector((state) => state.auth);
   const searchIcon = document.getElementById("searchBox");
   const profileBox = document.getElementById("profileBox");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const dispatch = useDispatch();
   const status = useSelector((state) => state.cart?.status);
   const cartData = useSelector((state) => state.cart?.cart?.cartItems);
   const cartTotalFee = useSelector((state) => state.cart?.cart.totalFee);
-  const navigate = useNavigate();
   useEffect(() => {
     if (isCartVisible && status === "idle") {
       dispatch(fetchUsercartAsync());
@@ -48,6 +48,9 @@ const Header = () => {
   const toggleCart = (e) => {
     setCartVisible(!isCartVisible);
     e.stopPropagation();
+    if (!isCartVisible && status === "idle") {
+      dispatch(fetchUsercartAsync());
+    }
   };
   document.addEventListener("click", (e) => {
     if (e.target !== searchIcon) {

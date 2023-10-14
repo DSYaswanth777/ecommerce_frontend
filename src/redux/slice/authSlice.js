@@ -1,137 +1,100 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-// Define an asynchronous thunk action for logging in
-export const loginAsync = createAsyncThunk(
-  "auth/loginAsync",
-  async (credentials) => {
-    try {
-      // Make your API call here using fetch or axios
-      const response = await fetch("http://localhost:3000/api/v1/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-      });
+export const loginAsync = createAsyncThunk("auth/loginAsync", async (credentials) => {
+  try {
+    const response = await axios.post("http://localhost:3000/api/v1/login", credentials, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-      if (!response.ok) {
-        // Handle errors here (e.g., invalid credentials)
-        throw new Error("Login failed");
-      }
-
-      const data = await response.json();
-
-      // Assuming your API response structure includes user data and a token
-      const { user, token, message } = data;
-
-      // Determine if the user is an admin based on their role
-      // const isAdmin = user && user.role === "admin";
-
-      // Return the user, token, isAdmin, and message to be used as the payload
-      return { user, token, message };
-    } catch (error) {
-      // Handle any network or API errors here
-      throw error;
+    if (response.status !== 200) {
+      throw new Error("Login failed");
     }
-  }
-);
-export const signupAsync = createAsyncThunk(
-  "auth/signupAsync",
-  async (userData) => {
-    try {
-      // Make your API call here using fetch or axios
-      const response = await fetch("http://localhost:3000/api/v1/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-      if (!response.ok) {
-        // Handle errors here (e.g., duplicate email)
-        throw new Error("Signup failed");
-      }
-      // You may receive an OTP in the response, depending on your API design
-      const data = await response.json();
-      // Assuming your API response structure includes an OTP field
-      const { otp } = data;
-      return { otp };
-    } catch (error) {
-      // Handle any network or API errors here
-      throw error;
-    }
-  }
-);
-export const forgotPasswordAsync = createAsyncThunk(
-  "auth/signupAsync",
-  async (userData) => {
-    try {
-      // Make your API call here using fetch or axios
-      const response = await fetch("http://localhost:3000/api/v1/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to Send OTP");
-      }
-      // You may receive an OTP in the response, depending on your API design
-      const data = await response.json();
-      return data
-    } catch (error) {
-      throw error;
-    }
-  }
-)
-export const resetPasswordAsync = createAsyncThunk(
-  "auth/signupAsync",
-  async (userData) => {
-    try {
-      // Make your API call here using fetch or axios
-      const response = await fetch("http://localhost:3000/api/v1/reset-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to Send OTP");
-      }
-      // You may receive an OTP in the response, depending on your API design
-      const data = await response.json();
-      return data
-    } catch (error) {
-      throw error;
-    }
-  }
-)
-export const verifyOtpAsync = createAsyncThunk(
-  "auth/verifyOtpAsync",
-  async ({ mobile, otp }) => {
-    try {
-      const response = await fetch("http://localhost:3000/api/v1/verify-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ mobile, otp }),
-      });
 
-      if (!response.ok) {
-        throw new Error("OTP verification failed");
-      }
-
-      // OTP verification succeeded, no need to return any data
-      return null;
-    } catch (error) {
-      // Handle OTP verification error
-      throw error;
-    }
+    const { user, token, message } = response.data;
+    return { user, token, message };
+  } catch (error) {
+    throw error;
   }
-);
+});
+
+export const signupAsync = createAsyncThunk("auth/signupAsync", async (userData) => {
+  try {
+    const response = await axios.post("http://localhost:3000/api/v1/signup", userData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status !== 200) {
+      throw new Error("Signup failed");
+    }
+
+    const { otp } = response.data;
+    return { otp };
+  } catch (error) {
+    throw error;
+  }
+});
+
+export const forgotPasswordAsync = createAsyncThunk("auth/forgotPasswordAsync", async (userData) => {
+  try {
+    const response = await axios.post("http://localhost:3000/api/v1/forgot-password", userData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status !== 200) {
+      throw new Error("Failed to Send OTP");
+    }
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+});
+
+export const resetPasswordAsync = createAsyncThunk("auth/resetPasswordAsync", async (userData) => {
+  try {
+    const response = await axios.post("http://localhost:3000/api/v1/reset-password", userData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status !== 200) {
+      throw Error("Failed to Reset Password");
+    }
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+});
+
+export const verifyOtpAsync = createAsyncThunk("auth/verifyOtpAsync", async ({ mobile, otp }) => {
+  try {
+    const response = await axios.post("http://localhost:3000/api/v1/verify-otp", { mobile, otp }, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status !== 200) {
+      throw new Error("OTP verification failed");
+    }
+
+    return null;
+  } catch (error) {
+    throw error;
+  }
+});
+
+// Rest of your Redux code...
+
 const loadUserFromLocalStorage = () => {
   const token = localStorage.getItem("token");
   const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
