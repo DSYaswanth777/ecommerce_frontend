@@ -131,7 +131,9 @@ export const viewProductAsync = createAsyncThunk(
 export const recentProductAsync = createAsyncThunk(
   "products/recentProducts",
   async () => {
-    const response = await fetch(`http://localhost:3000/api/v1/products/recentproducts`);
+    const response = await fetch(
+      `http://localhost:3000/api/v1/products/recentproducts`
+    );
     const data = await response.json();
     return data;
   }
@@ -139,19 +141,32 @@ export const recentProductAsync = createAsyncThunk(
 export const sortproductsAsync = createAsyncThunk(
   "products/sortProducts",
   async (sortBy) => {
-    const response = await fetch(`http://localhost:3000/api/v1/products/sort?sortBy=${sortBy}`);
+    const response = await fetch(
+      `http://localhost:3000/api/v1/products/sort?sortBy=${sortBy}`
+    );
     const data = await response.json();
     return data;
   }
-)
-
+);
+export const filterProductsAsync = createAsyncThunk(
+  "products/filterProducts",
+  async (subcategoriesId) => {
+    
+    const subcategoryIdsString = subcategoriesId.join(','); 
+    const response = await fetch(
+      `http://localhost:3000/api/v1/products/filters?subcategoryIds=${subcategoryIdsString}`
+    );
+    const data = await response.json();
+    return data;
+  }
+);
 
 const productSlice = createSlice({
   name: "products",
   initialState: {
     products: null,
     product: null,
-    sortedproducts:null,
+    sortedproducts: null,
     status: "idle",
     error: null,
   },
@@ -232,6 +247,17 @@ const productSlice = createSlice({
       .addCase(viewProductAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.product = action.payload;
+      })
+      .addCase(filterProductsAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(filterProductsAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.products = action.payload;
+      })
+      .addCase(filterProductsAsync.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });
