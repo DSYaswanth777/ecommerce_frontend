@@ -48,13 +48,6 @@
             </div>
           </div>
         </Card>
-        <Card className="h-100 p-4">
-          <CardTitle className="fs-5 fw-bold pb-3">Last Used</CardTitle>
-          <h6>D S Yaswanth</h6>
-          <p> Jakka Vari Street, Perala, Chirala, Andhra Pradesh</p>
-          <p> Jakka Vari Street, Perala, Chirala, Andhra Pradesh</p>
-          <Button style={{backgroundColor:"#2D7B8B"}}>Deliver to this Address</Button>
-        </Card>
       </div>
     );
   }

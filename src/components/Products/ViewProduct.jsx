@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Carousel } from "react-responsive-carousel";
 import { formatCurrency } from "../../utilities/formatCurrency";
-import { Button, Input, Badge } from "reactstrap";
+import { Button, Badge } from "reactstrap";
 import { FaCartPlus, FaHeart } from "react-icons/fa";
 import Poster from "../../components/Poster/Poster";
 import "./Products.scss";
@@ -49,9 +49,6 @@ function ViewProduct() {
           </Badge>
           <p className="fs-4">{formatCurrency(product?.productPrice)}</p>
           <div className="d-flex gap-3">
-            <Button className="btn-sm">-</Button>
-            <Input type="text" style={{ width: "40px", height: "40px" }} />
-            <Button className="btn-sm">+</Button>
             <Button
               className="text-uppercase"
               style={{ backgroundColor: "#2A798B" }}
@@ -60,13 +57,13 @@ function ViewProduct() {
               <FaCartPlus className="me-2" />
               Add To Cart
             </Button>
-          </div>
           <Button
             className="text-uppercase text-white border-0 mt-3"
             style={{ backgroundColor: "#88173E" }}
           >
             <FaHeart className="me-2 text-white" /> Add To Wishlist
           </Button>
+          </div>
         </div>
       </div>
       <Poster title="Relevalant Items" subtitle="Check Out these" />

@@ -3,11 +3,18 @@ import { Badge, Button, Card, CardBody, CardTitle, Input } from "reactstrap";
 import { formatCurrency } from "../../../utilities/formatCurrency";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchUsercartAsync } from "../../../redux/slice/cartSlice";
+import {
+  cartQuantityIncreaseAsync,
+  fetchUsercartAsync,
+} from "../../../redux/slice/cartSlice";
 function CartStep({ handlePreviousStep, handleNextStep }) {
   const dispatch = useDispatch();
   const status = useSelector((state) => state.cart?.status);
   const cartData = useSelector((state) => state.cart?.cart?.cartItems);
+  const handleQuantityIncrease = async () => {
+    await dispatch(cartQuantityIncreaseAsync());
+    
+  };
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchUsercartAsync());
@@ -16,7 +23,10 @@ function CartStep({ handlePreviousStep, handleNextStep }) {
   return (
     <>
       <div className="d-flex container justify-content-between pt-5 flex-column flex-lg-row flex-md-column flex gap-5   pb-5">
-        <div className="d-flex flex-column   gap-3 pb-5">
+        <div
+          className="d-flex flex-column gap-3 w-75 pb-5"
+          style={{ height: "540px", overflow: "scroll", overflowX: "hidden" }}
+        >
           {cartData?.map((product) => (
             <Card className=" border shadow-sm p-3 h-60 w-100">
               <CardBody>
@@ -44,7 +54,12 @@ function CartStep({ handlePreviousStep, handleNextStep }) {
                         value={product?.quantity}
                         style={{ width: "40px", height: "30px" }}
                       ></Input>
-                      <Button className="btn-sm border-0 bg-success">+</Button>
+                      <Button
+                        className="btn-sm border-0 bg-success"
+                        onClick={() => handleQuantityIncrease(product._id)}
+                      >
+                        +
+                      </Button>
                     </div>
                   </div>
                   <div className="d-flex flex-column gap-3 justify-content-center ">
@@ -66,7 +81,9 @@ function CartStep({ handlePreviousStep, handleNextStep }) {
         </div>
         <div className="d-flex justify-content-center align-items-center shadow-sm">
           <Card className="bg-light py-4 w-100 ">
-            <CardTitle className="px-3 ">Cart Total</CardTitle>
+            <CardTitle className="px-3 text-center fs-4 fw-bold">
+              Cart Total
+            </CardTitle>
             <CardBody className="totalCard">
               <div className="d-flex flex-column gap-2">
                 <div className="d-flex justify-content-between align-items-center">
@@ -76,14 +93,6 @@ function CartStep({ handlePreviousStep, handleNextStep }) {
                 <h6 className="fw-bold pt-2">Price Details</h6>
                 <div className="d-flex justify-content-between gap-5  align-items-center">
                   <div>Total MRP</div>
-                  <div className="">{formatCurrency("2500")}</div>
-                </div>
-                <div className="d-flex justify-content-between gap-5 align-items-center">
-                  <div>Bag Discount</div>
-                  <div className="">{formatCurrency("2500")}</div>
-                </div>
-                <div className="d-flex justify-content-between gap-5 align-items-center">
-                  <div>Estimated Tax</div>
                   <div className="">{formatCurrency("2500")}</div>
                 </div>
                 <div className="d-flex justify-content-between gap-5 align-items-center">
