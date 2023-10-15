@@ -11,7 +11,10 @@ import Cart from "../Cart/Cart";
 import { useDispatch, useSelector } from "react-redux";
 import { User } from "react-feather";
 import { fetchUsercartAsync } from "../../redux/slice/cartSlice";
-import { searchProductsAsync } from "../../redux/slice/productSlice";
+import {
+  fetchProducts,
+  searchProductsAsync,
+} from "../../redux/slice/productSlice";
 import debounce from "lodash.debounce";
 import { useNavigate } from "react-router";
 
@@ -30,6 +33,10 @@ const Header = () => {
   const status = useSelector((state) => state.cart?.status);
   const cartData = useSelector((state) => state.cart?.cart?.cartItems);
   const cartTotalFee = useSelector((state) => state.cart?.cart.totalFee);
+  
+  const suggestedProducts = useSelector(
+    (state) => state?.products?.products
+  );
   useEffect(() => {
     if (isCartVisible && status === "idle") {
       dispatch(fetchUsercartAsync());
@@ -64,19 +71,25 @@ const Header = () => {
   const debouncedHandleSearch = debounce(() => {
     if (debouncedSearchQuery) {
       dispatch(searchProductsAsync(debouncedSearchQuery));
-      navigate(`/products?search=${debouncedSearchQuery}`);
     }
   }, 300);
-  
+
   useEffect(() => {
     // Only perform the search when debouncedSearchQuery changes
-    if (debouncedSearchQuery || searchQuery === "") {
+    if (debouncedSearchQuery) {
       debouncedHandleSearch();
+    } else {
+      dispatch(fetchProducts());
     }
   }, [debouncedSearchQuery, searchQuery]);
   const cartQuantity = useSelector(
     (state) => state?.cart.cart.cartItems?.length
   );
+  const handleSearch = (e) => {
+    navigate(`/products?search=${debouncedSearchQuery}`);
+
+  };
+
   return (
     <div className="header  bg-white sticky-top border-bottom ">
       <div className="container">
@@ -179,6 +192,17 @@ const Header = () => {
               <BsSearch size={20} className="" />
             </InputGroupText>
           </InputGroup>
+          <ul className="search-results bg-white py-2 px-2">
+            {suggestedProducts?.slice(0, 5)?.map((suggestion, index) => (
+              <p
+                key={index}
+                className="border-bottom border-2 text-left "
+                onClick={handleSearch}
+              >
+                {suggestion?.productName}
+              </p>
+            ))}
+          </ul>
         </div>
       )}
       <NavbarMenu isOpen={menuOpen} toggleMenu={toggleMenu} />

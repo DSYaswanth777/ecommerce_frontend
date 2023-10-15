@@ -78,3 +78,17 @@
   background-color: #2D7B8B;
   color: #ffff;
 }
+.search-results{
+  width: 650px;
+  position: absolute;
+  text-align: start;
+  left: 28%;
+  top: 90%;
+  @media screen and (max-device-width: 480px) and (orientation: portrait) {
+    left: 5%;
+  }
+  @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    left: 50%;
+
+  }
+}

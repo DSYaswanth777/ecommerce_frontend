@@ -19,7 +19,6 @@ import { cartAddAsync, fetchUsercartAsync } from "../../redux/slice/cartSlice";
 import { Shimmer } from "react-shimmer";
 function Products({ productData }) {
   const status = useSelector((state) => state?.products?.status);
-
   const dispatch = useDispatch();
   const handleAddCartItem = (productId) => {
     // Dispatch the delete action

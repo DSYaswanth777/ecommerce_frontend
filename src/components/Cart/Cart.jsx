@@ -11,7 +11,6 @@ import { X } from "react-feather";
 import { Spinner } from "react-bootstrap";
 function Cart({ cartData, cartTotalFee }) {
   const status = useSelector((state) => state?.cart?.status);
-  console.log(status);
   const dispatch = useDispatch();
   return (
     <>
@@ -21,7 +20,7 @@ function Cart({ cartData, cartTotalFee }) {
             <Spinner></Spinner>
           ) : (
             cartData?.map((product) => (
-              <CardBody className="">
+              <CardBody className="" key={product._id}>
                 <div className="d-flex gap-4 justify-content-center align-items-center py-3">
                   <img
                     alt={product.product.prod}

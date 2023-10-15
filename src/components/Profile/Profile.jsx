@@ -62,7 +62,7 @@ const Profile = () => {
           <Input
             type="text"
             name="name"
-            value={isEditing ? editedName : profileData?.name}
+            value={isEditing ? editedName : profileData?.name || ""}
             onChange={(e) => setEditedName(e.target.value)}
             className="mb-3"
             disabled={!isEditing}
@@ -71,7 +71,7 @@ const Profile = () => {
           <Input
             type="email"
             name="email"
-            value={isEditing ? editedEmail : profileData?.email}
+            value={isEditing ? editedEmail : profileData?.email || ""}
             onChange={(e) => setEditedEmail(e.target.value)}
             className="mb-3"
             disabled={!isEditing}
@@ -80,7 +80,7 @@ const Profile = () => {
           <Input
             type="number"
             name="mobile"
-            value={profileData.mobile}
+            value={profileData.mobile || ""}
             className="mb-3"
             disabled
           />

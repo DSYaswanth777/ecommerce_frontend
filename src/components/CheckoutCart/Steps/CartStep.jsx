@@ -11,6 +11,9 @@ function CartStep({ handlePreviousStep, handleNextStep }) {
   const dispatch = useDispatch();
   const status = useSelector((state) => state.cart?.status);
   const cartData = useSelector((state) => state.cart?.cart?.cartItems);
+  const totalfee = useSelector((state) => state.cart?.cart?.totalFee);
+  const deliveryCharge = useSelector((state) => state.cart?.cart?.deliveryCharge);
+
   const handleQuantityIncrease = async () => {
     await dispatch(cartQuantityIncreaseAsync());
     
@@ -86,24 +89,20 @@ function CartStep({ handlePreviousStep, handleNextStep }) {
             </CardTitle>
             <CardBody className="totalCard">
               <div className="d-flex flex-column gap-2">
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>Coupons</div>
-                  <div className="text-primary">Apply</div>
-                </div>
                 <h6 className="fw-bold pt-2">Price Details</h6>
                 <div className="d-flex justify-content-between gap-5  align-items-center">
-                  <div>Total MRP</div>
-                  <div className="">{formatCurrency("2500")}</div>
+                  <div>Total </div>
+                  <div className="">{formatCurrency(totalfee-deliveryCharge)}</div>
                 </div>
                 <div className="d-flex justify-content-between gap-5 align-items-center">
                   <div>Delivery Charges</div>
-                  <div className="">{formatCurrency("2500")}</div>
+                  <div className="">{formatCurrency(deliveryCharge)}</div>
                 </div>
                 <hr />
                 <div className="d-flex flex-column gap-3">
                   <div className="d-flex justify-content-between align-items-center">
-                    <div>Total</div>
-                    <div className="">{formatCurrency("2500")}</div>
+                    <div>Total <br/>(*Includes Delivery fee)</div>
+                    <div className="">{formatCurrency(totalfee)}</div>
                   </div>
                   <Button onClick={handleNextStep} color="success">
                     Place Order

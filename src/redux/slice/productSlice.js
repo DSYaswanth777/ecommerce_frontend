@@ -92,6 +92,16 @@ export const searchProductsAsync = createAsyncThunk(
   "products/searchProducts",
   async (productName) => {
     try {
+      if (!productName) {
+        // Handle an empty search query by fetching all products
+        const response = await fetch(`http://localhost:3000/api/v1/products`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch all products");
+        }
+        const data = await response.json();
+        return data;
+      }
+
       // You can pass the productName as a query parameter to your API endpoint
       const response = await fetch(
         `http://localhost:3000/api/v1/products/search?productName=${productName}`
@@ -108,6 +118,7 @@ export const searchProductsAsync = createAsyncThunk(
     }
   }
 );
+
 export const viewProductAsync = createAsyncThunk(
   "product/viewproduct",
   async (productId) => {
@@ -151,8 +162,7 @@ export const sortproductsAsync = createAsyncThunk(
 export const filterProductsAsync = createAsyncThunk(
   "products/filterProducts",
   async (subcategoriesId) => {
-    
-    const subcategoryIdsString = subcategoriesId.join(','); 
+    const subcategoryIdsString = subcategoriesId.join(",");
     const response = await fetch(
       `http://localhost:3000/api/v1/products/filters?subcategoryIds=${subcategoryIdsString}`
     );
@@ -167,6 +177,8 @@ const productSlice = createSlice({
     products: null,
     product: null,
     sortedproducts: null,
+    recentproducts: null,
+    suggestedproducts: null,
     status: "idle",
     error: null,
   },
@@ -189,7 +201,7 @@ const productSlice = createSlice({
       })
       .addCase(recentProductAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.products = action.payload;
+        state.recentproducts = action.payload;
       })
       .addCase(recentProductAsync.rejected, (state, action) => {
         state.status = "failed";
@@ -232,6 +244,7 @@ const productSlice = createSlice({
       .addCase(searchProductsAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.products = action.payload;
+        state.suggestedproducts = action.payload;
       })
       .addCase(searchProductsAsync.rejected, (state, action) => {
         state.status = "failed";

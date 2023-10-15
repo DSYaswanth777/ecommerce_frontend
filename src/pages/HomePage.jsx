@@ -10,7 +10,7 @@ import {
   sortproductsAsync,
 } from "../redux/slice/productSlice";
 function Home() {
-  const recentProducts = useSelector((state) => state.products?.products);
+  const recentProducts = useSelector((state) => state.products?.recentproducts);
   const status = useSelector((state) => state.products?.status);
   const dispatch = useDispatch();
   useEffect(() => {
