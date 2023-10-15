@@ -32,7 +32,7 @@ function Search() {
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
-      dispatch(sortproductsAsync("featured"))
+      dispatch(sortproductsAsync("featured"));
     }
   }, [status, dispatch]);
 
@@ -52,6 +52,10 @@ function Search() {
     { value: "featured", label: "Featured" },
     { value: "lowtohigh", label: "Low to High" },
     { value: "hightolow", label: "High to Low" },
+    { value: "hightolow&maxPrice=500", label: "Under 500" },
+    { value: "hightolow&maxPrice=1000", label: "Under 1000" },
+    { value: "hightolow&maxPrice=1500", label: "Under 1500" },
+    { value: "hightolow&maxPrice=2000", label: "Under 2000" },
   ];
   return (
     <div>
