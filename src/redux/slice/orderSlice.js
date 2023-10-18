@@ -33,7 +33,7 @@ export const placeOrder = createAsyncThunk(
 export const updatePaymentStatus = createAsyncThunk(
   "orders/updatePaymentStatus",
   async ({orderID, paymentStatus}, { getState, rejectWithValue }) => {
-    console.log(orderID,paymentStatus,"redux paymnet")
+  console.log(orderID)
     const token = getState().auth.token;
 
     try {

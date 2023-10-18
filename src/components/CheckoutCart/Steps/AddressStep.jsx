@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Card, Input, InputGroup, Label } from "reactstrap";
+import { Card, Input, InputGroup, Label } from "reactstrap";
 import {
   placeOrder,
   updatePaymentStatus,
@@ -9,7 +9,6 @@ import GooglePayButton from "@google-pay/button-react";
 
 function AddressStep() {
   const cartData = useSelector((state) => state?.cart?.cart);
-  const orderInfo = useSelector((state) => state?.orders?.orders?.orderID);
   const [address, setAddress] = useState({
     fullName: "",
     mobileNumber: "",
@@ -26,32 +25,41 @@ function AddressStep() {
       [name]: value,
     });
   };
-  const [orderID, setOrderId] = useState("");
-  const handleSaveAndDeliver = async () => {
-    // You might want to handle the asynchronous dispatch here
-    const response = await dispatch(placeOrder(address));
-    if (response.meta.requestStatus === "fulfilled") {
-      setOrderId(response.payload.orderID);
+
+  const handleGooglePayClick = async () => {
+    try {
+      // Dispatch the placeOrder action to create the order and get the orderID
+      const orderResponse = await dispatch(placeOrder(address));
+      if (orderResponse.meta.requestStatus === "fulfilled") {
+        const orderId = orderResponse.payload.orderID;
+
+        // Dispatch the updatePaymentStatus action with the obtained orderID
+        const paymentResponse = await dispatch(
+          updatePaymentStatus({ orderID: orderId, paymentStatus: "Successful" })
+        );
+
+        if (paymentResponse.meta.requestStatus === "fulfilled") {
+          return { transactionState: "SUCCESS" };
+        } else {
+          // Handle errors in updating payment status
+          console.error(
+            "Error updating payment status:",
+            paymentResponse.error
+          );
+          return { transactionState: "ERROR" };
+        }
+      } else {
+        // Handle errors in creating the order
+        console.error("Error creating the order:", orderResponse.error);
+        return { transactionState: "ERROR" };
+      }
+    } catch (error) {
+      // Handle any other unexpected errors
+      console.error("An unexpected error occurred:", error);
+      return { transactionState: "ERROR" };
     }
   };
-  const handlePaymentAuthorized = async () => {
-    // Assuming you have a function to update payment status in your orderSlice
-    await dispatch(
-      updatePaymentStatus({ orderId: orderInfo, paymentStatus: "Successful" })
-    );
-    return { transactionState: "SUCCESS" };
-  };
 
-  const handlePaymentFailed = async () => {
-    console.log("Payment failed.");
-
-    // Assuming you have a function to update payment status in your orderSlice
-    await dispatch(
-      updatePaymentStatus({ orderId:orderInfo, paymentStatus: "failed" })
-    );
-    return { transactionState: "Failed" };
-
-  };
   return (
     <div className="container py-5 d-flex flex-column flex-sm-row justify-content-between gap-5">
       <Card className="p-5 w-100">
@@ -135,7 +143,6 @@ function AddressStep() {
           </div>
           <div className=" pt-3 d-flex flex-column ">
             <GooglePayButton
-              onClick={handleSaveAndDeliver}
               environment="TEST"
               paymentRequest={{
                 apiVersion: 2,
@@ -180,9 +187,7 @@ function AddressStep() {
                   },
                 };
               }}
-              onPaymentAuthorized={handlePaymentAuthorized}
-              onCancel={handlePaymentFailed}
-              onError={handlePaymentFailed}
+              onPaymentAuthorized={handleGooglePayClick}
               existingPaymentMethodRequired="false"
               buttonColor="black"
               buttonType="Buy"
