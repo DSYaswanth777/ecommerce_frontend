@@ -11,6 +11,7 @@ import customerSlice from '../slice/customerSlice';
 import wishlistSlice from '../slice/wishlistSlice';
 import cartSlice from '../slice/cartSlice';
 import ProfileSlice from '../slice/ProfileSlice';
+import orderSlice from '../slice/orderSlice';
 const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -20,7 +21,8 @@ const store = configureStore({
     customers:customerSlice,
     wishlist:wishlistSlice,
     cart:cartSlice,
-    profile:ProfileSlice
+    profile:ProfileSlice,
+    orders:orderSlice
   },
   middleware: [thunk],
 });

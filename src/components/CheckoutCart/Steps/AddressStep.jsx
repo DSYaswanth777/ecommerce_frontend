@@ -1,7 +1,15 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Card, Input, InputGroup, Label } from "reactstrap";
+import {
+  placeOrder,
+  updatePaymentStatus,
+} from "../../../redux/slice/orderSlice";
+import GooglePayButton from "@google-pay/button-react";
 
 function AddressStep() {
+  const cartData = useSelector((state) => state?.cart?.cart);
+  const orderInfo = useSelector((state) => state?.orders?.orders?.orderID);
   const [address, setAddress] = useState({
     fullName: "",
     mobileNumber: "",
@@ -10,9 +18,7 @@ function AddressStep() {
     townCity: "",
     pincode: "",
   });
-  const cartData = useSelector((state) => state.cart?.cart?.cartItems);
-  const totalfee = useSelector((state) => state.cart?.cart?.totalFee);
-
+  const dispatch = useDispatch();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAddress({
@@ -20,15 +26,32 @@ function AddressStep() {
       [name]: value,
     });
   };
-
-  const handleSaveAndDeliver = () => {
-    // Here, you can perform actions such as sending the address to your server
-    // or updating the state in your parent component.
-    // You can access the address details in the 'address' state object.
-    console.log("Shipping Address:", address);
-    // Add your logic here to save and deliver the address.
+  const [orderID, setOrderId] = useState("");
+  const handleSaveAndDeliver = async () => {
+    // You might want to handle the asynchronous dispatch here
+    const response = await dispatch(placeOrder(address));
+    if (response.meta.requestStatus === "fulfilled") {
+      setOrderId(response.payload.orderID);
+    }
+  };
+  const handlePaymentAuthorized = async () => {
+    // Assuming you have a function to update payment status in your orderSlice
+    await dispatch(
+      updatePaymentStatus({ orderId: orderInfo, paymentStatus: "Successful" })
+    );
+    return { transactionState: "SUCCESS" };
   };
 
+  const handlePaymentFailed = async () => {
+    console.log("Payment failed.");
+
+    // Assuming you have a function to update payment status in your orderSlice
+    await dispatch(
+      updatePaymentStatus({ orderId:orderInfo, paymentStatus: "failed" })
+    );
+    return { transactionState: "Failed" };
+
+  };
   return (
     <div className="container py-5 d-flex flex-column flex-sm-row justify-content-between gap-5">
       <Card className="p-5 w-100">
@@ -110,13 +133,60 @@ function AddressStep() {
               />
             </InputGroup>
           </div>
-          <div className=" pt-3">
-            <Button
-              className=" h-100 bg-success border-0 shadow-sm"
+          <div className=" pt-3 d-flex flex-column ">
+            <GooglePayButton
               onClick={handleSaveAndDeliver}
-            >
-              Save and Deliver Here
-            </Button>
+              environment="TEST"
+              paymentRequest={{
+                apiVersion: 2,
+                apiVersionMinor: 0,
+                allowedPaymentMethods: [
+                  {
+                    type: "CARD",
+                    parameters: {
+                      allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+                      allowedCardNetworks: ["MASTERCARD", "VISA"],
+                    },
+                    tokenizationSpecification: {
+                      type: "PAYMENT_GATEWAY",
+                      parameters: {
+                        gateway: "example",
+                        gatewayMerchantId: "exampleGatewayMerchantId",
+                      },
+                    },
+                  },
+                ],
+                merchantInfo: {
+                  merchantId: "12345678901234567890",
+                  merchantName: "Demo Merchant",
+                },
+                transactionInfo: {
+                  totalPriceStatus: "FINAL",
+                  totalPriceLabel: "Total",
+                  totalPrice: cartData.totalFee.toString(),
+                  currencyCode: "INR",
+                  countryCode: "US",
+                },
+                shippingAddressRequired: true,
+                callbackIntents: ["SHIPPING_ADDRESS", "PAYMENT_AUTHORIZATION"],
+              }}
+              onPaymentDataChanged={() => {
+                return {
+                  newShippingOptionParameters: {},
+                  newTransactionInfo: {
+                    totalPriceStatus: "FINAL",
+                    totalPrice: cartData.totalFee.toString(),
+                    currencyCode: "INR",
+                  },
+                };
+              }}
+              onPaymentAuthorized={handlePaymentAuthorized}
+              onCancel={handlePaymentFailed}
+              onError={handlePaymentFailed}
+              existingPaymentMethodRequired="false"
+              buttonColor="black"
+              buttonType="Buy"
+            />
           </div>
         </div>
       </Card>
