@@ -6,6 +6,9 @@ import {
   updatePaymentStatus,
 } from "../../../redux/slice/orderSlice";
 import GooglePayButton from "@google-pay/button-react";
+import { useRef } from "react";
+import { useCallback } from "react";
+import { useNavigate } from "react-router";
 
 function AddressStep() {
   const cartData = useSelector((state) => state?.cart?.cart);
@@ -18,6 +21,10 @@ function AddressStep() {
     pincode: "",
   });
   const dispatch = useDispatch();
+  const addressRef = useRef(address);
+  addressRef.current = address;
+
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAddress({
@@ -26,22 +33,22 @@ function AddressStep() {
     });
   };
 
-  const handleGooglePayClick = async () => {
+  const handleGooglePayClick = useCallback(async () => {
     try {
-      // Dispatch the placeOrder action to create the order and get the orderID
-      const orderResponse = await dispatch(placeOrder(address));
+      console.log(addressRef.current, "inside address");
+      const orderResponse = await dispatch(placeOrder(addressRef.current));
+
       if (orderResponse.meta.requestStatus === "fulfilled") {
         const orderId = orderResponse.payload.orderID;
 
-        // Dispatch the updatePaymentStatus action with the obtained orderID
         const paymentResponse = await dispatch(
           updatePaymentStatus({ orderID: orderId, paymentStatus: "Successful" })
         );
 
         if (paymentResponse.meta.requestStatus === "fulfilled") {
+          navigate("/");
           return { transactionState: "SUCCESS" };
         } else {
-          // Handle errors in updating payment status
           console.error(
             "Error updating payment status:",
             paymentResponse.error
@@ -49,17 +56,15 @@ function AddressStep() {
           return { transactionState: "ERROR" };
         }
       } else {
-        // Handle errors in creating the order
+        navigate("/checkout")
         console.error("Error creating the order:", orderResponse.error);
         return { transactionState: "ERROR" };
       }
     } catch (error) {
-      // Handle any other unexpected errors
       console.error("An unexpected error occurred:", error);
       return { transactionState: "ERROR" };
     }
-  };
-
+  }, [dispatch]);
   return (
     <div className="container py-5 d-flex flex-column flex-sm-row justify-content-between gap-5">
       <Card className="p-5 w-100">

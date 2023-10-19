@@ -32,6 +32,11 @@ function Home() {
         subtitle="New Arrivals for You"
         products={recentProducts}
       />
+      <Poster
+        title="Just In"
+        subtitle="New Arrivals for You"
+        products={recentProducts}
+      />
       <Footer />
     </div>
   );

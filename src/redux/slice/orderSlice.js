@@ -5,7 +5,19 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // Define an async thunk to place an order
 export const placeOrder = createAsyncThunk(
   "orders/placeOrder",
-  async (orderData, { getState, rejectWithValue }) => {
+  async (
+    { fullName, landmark, mobileNumber, pincode, streetAddress, townCity },
+    { getState, rejectWithValue }
+  ) => {
+    const shippingAddress = {
+      fullName,
+      landmark,
+      mobileNumber,
+      pincode,
+      streetAddress,
+      townCity,
+    };
+    console.log(shippingAddress)
     try {
       const token = getState().auth.token;
 
@@ -15,7 +27,7 @@ export const placeOrder = createAsyncThunk(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(orderData),
+        body: JSON.stringify({shippingAddress}),
       });
       if (!response.ok) {
         const data = await response.json();
@@ -32,8 +44,8 @@ export const placeOrder = createAsyncThunk(
 // Define an async thunk to update the payment status of an order
 export const updatePaymentStatus = createAsyncThunk(
   "orders/updatePaymentStatus",
-  async ({orderID, paymentStatus}, { getState, rejectWithValue }) => {
-  console.log(orderID)
+  async ({ orderID, paymentStatus }, { getState, rejectWithValue }) => {
+    console.log(orderID);
     const token = getState().auth.token;
 
     try {
@@ -47,7 +59,7 @@ export const updatePaymentStatus = createAsyncThunk(
           },
           body: JSON.stringify({
             orderID,
-            paymentStatus
+            paymentStatus,
           }),
         }
       );
@@ -77,7 +89,7 @@ const orderSlice = createSlice({
       })
       .addCase(placeOrder.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders=action.payload;
+        state.orders = action.payload;
       })
       .addCase(placeOrder.rejected, (state, action) => {
         state.loading = false;
@@ -88,8 +100,8 @@ const orderSlice = createSlice({
       })
       .addCase(updatePaymentStatus.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders=action.payload;
-        
+        state.orders = action.payload;
+
         // Update the payment status of the order in the state
       })
       .addCase(updatePaymentStatus.rejected, (state, action) => {
