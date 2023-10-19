@@ -23,10 +23,7 @@ function AddressStep() {
   const dispatch = useDispatch();
   const addressRef = useRef(address);
   addressRef.current = address;
-
-  const navigate = useNavigate();
-
-  
+  const navigate = useNavigate();  
   const [pincodeDetails, setPincodeDetails] = useState(null);
   const [availableOptions, setAvailableOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
