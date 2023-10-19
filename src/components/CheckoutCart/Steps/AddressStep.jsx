@@ -6,8 +6,7 @@ import {
   updatePaymentStatus,
 } from "../../../redux/slice/orderSlice";
 import GooglePayButton from "@google-pay/button-react";
-import { useRef } from "react";
-import { useCallback } from "react";
+import { useRef, useCallback } from "react";
 import { useNavigate } from "react-router";
 
 function AddressStep() {
@@ -17,20 +16,80 @@ function AddressStep() {
     mobileNumber: "",
     streetAddress: "",
     landmark: "",
-    townCity: "",
     pincode: "",
+    state: "",
+    townCity: "", 
   });
   const dispatch = useDispatch();
   const addressRef = useRef(address);
   addressRef.current = address;
 
   const navigate = useNavigate();
+
+  
+  const [pincodeDetails, setPincodeDetails] = useState(null);
+  const [availableOptions, setAvailableOptions] = useState([]);
+  const [selectedOption, setSelectedOption] = useState("");
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAddress({
       ...address,
       [name]: value,
     });
+
+    if (name === "pincode") {
+      // Fetch address details when pincode is entered or changed
+      fetchAddressDetails(value);
+    }
+  };
+
+  const fetchAddressDetails = async (pincode) => {
+    try {
+      const response = await fetch(
+        `https://api.postalpincode.in/pincode/${pincode}`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.length > 0) {
+          const postOfficeOptions = data[0].PostOffice.map(
+            (office) => office.Name
+          );
+          setAvailableOptions(postOfficeOptions);
+
+          setPincodeDetails(data[0]);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching address details:", error);
+    }
+  };
+
+  const handleOptionSelect = (option) => {
+    setSelectedOption(option);
+
+    // Extract state from the pincodeDetails object
+    const selectedOptionDetails = pincodeDetails?.PostOffice.find(
+      (office) => office.Name === option
+    );
+    if (selectedOptionDetails) {
+      const selectedState = selectedOptionDetails.State;
+
+      setAddress({
+        ...address,
+        townCity: option,
+        state: selectedState, // Update the state field
+      });
+    } else {
+      setAddress({
+        ...address,
+        townCity: option,
+      });
+    }
+
+    // Clear the availableOptions and selectedOption
+    setAvailableOptions([]);
+    setSelectedOption("");
   };
 
   const handleGooglePayClick = useCallback(async () => {
@@ -56,7 +115,7 @@ function AddressStep() {
           return { transactionState: "ERROR" };
         }
       } else {
-        navigate("/checkout")
+        navigate("/checkout");
         console.error("Error creating the order:", orderResponse.error);
         return { transactionState: "ERROR" };
       }
@@ -65,6 +124,7 @@ function AddressStep() {
       return { transactionState: "ERROR" };
     }
   }, [dispatch]);
+
   return (
     <div className="container py-5 d-flex flex-column flex-sm-row justify-content-between gap-5">
       <Card className="p-5 w-100">
@@ -124,17 +184,6 @@ function AddressStep() {
           </div>
           <div className="d-flex flex-column flex-sm-row gap-5 justify-content-center align-items-center">
             <InputGroup className="d-flex flex-column">
-              <Label className="me-3">Town/City:</Label>
-              <Input
-                type="text"
-                name="townCity"
-                className="w-100"
-                required
-                value={address.townCity}
-                onChange={handleInputChange}
-              />
-            </InputGroup>
-            <InputGroup className="d-flex flex-column">
               <Label className="me-3">Pincode:</Label>
               <Input
                 type="number"
@@ -144,9 +193,47 @@ function AddressStep() {
                 value={address.pincode}
                 onChange={handleInputChange}
               />
+              {availableOptions.length > 0 && (
+                <div className="d-flex flex-column pt-2 pincodeDetails bg-light w-100 border">
+                  {availableOptions.map((option) => (
+                    <p
+                      key={option}
+                      onClick={() => handleOptionSelect(option)}
+                      className=" bg-light border-bottom"
+                    >
+                      {option}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </InputGroup>
+            <InputGroup className="d-flex flex-column">
+              <Label className="me-3">Town/City:</Label>
+              <Input
+                type="text"
+                name="townCity"
+                className="w-100"
+                min={6}
+                value={address.townCity}
+                onChange={handleInputChange}
+              />
+            </InputGroup>
+          </div>
+          <div className="d-flex flex-column flex-sm-row gap-5 justify-content-center align-items-center">
+            <InputGroup className="d-flex flex-column">
+              <Label className="me-3">State:</Label>
+              <Input
+                type="text"
+                name="state"
+                className="w-100"
+                min={6}
+                value={address.state}
+                onChange={handleInputChange}
+              />
             </InputGroup>
           </div>
           <div className=" pt-3 d-flex flex-column ">
+            
             <GooglePayButton
               environment="TEST"
               paymentRequest={{
@@ -175,7 +262,7 @@ function AddressStep() {
                 transactionInfo: {
                   totalPriceStatus: "FINAL",
                   totalPriceLabel: "Total",
-                  totalPrice: cartData.totalFee.toString(),
+                  totalPrice: cartData?.totalFee.toString(),
                   currencyCode: "INR",
                   countryCode: "US",
                 },
