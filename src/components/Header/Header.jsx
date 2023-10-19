@@ -33,10 +33,8 @@ const Header = () => {
   const status = useSelector((state) => state.cart?.status);
   const cartData = useSelector((state) => state.cart?.cart?.cartItems);
   const cartTotalFee = useSelector((state) => state.cart?.cart.totalFee);
-  
-  const suggestedProducts = useSelector(
-    (state) => state?.products?.products
-  );
+
+  const suggestedProducts = useSelector((state) => state?.products?.products);
   useEffect(() => {
     if (isCartVisible && status === "idle") {
       dispatch(fetchUsercartAsync());
@@ -55,7 +53,7 @@ const Header = () => {
   const toggleCart = (e) => {
     setCartVisible(!isCartVisible);
     e.stopPropagation();
-    if (!isCartVisible && status === "idle") {
+    if (!isCartVisible) {
       dispatch(fetchUsercartAsync());
     }
   };
@@ -87,7 +85,6 @@ const Header = () => {
   );
   const handleSearch = (e) => {
     navigate(`/products?search=${debouncedSearchQuery}`);
-
   };
 
   return (
@@ -145,6 +142,8 @@ const Header = () => {
                   data-bs-target="#staticBackdrop"
                   aria-controls="staticBackdrop"
                 />
+          
+                <span className=" rounded-circle  cartCount ">{cartData?.length}</span>
               </div>
               <div
                 className="offcanvas offcanvas-end"

@@ -9,8 +9,12 @@ import {
   recentProductAsync,
   sortproductsAsync,
 } from "../redux/slice/productSlice";
+import Categories from "../components/Categories/categories";
 function Home() {
   const recentProducts = useSelector((state) => state.products?.recentproducts);
+  const filteredProducts = useSelector(
+    (state) => state.products?.filteredproducts
+  );
   const status = useSelector((state) => state.products?.status);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -20,22 +24,23 @@ function Home() {
   }, [status, dispatch]);
   useEffect(() => {
     if (status === "idle") {
-      dispatch(sortproductsAsync());
+      dispatch(sortproductsAsync("lowtohigh"));
     }
   }, [status, dispatch]);
   return (
     <div>
       <Header />
       <HeroSection />
+      <Categories/>
       <Poster
         title="Just In"
         subtitle="New Arrivals for You"
         products={recentProducts}
       />
       <Poster
-        title="Just In"
-        subtitle="New Arrivals for You"
-        products={recentProducts}
+        title="Best Deals Await"
+        subtitle="Discover Affordable Finds: Prices Low to High"
+        products={filteredProducts}
       />
       <Footer />
     </div>

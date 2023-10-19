@@ -57,76 +57,76 @@ export const cartAddAsync = createAsyncThunk(
   }
 );
 export const cartQuantityIncreaseAsync = createAsyncThunk(
-    "cart/cartQuantityIncreaseAsync",
-    async (cartItemId, { getState }) => {
-      const token = getState().auth.token;
-      try {
-        // Create an object with the productId key
-        const requestData = {
-          cartItemId: cartItemId,
-        };
-  
-        // Make the API call using fetch or axios
-        const response = await fetch(
-          `http://localhost:3000/api/v1/user/cart/increase`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(requestData), // Send the requestData object as JSON
-          }
-        );
-  
-        if (!response.ok) {
-          throw new Error("Error While Adding product to cart");
+  "cart/cartQuantityIncreaseAsync",
+  async (cartItemId, { getState }) => {
+    const token = getState().auth.token;
+    try {
+      // Create an object with the productId key
+      const requestData = {
+        cartItemId: cartItemId,
+      };
+
+      // Make the API call using fetch or axios
+      const response = await fetch(
+        `http://localhost:3000/api/v1/user/cart/increase`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(requestData), // Send the requestData object as JSON
         }
-  
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        throw error;
+      );
+
+      if (!response.ok) {
+        throw new Error("Error While Adding product to cart");
       }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw error;
     }
-  );
+  }
+);
 export const cartQuantityDecreaseAsync = createAsyncThunk(
-    "cart/cartQuantityDecreaseAsync",
-    async (cartItemId, { getState }) => {
-      const token = getState().auth.token;
-      try {
-        // Create an object with the productId key
-        const requestData = {
-          cartItemId: cartItemId,
-        };
-  
-        // Make the API call using fetch or axios
-        const response = await fetch(
-          `http://localhost:3000/api/v1/user/cart/decrease`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(requestData), // Send the requestData object as JSON
-          }
-        );
-  
-        if (!response.ok) {
-          throw new Error("Error While Adding product to cart");
+  "cart/cartQuantityDecreaseAsync",
+  async (cartItemId, { getState }) => {
+    const token = getState().auth.token;
+    try {
+      // Create an object with the productId key
+      const requestData = {
+        cartItemId: cartItemId,
+      };
+
+      // Make the API call using fetch or axios
+      const response = await fetch(
+        `http://localhost:3000/api/v1/user/cart/decrease`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(requestData), // Send the requestData object as JSON
         }
-  
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        throw error;
+      );
+
+      if (!response.ok) {
+        throw new Error("Error While Adding product to cart");
       }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw error;
     }
-  );
+  }
+);
 export const deletecartAsync = createAsyncThunk(
   "cart/deletecartAsync",
-  async ( cartItemId , { getState }) => {
+  async (cartItemId, { getState }) => {
     const token = getState().auth.token;
     try {
       const requestData = {
@@ -142,7 +142,6 @@ export const deletecartAsync = createAsyncThunk(
             Authorization: `Bearer ${token}`, // Include the bearer token in the request headers
           },
           body: JSON.stringify(requestData), // Send the requestData object as JSON
-
         }
       );
       if (!response.ok) {
@@ -178,7 +177,51 @@ const cartSlice = createSlice({
       .addCase(fetchUsercartAsync.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      });
+      })
+      .addCase(cartAddAsync.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(cartAddAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(cartAddAsync.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(cartQuantityIncreaseAsync.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(cartQuantityIncreaseAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(cartQuantityIncreaseAsync.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(cartQuantityDecreaseAsync.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(cartQuantityDecreaseAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(cartQuantityDecreaseAsync.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(deletecartAsync.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(deletecartAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(deletecartAsync.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
   },
 });
 

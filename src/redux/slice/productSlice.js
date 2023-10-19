@@ -179,6 +179,7 @@ const productSlice = createSlice({
     sortedproducts: null,
     recentproducts: null,
     suggestedproducts: null,
+    filteredproducts: null,
     status: "idle",
     error: null,
   },
@@ -213,6 +214,7 @@ const productSlice = createSlice({
       .addCase(sortproductsAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.products = action.payload;
+        state.filteredproducts = action.payload;
       })
       .addCase(sortproductsAsync.rejected, (state, action) => {
         state.status = "failed";

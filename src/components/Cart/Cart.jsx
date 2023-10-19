@@ -1,26 +1,57 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, CardBody, Input, Badge } from "reactstrap";
 import { formatCurrency } from "../../utilities/formatCurrency";
 import {
   cartQuantityDecreaseAsync,
   cartQuantityIncreaseAsync,
   deletecartAsync,
+  fetchUsercartAsync,
 } from "../../redux/slice/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { X } from "react-feather";
-import { Spinner } from "react-bootstrap";
-
+import Lottie from "lottie-react";
+import EmptyCart from "../../assets/icons/EmptyCart.json";
 function Cart({ cartData, cartTotalFee }) {
   const status = useSelector((state) => state?.cart?.status);
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
+  const handleDecrease = async (productId) => {
+    setLoading(true);
+    await dispatch(cartQuantityDecreaseAsync(productId));
+    setLoading(false);
+    if (!loading) {
+      dispatch(fetchUsercartAsync()); 
+    }
+  };
+
+  const handleIncrease = async (productId) => {
+    setLoading(true);
+    await dispatch(cartQuantityIncreaseAsync(productId));
+    setLoading(false);
+    if (!loading) {
+      dispatch(fetchUsercartAsync()); 
+    }
+  };
+
+  const handleDelete = async (productId) => {
+    setLoading(true);
+    await dispatch(deletecartAsync(productId));
+    setLoading(false);
+    if (!loading) {
+      dispatch(fetchUsercartAsync()); 
+    }
+  };
   return (
     <div className="d-flex flex-column">
       <div className="px-2">
         {status === "loading" ? (
-          <Spinner />
+          <Lottie animationData={EmptyCart} />
         ) : cartData?.length === 0 ? (
-          <p>Your Cart is empty</p>
+          <>
+            <Lottie animationData={EmptyCart} />
+            <p className="text-center text-secondary">Your Cart is Empty</p>
+          </>
         ) : (
           cartData?.map((product) => (
             <CardBody key={product._id}>
@@ -36,17 +67,20 @@ function Cart({ cartData, cartTotalFee }) {
                     <h6>{product.product.productName}</h6>
                     <X
                       className="bg-danger text-white rounded-circle"
-                      onClick={() => dispatch(deletecartAsync(product._id))}
+                      onClick={() => handleDelete(product._id)}
                     />
                   </div>
-                  <Badge style={{ backgroundColor: "#2D7B8B" }} color="bg-success">
+                  <Badge
+                    style={{ backgroundColor: "#2D7B8B" }}
+                    color="bg-success"
+                  >
                     In Stock {product.product.productStock}
                   </Badge>
                   <div className="d-flex gap-3">
                     <Button
                       className="btn-sm fw-bold"
                       style={{ backgroundColor: "#2D7B8B" }}
-                      onClick={() => dispatch(cartQuantityDecreaseAsync(product._id))}
+                      onClick={() => handleDecrease(product._id)} 
                     >
                       -
                     </Button>
@@ -59,7 +93,9 @@ function Cart({ cartData, cartTotalFee }) {
                     <Button
                       className="btn-sm fw-bold"
                       style={{ backgroundColor: "#2D7B8B" }}
-                      onClick={() => dispatch(cartQuantityIncreaseAsync(product._id))}
+                      onClick={() =>
+                       handleIncrease(product._id)
+                      }
                     >
                       +
                     </Button>

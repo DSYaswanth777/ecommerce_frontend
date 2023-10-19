@@ -13,14 +13,37 @@ import { useParams } from "react-router";
 import { useEffect } from "react";
 import { viewProductAsync } from "../../redux/slice/productSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { cartAddAsync, fetchUsercartAsync } from "../../redux/slice/cartSlice";
+import { wishlistAddAsync } from "../../redux/slice/wishlistSlice";
 
 function ViewProduct() {
   const { productId } = useParams();
   const dispatch = useDispatch();
   const product = useSelector((state) => state.products?.product);
+  const subcategryId = useSelector(
+    (state) => state.products?.product.subcategoryId._id
+  );
+
   useEffect(() => {
     dispatch(viewProductAsync(productId));
   }, [dispatch, productId]);
+  useEffect(() => {
+    dispatch(viewProductAsync(productId));
+    // Scroll to the top of the page when the component mounts
+    window.scrollTo(0, 0);
+  }, [dispatch, productId]);
+  const handleAddCartItem = (productId) => {
+    // Dispatch the delete action
+    dispatch(cartAddAsync(productId))
+      .then(() => {
+        // After successfully deleting, fetch the updated wishlist
+        dispatch(fetchUsercartAsync());
+      })
+      .catch((error) => {
+        // Handle any errors, if needed
+        console.log(error);
+      });
+  };
 
   return (
     <>
@@ -35,7 +58,13 @@ function ViewProduct() {
             showThumbs={false}
           >
             {product?.productImages.map((img) => (
-              <img alt={product.name} src={img} width={400} height={400} />
+              <img
+                alt={product.name}
+                src={img}
+                width={400}
+                height={400}
+                key={product._id}
+              />
             ))}
           </Carousel>
         </div>
@@ -52,21 +81,27 @@ function ViewProduct() {
             <Button
               className="text-uppercase"
               style={{ backgroundColor: "#2A798B" }}
+              onClick={() => handleAddCartItem(product._id)}
             >
               {" "}
               <FaCartPlus className="me-2" />
               Add To Cart
             </Button>
-          <Button
-            className="text-uppercase text-white border-0 mt-3"
-            style={{ backgroundColor: "#88173E" }}
-          >
-            <FaHeart className="me-2 text-white" /> Add To Wishlist
-          </Button>
+            <Button
+              className="text-uppercase text-white border-0 mt-3"
+              style={{ backgroundColor: "#88173E" }}
+              onClick={() => dispatch(wishlistAddAsync(product._id))}
+            >
+              <FaHeart className="me-2 text-white" /> Add To Wishlist
+            </Button>
           </div>
         </div>
       </div>
-      <Poster title="Relevalant Items" subtitle="Check Out these" />
+      <Poster
+        title="Relevalant Items"
+        subtitle="Check Out these"
+        // products={}
+      />
       <Footer />
     </>
   );

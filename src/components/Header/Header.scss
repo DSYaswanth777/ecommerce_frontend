@@ -53,7 +53,7 @@
   left: 65%;
   top: 90%;
   @media screen and (max-device-width: 480px) and (orientation: portrait) {
-    left: 5%;
+    left:23%;
   }
   @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
     left: 50%;
@@ -91,4 +91,23 @@
     left: 50%;
 
   }
+}
+.cartCount{
+position: absolute;
+top: 15px;
+ right: 72px;
+ width: 22px;
+ height: 22px;
+ text-align: center;
+ color: #ffff;
+ background-color: #2A798B;
+ @media screen and (max-device-width: 480px) and (orientation: portrait) {
+  right: 6px;
+  width: 17px;
+  height: 17px;
+}
+@media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+
+
+}
 }
