@@ -17,7 +17,7 @@ export const placeOrder = createAsyncThunk(
       streetAddress,
       townCity,
     };
-    console.log(shippingAddress)
+    console.log(shippingAddress);
     try {
       const token = getState().auth.token;
 
@@ -27,7 +27,7 @@ export const placeOrder = createAsyncThunk(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({shippingAddress}),
+        body: JSON.stringify({ shippingAddress }),
       });
       if (!response.ok) {
         const data = await response.json();
@@ -76,7 +76,7 @@ export const updatePaymentStatus = createAsyncThunk(
 );
 export const fetchUserOrders = createAsyncThunk(
   "orders/fetchuserorders",
-  async (_,{getState }) => {
+  async (_, { getState }) => {
     try {
       const token = getState().auth.token;
       const config = {
@@ -90,7 +90,30 @@ export const fetchUserOrders = createAsyncThunk(
         config
       );
       const data = await response.json();
-      console.log(data)
+      console.log(data);
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+export const fetchAdminOrders = createAsyncThunk(
+  "orders/fetchAdminorders",
+  async (_, { getState }) => {
+    try {
+      const token = getState().auth.token;
+      const config = {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await fetch(
+        "http://localhost:3000/api/v1/admin/orders",
+        config
+      );
+      const data = await response.json();
+      console.log(data);
       return data;
     } catch (error) {
       throw error;
@@ -140,6 +163,17 @@ const orderSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
+      .addCase(fetchAdminOrders.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAdminOrders.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.orders = action.payload;
+      })
+      .addCase(fetchAdminOrders.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      });
   },
 });
 
