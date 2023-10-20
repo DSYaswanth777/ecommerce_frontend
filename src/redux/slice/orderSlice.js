@@ -74,40 +74,72 @@ export const updatePaymentStatus = createAsyncThunk(
     }
   }
 );
-
+export const fetchUserOrders = createAsyncThunk(
+  "orders/fetchuserorders",
+  async (_,{getState }) => {
+    try {
+      const token = getState().auth.token;
+      const config = {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await fetch(
+        "http://localhost:3000/api/v1/user/orders",
+        config
+      );
+      const data = await response.json();
+      console.log(data)
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
 // Create an order slice
 const orderSlice = createSlice({
   name: "orders",
   initialState: {
-    orders: [],
+    orders: null,
+    status: "idle",
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(placeOrder.pending, (state) => {
-        state.loading = true;
+        state.status = "loading";
       })
       .addCase(placeOrder.fulfilled, (state, action) => {
-        state.loading = false;
+        state.status = "succeeded";
         state.orders = action.payload;
       })
       .addCase(placeOrder.rejected, (state, action) => {
-        state.loading = false;
+        state.status = "failed";
         state.error = action.payload;
       })
       .addCase(updatePaymentStatus.pending, (state) => {
-        state.loading = true;
+        state.status = "loading";
       })
       .addCase(updatePaymentStatus.fulfilled, (state, action) => {
-        state.loading = false;
+        state.status = "succeeded";
         state.orders = action.payload;
-
-        // Update the payment status of the order in the state
       })
       .addCase(updatePaymentStatus.rejected, (state, action) => {
-        state.loading = false;
+        state.status = "failed";
         state.error = action.payload;
-      });
+      })
+      .addCase(fetchUserOrders.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchUserOrders.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.orders = action.payload;
+      })
+      .addCase(fetchUserOrders.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
   },
 });
 

@@ -27,7 +27,7 @@ function Categories() {
         {categoriesData?.map((category) =>
           category?.subcategories?.map((subcategory) => (
             <div
-              className=" text-white fs-5 categoryCircle"
+              className=" text-white fs-6 categoryCircle"
               onClick={() => handleCategoryClick(subcategory._id)}
               key={subcategory._id}
             >

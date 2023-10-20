@@ -8,7 +8,7 @@ import {
   fetchUsercartAsync,
 } from "../../redux/slice/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { X } from "react-feather";
+import { Trash, X } from "react-feather";
 import Lottie from "lottie-react";
 import EmptyCart from "../../assets/icons/EmptyCart.json";
 function Cart({ cartData, cartTotalFee }) {
@@ -21,7 +21,7 @@ function Cart({ cartData, cartTotalFee }) {
     await dispatch(cartQuantityDecreaseAsync(productId));
     setLoading(false);
     if (!loading) {
-      dispatch(fetchUsercartAsync()); 
+      dispatch(fetchUsercartAsync());
     }
   };
 
@@ -30,7 +30,7 @@ function Cart({ cartData, cartTotalFee }) {
     await dispatch(cartQuantityIncreaseAsync(productId));
     setLoading(false);
     if (!loading) {
-      dispatch(fetchUsercartAsync()); 
+      dispatch(fetchUsercartAsync());
     }
   };
 
@@ -39,7 +39,7 @@ function Cart({ cartData, cartTotalFee }) {
     await dispatch(deletecartAsync(productId));
     setLoading(false);
     if (!loading) {
-      dispatch(fetchUsercartAsync()); 
+      dispatch(fetchUsercartAsync());
     }
   };
   return (
@@ -65,10 +65,7 @@ function Cart({ cartData, cartTotalFee }) {
                 <div className="d-flex flex-column justify-content-start gap-3 align-items-start">
                   <div className="d-flex justify-content-between gap-4">
                     <h6>{product.product.productName}</h6>
-                    <X
-                      className="bg-danger text-white rounded-circle"
-                      onClick={() => handleDelete(product._id)}
-                    />
+                    <Trash className="text-danger" size={20} onClick={() => handleDelete(product._id)} />
                   </div>
                   <Badge
                     style={{ backgroundColor: "#2D7B8B" }}
@@ -76,11 +73,11 @@ function Cart({ cartData, cartTotalFee }) {
                   >
                     In Stock {product.product.productStock}
                   </Badge>
-                  <div className="d-flex gap-3">
+                  <div className="d-flex gap-2">
                     <Button
                       className="btn-sm fw-bold"
                       style={{ backgroundColor: "#2D7B8B" }}
-                      onClick={() => handleDecrease(product._id)} 
+                      onClick={() => handleDecrease(product._id)}
                     >
                       -
                     </Button>
@@ -93,9 +90,7 @@ function Cart({ cartData, cartTotalFee }) {
                     <Button
                       className="btn-sm fw-bold"
                       style={{ backgroundColor: "#2D7B8B" }}
-                      onClick={() =>
-                       handleIncrease(product._id)
-                      }
+                      onClick={() => handleIncrease(product._id)}
                     >
                       +
                     </Button>
