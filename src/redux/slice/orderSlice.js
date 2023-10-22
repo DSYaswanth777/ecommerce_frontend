@@ -318,17 +318,6 @@ const orderSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
-      // .addCase(fetchorderByDate.pending, (state) => {
-      //   state.status = "loading";
-      // })
-      // .addCase(fetchorderByDate.fulfilled, (state, action) => {
-      //   state.status = "succeeded";
-      //   state.orders = action.payload;
-      // })
-      // .addCase(fetchorderByDate.rejected, (state, action) => {
-      //   state.status = "failed";
-      //   state.error = action.payload;
-      // })
       .addCase(fetchOrdersByOrderID.pending, (state) => {
         state.status = "loading";
       })

@@ -16,6 +16,7 @@ import Logo from "../../../assets/icons/brand_logo.svg";
 import debounce from "lodash.debounce"; 
 import { Loader } from "react-feather";
 import { formatCurrency } from "../../../utilities/formatCurrency";
+import { useNavigate } from "react-router";
 
 function Products() {
   const dispatch = useDispatch();
@@ -25,7 +26,7 @@ function Products() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-
+const navigate = useNavigate()
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
@@ -94,6 +95,7 @@ function Products() {
       name: "Product Name",
       selector: (row) => row.productName,
       sortable: true,
+      maxWidth: "220px"
     },
     {
       name: "Product Image",
@@ -104,26 +106,35 @@ function Products() {
           style={{ width: "50px", height: "50px" }}
         />
       ),
+      maxWidth: "120px"
+
     },
     {
       name: "Price",
       selector: (row) =>(formatCurrency(row.productPrice)) ,
       sortable: true,
+      maxWidth: "80px"
+
     },
     {
       name: "Product Info",
       selector: (row) => row.productInfo,
+      maxWidth: "280px"
+
     },
     {
       name: "Subcategory",
       selector: (row) => row.subcategoryId.name,
-
       sortable: true,
+      maxWidth: "180px"
+
     },
     {
       name: "Stock",
       selector: (row) => row.productStock,
       sortable: true,
+      maxWidth: "50px"
+
     },
     {
       name: "Edit",
@@ -132,6 +143,8 @@ function Products() {
           <FaEdit size={18} onClick={() => handleEditClick(row)} />
         </div>
       ),
+      maxWidth: "50px"
+
     },
     {
       name: "Delete",
@@ -140,6 +153,8 @@ function Products() {
           <FaTrash size={18} onClick={() => handleDelete(row)} />
         </div>
       ),
+      maxWidth: "50px"
+
     },
   ];
   return (
@@ -181,6 +196,7 @@ function Products() {
           pointerOnHover
           paginationPerPage={10}
           paginationPerPageOptions={[10, 20, 30]}
+          onRowClicked={(row)=>navigate(`/products/viewproduct/${row._id}`)}
         />
       )}
 
@@ -189,6 +205,7 @@ function Products() {
         toggle={toggleModal}
         isEditing={!!selectedProduct}
         productData={selectedProduct}
+        
       />
     </div>
   );

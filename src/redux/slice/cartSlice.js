@@ -1,4 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 export const fetchUsercartAsync = createAsyncThunk(
   "cart/fetchUserCartAsync",
@@ -6,124 +8,154 @@ export const fetchUsercartAsync = createAsyncThunk(
     try {
       const token = getState().auth.token;
       const config = {
-        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await fetch(
+      const response = await axios.get(
         "http://localhost:3000/api/v1/user/cart",
         config
       );
-      const data = await response.json();
-      return data;
+
+      if (response.status === 200) {
+        return response.data;
+      } else if (response.status === 404) {
+        toast.error("Cart not found"); // Display an error toast
+      } else if (response.status === 500) {
+        toast.error("Server error"); // Display an error toast
+      }
+
+      throw new Error("Error while fetching the cart");
     } catch (error) {
+      toast.error("Error while fetching the cart"); // Display an error toast
       throw error;
     }
   }
 );
+
 export const cartAddAsync = createAsyncThunk(
   "cart/cartAddAsync",
   async (productId, { getState }) => {
     const token = getState().auth.token;
     try {
-      // Create an object with the productId key
       const requestData = {
         productId: productId,
       };
 
-      // Make the API call using fetch or axios
-      const response = await fetch(
-        `http://localhost:3000/api/v1/user/cart/add`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(requestData), // Send the requestData object as JSON
-        }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/user/cart/add",
+        requestData,
+        config
       );
 
-      if (!response.ok) {
-        throw new Error("Error While Adding product to cart");
+      if (response.status === 201) {
+        toast.success("Product added to cart");
+        return response.data;
+      } else if (response.status === 400) {
+        toast.error("Bad request");
+      } else if (response.status === 404) {
+        toast.error("Product not found");
+      } else if (response.status === 500) {
+        toast.error("Server error");
+      } else {
+        throw new Error("Error while adding a product to the cart");
       }
-
-      const data = await response.json();
-      return data;
     } catch (error) {
+      toast.error("Error while adding a product to the cart");
       throw error;
     }
   }
 );
+
 export const cartQuantityIncreaseAsync = createAsyncThunk(
   "cart/cartQuantityIncreaseAsync",
   async (cartItemId, { getState }) => {
     const token = getState().auth.token;
     try {
-      // Create an object with the productId key
       const requestData = {
         cartItemId: cartItemId,
       };
 
-      // Make the API call using fetch or axios
-      const response = await fetch(
-        `http://localhost:3000/api/v1/user/cart/increase`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(requestData), // Send the requestData object as JSON
-        }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.put(
+        "http://localhost:3000/api/v1/user/cart/increase",
+        requestData,
+        config
       );
 
-      if (!response.ok) {
-        throw new Error("Error While Adding product to cart");
+      if (response.status === 200) {
+        toast.success("Cart quantity increased");
+        return response.data;
+      } else if (response.status === 400) {
+        toast.error("Bad request");
+      } else if (response.status === 404) {
+        toast.error("Item not found in the cart");
+      } else if (response.status === 500) {
+        toast.error("Server error");
+      } else {
+        throw new Error("Error while increasing cart quantity");
       }
-
-      const data = await response.json();
-      return data;
     } catch (error) {
+      toast.error("Error while increasing cart quantity");
       throw error;
     }
   }
 );
+
 export const cartQuantityDecreaseAsync = createAsyncThunk(
   "cart/cartQuantityDecreaseAsync",
   async (cartItemId, { getState }) => {
     const token = getState().auth.token;
     try {
-      // Create an object with the productId key
       const requestData = {
         cartItemId: cartItemId,
       };
 
-      // Make the API call using fetch or axios
-      const response = await fetch(
-        `http://localhost:3000/api/v1/user/cart/decrease`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(requestData), // Send the requestData object as JSON
-        }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.put(
+        "http://localhost:3000/api/v1/user/cart/decrease",
+        requestData,
+        config
       );
 
-      if (!response.ok) {
-        throw new Error("Error While Adding product to cart");
+      if (response.status === 200) {
+        toast.success("Cart quantity decreased");
+        return response.data;
+      } else if (response.status === 400) {
+        toast.error("Bad request");
+      } else if (response.status === 404) {
+        toast.error("Item not found in the cart");
+      } else if (response.status === 500) {
+        toast.error("Server error");
+      } else {
+        throw new Error("Error while decreasing cart quantity");
       }
-
-      const data = await response.json();
-      return data;
     } catch (error) {
+      toast.error("Error while decreasing cart quantity");
       throw error;
     }
   }
 );
+
 export const deletecartAsync = createAsyncThunk(
   "cart/deletecartAsync",
   async (cartItemId, { getState }) => {
@@ -132,30 +164,39 @@ export const deletecartAsync = createAsyncThunk(
       const requestData = {
         cartItemId: cartItemId,
       };
-      // Make your API call here using fetch or axios
-      const response = await fetch(
-        `http://localhost:3000/api/v1/user/cart/remove`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Include the bearer token in the request headers
-          },
-          body: JSON.stringify(requestData), // Send the requestData object as JSON
-        }
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        data: requestData,
+      };
+
+      const response = await axios.delete(
+        "http://localhost:3000/api/v1/user/cart/remove",
+        config
       );
-      if (!response.ok) {
-        throw new Error("Error While deleting cart");
+
+      if (response.status === 200) {
+        toast.success("Item removed from the cart");
+        return response.data;
+      } else if (response.status === 400) {
+        toast.error("Bad request");
+      } else if (response.status === 404) {
+        toast.error("Item not found in the cart");
+      } else if (response.status === 500) {
+        toast.error("Server error");
+      } else {
+        throw new Error("Error while removing an item from the cart");
       }
-      const data = await response.json();
-      return data;
     } catch (error) {
-      // Handle any network or API errors here
+      toast.error("Error while removing an item from the cart");
       throw error;
     }
   }
 );
-//**  Create a slice for cart*/
+
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
@@ -215,13 +256,13 @@ const cartSlice = createSlice({
         state.status = "loading";
         state.error = null;
       })
-      .addCase(deletecartAsync.fulfilled, (state, action) => {
+      .addCase(deletecartAsync.fulfilled, (state) => {
         state.status = "succeeded";
       })
       .addCase(deletecartAsync.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      })
+      });
   },
 });
 

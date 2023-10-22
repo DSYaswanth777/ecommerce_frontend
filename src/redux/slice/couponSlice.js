@@ -1,145 +1,135 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
-export const fetchCoupons = createAsyncThunk(
-  "coupons/fetchcoupons",
-  async (_,{getState }) => {
-    try {
-      const token = getState().auth.token;
-      const config = {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const response = await fetch(
-        "http://localhost:3000/api/v1/admin/coupons",
-        config
-      );
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      throw error;
-    }
-  }
-);
-export const addCouponAsync = createAsyncThunk(
-  "coupons/addCoupon",
-  async (couponData, { getState }) => {
-    try {
-      const token = getState().auth.token; 
-
-      const config = {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(couponData),
-      };
-
-      const response = await fetch(
-        "http://localhost:3000/api/v1/admin/add/coupon",
-        config
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to add a coupon");
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      throw error;
-    }
-  }
-);
-export const deleteCouponAsync = createAsyncThunk(
-  "coupons/deleteCoupons",
-  async (couponId, { getState }) => {
-    try {
-      const token = getState().auth.token; // Assuming you have a token in your auth state
-      const response = await fetch(
-        `http://localhost:3000/api/v1/admin/delete/coupon/${couponId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the bearer token in the request headers
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to delete the product");
-      }
-      // If the category is successfully deleted, you can return a success message or status
-      return "Product deleted successfully";
-    } catch (error) {
-      throw error;
-    }
-  }
-);
-export const editCouponAsync = createAsyncThunk(
-  "coupons/editCoupon",
-  async (editCouponData, { getState }) => {
-    console.log(editCouponData)
-    try {
-      const token = getState().auth.token;
-      // Extract any other necessary data from editCouponData
-
-      const config = {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editCouponData), // Assuming editCouponData is a JSON object
-      };
-
-      const response = await fetch(
-        `http://localhost:3000/api/v1/admin/coupon/edit/${editCouponData.id}`, // Make sure to adjust the URL and access the coupon ID
-        config
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to edit the Coupon");
-      }
-      // If the product is successfully edited, you can return a success message or status
-      return "Coupon edited successfully";
-    } catch (error) {
-      throw error;
-    }
-  }
-);
-
-export const searchCouponAsync = createAsyncThunk(
-  "coupons/searchcoupons",
-  async (couponName,{getState}) => {
+export const fetchCoupons = createAsyncThunk("coupons/fetchcoupons", async (_, { getState }) => {
+  try {
     const token = getState().auth.token;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get("http://localhost:3000/api/v1/admin/coupons", config);
 
-    try {
-      // You can pass the productName as a query parameter to your API endpoint
-      const config = {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      };
-      const response = await fetch(
-`        http://localhost:3000/api/v1/admin/coupons/search?couponCode=${couponName}`,
-        config
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to search coupons");
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      throw error;
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      toast.error("Failed to fetch coupons");
+      throw new Error("Failed to fetch coupons");
     }
+  } catch (error) {
+    toast.error("Failed to fetch coupons");
+    throw error;
   }
-);
+});
+
+export const addCouponAsync = createAsyncThunk("coupons/addCoupon", async (couponData, { getState }) => {
+  try {
+    const token = getState().auth.token;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await axios.post("http://localhost:3000/api/v1/admin/add/coupon", couponData, config);
+
+    if (response.status === 201) {
+      toast.success("Coupon added successfully");
+      return response.data;
+    } else {
+      toast.error("Error while adding a coupon");
+      throw new Error("Error while adding a coupon");
+    }
+  } catch (error) {
+    toast.error("Error while adding a coupon");
+    throw error;
+  }
+});
+
+export const deleteCouponAsync = createAsyncThunk("coupons/deleteCoupons", async (couponId, { getState }) => {
+  try {
+    const token = getState().auth.token;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const response = await axios.delete(`http://localhost:3000/api/v1/admin/delete/coupon/${couponId}`, config);
+
+    if (response.status === 200) {
+      toast.success("Coupon deleted successfully");
+      return response.data;
+    } else {
+      toast.error("Error while deleting the coupon");
+      throw new Error("Error while deleting the coupon");
+    }
+  } catch (error) {
+    toast.error("Error while deleting the coupon");
+    throw error;
+  }
+});
+
+export const editCouponAsync = createAsyncThunk("coupons/editCoupon", async (editCouponData, { getState }) => {
+  try {
+    const token = getState().auth.token;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await axios.patch(
+      `http://localhost:3000/api/v1/admin/coupon/edit/${editCouponData.id}`,
+      editCouponData,
+      config
+    );
+
+    if (response.status === 200) {
+      toast.success("Coupon edited successfully");
+      return response.data;
+    } else {
+      toast.error("Error while editing the coupon");
+      throw new Error("Error while editing the coupon");
+    }
+  } catch (error) {
+    toast.error("Error while editing the coupon");
+    throw error;
+  }
+});
+
+export const searchCouponAsync = createAsyncThunk("coupons/searchcoupons", async (couponName, { getState }) => {
+  const token = getState().auth.token;
+
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await axios.get(
+      `http://localhost:3000/api/v1/admin/coupons/search?couponCode=${couponName}`,
+      config
+    );
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      toast.error("Failed to search coupons");
+      throw new Error("Failed to search coupons");
+    }
+  } catch (error) {
+    toast.error("Failed to search coupons");
+    throw error;
+  }
+});
+
 const couponSlice = createSlice({
   name: "coupons",
   initialState: {
