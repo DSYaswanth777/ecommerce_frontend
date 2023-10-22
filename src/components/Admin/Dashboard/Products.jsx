@@ -144,9 +144,9 @@ function Products() {
   ];
   return (
     <div className=" mb-5 shadow w-100 justify-content-center align-items-center gap-2 mt-2 border p-5 pt-2">
-      <div className="d-flex justify-content-between gap-5 align-items-center">
+      <div className="d-flex justify-content-between gap-5 align-items-center gap-5">
         <img src={Logo} alt="" />
-        <InputGroup className="d-flex justify-content-center align-items-center inpu w-50">
+        <InputGroup className="d-flex justify-content-between align-items-center inpu w-50">
           <Input
             type="search"
             name=""

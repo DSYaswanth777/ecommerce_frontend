@@ -69,6 +69,7 @@ const Footer = () => {
 
               <img src={Dev} alt=""  /> <a href="https://www.yaswanthdasari.in/" target="_blank" className="list-style-none text-dark">Yaswanth Dasari</a>
               </div>
+              <div className="googleMap"></div>
             </div>
           </div>
         </div>

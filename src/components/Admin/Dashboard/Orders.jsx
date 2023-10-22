@@ -1,16 +1,25 @@
 import React, { useState } from "react";
 import DataTable from "react-data-table-component";
-import { FiRefreshCw } from "react-icons/fi";
+import { BsSearch } from "react-icons/bs";
 import { FaDownload } from "react-icons/fa";
 import "react-date-range/dist/styles.css"; // Import the CSS styles
 import "react-date-range/dist/theme/default.css"; // Import the default theme
-import { fetchAdminOrders } from "../../../redux/slice/orderSlice";
+import {
+  downloadPDF,
+  fetchAdminOrders,
+  fetchOrdersByOrderID,
+} from "../../../redux/slice/orderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { format } from "date-fns";
+import Logo from "../../../assets/icons/brand_logo.svg";
+import { Input, InputGroup, InputGroupText, Button } from "reactstrap";
+import debounce from "lodash.debounce";
+import { useNavigate } from "react-router";
+
 const formatDateForInput = (isoDate) => {
   if (!isoDate) {
-    return ""; 
+    return "";
   }
 
   const date = new Date(isoDate);
@@ -22,9 +31,32 @@ const formatDateForInput = (isoDate) => {
   return format(date, "dd/MM/yyyy");
 };
 function Orders() {
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const ordersData = useSelector((state) => state?.orders?.orders?.orders);
-  console.log(ordersData);
   const status = useSelector((state) => state.orders?.status);
+  const navigate = useNavigate()
+  const handleDownloadClick = (row) => {
+    dispatch(downloadPDF(row.orderID)).then((result) => {
+      if (result.payload.success) {
+      } else {
+        // Handle the case where the download failed
+        console.error("PDF download failed:", result.payload.error);
+      }
+    });
+  };
+
+  const debouncedHandleSearch = debounce(() => {
+    // Dispatch the searchProductsAsync action with the debounced search query
+    dispatch(fetchOrdersByOrderID(debouncedSearchQuery));
+  }, 300); // Adjust the delay time as needed
+
+  useEffect(() => {
+    // Only perform the search when debouncedSearchQuery changes
+    if (debouncedSearchQuery) {
+      debouncedHandleSearch();
+    }
+  }, [debouncedSearchQuery]);
   const dispatch = useDispatch();
   useEffect(() => {
     if (status === "idle") {
@@ -40,21 +72,25 @@ function Orders() {
     },
     {
       name: "Product",
-      cell: (row) => row.cartItems[0].product.productName, // Access product name
+      cell: (row) => row.cartItems[0].product.productName,
       sortable: true,
     },
     {
-      name: "Shipping Address",
-      cell: (row) => row.shippingAddress.fullName, // Access fullName from shippingAddress
+      name: "Customer Name",
+      cell: (row) => row.shippingAddress.fullName,
+      sortable: true,
+
     },
     {
       name: "Product Category",
-      cell: (row) => row.cartItems[0].product.subcategoryId.name, // Access subcategory name
+      cell: (row) => row.cartItems[0].product.subcategoryId.name,
       sortable: true,
     },
     {
       name: "Payment Status",
       selector: (row) => row.paymentStatus,
+      sortable: true,
+
     },
     {
       name: "Order Date",
@@ -72,36 +108,41 @@ function Orders() {
   ];
 
   return (
-    <div>
-      <div className="d-flex justify-content-between align-items-center gap-5 bg-white rounded border border-3 p-3">
-        <div className="fs-3">Orders</div>
-        <div className="fw-bold fs-5">
-          Sales Period:
-          <input type="date" className="ms-3" />
-        </div>
-        <div className="d-flex justify-content-center align-items-center gap-4">
-          <div className="fs-5">
-            Data refresh{" "}
-            <span className="text-primary">
-              <FiRefreshCw size={20} />
-            </span>
-          </div>
-          <div className="bg-secondary text-white p-2 rounded">
-            September 23, 2023 15:12 PM
-          </div>
-        </div>
+    <div className="mb-5 shadow w-100 justify-content-center align-items-center gap-2 mt-2 border p-5 pt-2">
+      <div className="d-flex justify-content-between gap-5 align-items-center gap-5">
+        <img src={Logo} alt="" />
+        <InputGroup className="d-flex justify-content-between align-items-center inpu w-50">
+          <Input
+            type="search"
+            name=""
+            id=""
+            placeholder="Search By order ID"
+            className="border border-end-0 input-searc w-75"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setDebouncedSearchQuery(e.target.value);
+            }}
+            onClick={(e) => e.stopPropagation()}
+          />
+          <InputGroupText className="p-2 input-tex">
+            <BsSearch size={20} className="" onClick={debouncedHandleSearch} />
+          </InputGroupText>
+        </InputGroup>
+        <InputGroup className="w-25">
+          <Input type="date" />
+        </InputGroup>
       </div>
-      <div className="shadow mt-4">
-        <DataTable
-          title="Orders"
-          columns={columns}
-          data={ordersData}
-          pagination
-          fixedHeader
-          pointerOnHover
-          paginationPerPage={10}
-        />
-      </div>
+      <DataTable
+        title="Orders"
+        columns={columns}
+        data={ordersData}
+        pagination
+        fixedHeader
+        pointerOnHover
+        onRowClicked={(row)=>navigate(`/view/order/${row.orderID}`)}
+        paginationPerPage={10}
+      />
     </div>
   );
 }

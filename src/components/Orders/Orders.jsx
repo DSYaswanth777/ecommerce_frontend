@@ -7,11 +7,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { format } from "date-fns";
 import { ChevronRight } from "react-feather";
 import { Shimmer } from "react-shimmer";
+import { useNavigate } from "react-router";
 
 function Orders() {
   const ordersData = useSelector((state) => state?.orders?.orders?.orders);
-  const status = useSelector((state) => state.orders?.status);
+  console.log(ordersData)
+  const status = useSelector((state) => state?.orders?.status);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchUserOrders());
@@ -63,7 +66,9 @@ function Orders() {
           </div>
           <div className="d-flex flex-column gap-3 ">
             {ordersData?.map((order) => (
-              <Card className="" key={order._id} style={{ cursor: "pointer" }}>
+              <Card className="" key={order._id} style={{ cursor: "pointer" }}
+              onClick={()=>navigate(`/view/order/${order?.orderID}`)}
+              >
                 <CardBody>
                   <div className="d-flex flex-column flex-sm-row  gap-4 justify-content-between align-items-center">
                     {order?.cartItems?.map((item) => (
@@ -79,7 +84,7 @@ function Orders() {
                       <h6 className="text-muted">
                         {" "}
                         <span className="fw-bold">OrderID:</span>{" "}
-                        {order.orderID}
+                        {order?.orderID}
                       </h6>
                       {order?.cartItems?.map((item) => (
                         <h6 key={item.product._id}>

@@ -15,8 +15,8 @@ import { deleteCategoryAsync, fetchCategoriesAsync, searchCategoriesAsync } from
 
 function Categories() {
   const dispatch = useDispatch();
-  const categoriesData = useSelector((state) => state.categories?.categories);
-  const status = useSelector((state) => state.categories?.status);
+  const categoriesData = useSelector((state) => state?.categories?.categories);
+  const status = useSelector((state) => state?.categories?.status);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedCategory, setselectedCategory] = useState(null);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
@@ -95,7 +95,7 @@ function Categories() {
       name: "Subcategories",
       cell: (row) => (
         <div>
-          {row.subcategories.map((subcategory) => (
+          {row?.subcategories?.map((subcategory) => (
             <Badge  key={subcategory._id} color="primary" className="me-2 mb-2 mt-1 text-center">
               {subcategory.name}
             </Badge>

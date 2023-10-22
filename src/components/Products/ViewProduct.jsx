@@ -20,9 +20,6 @@ function ViewProduct() {
   const { productId } = useParams();
   const dispatch = useDispatch();
   const product = useSelector((state) => state.products?.product);
-  const subcategryId = useSelector(
-    (state) => state.products?.product.subcategoryId._id
-  );
 
   useEffect(() => {
     dispatch(viewProductAsync(productId));
@@ -100,7 +97,6 @@ function ViewProduct() {
       <Poster
         title="Relevalant Items"
         subtitle="Check Out these"
-        // products={}
       />
       <Footer />
     </>

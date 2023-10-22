@@ -14,6 +14,7 @@ import Orders from "../components/Orders/Orders";
 import Wishlist from "../components/Wishlist/Wishlist";
 import Dashboard from "../components/Admin/Dashboard/Dashboard";
 import ViewProduct from "../components/Products/ViewProduct";
+import ViewOrder from "../components/Orders/ViewOrder";
 
 const PublicRoutes = () => {
   const user = useSelector((state) => state.auth);
@@ -34,6 +35,7 @@ const PublicRoutes = () => {
             <Route path="/orders" element={<Orders />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/products/viewproduct/:productId" element={<ViewProduct/>}/>
+            <Route path="/view/order/:orderID" element={<ViewOrder/>}/>
           </>
         ) : (
           <Route path="*" element={<Navigate to="/login" />} />

@@ -31,7 +31,7 @@ function Home() {
     <div>
       <Header />
       <HeroSection />
-      <Categories/>
+      {/* <Categories/> */}
       <Poster
         title="Just In"
         subtitle="New Arrivals for You"

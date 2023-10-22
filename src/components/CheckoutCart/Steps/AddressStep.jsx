@@ -102,7 +102,7 @@ function AddressStep() {
         );
 
         if (paymentResponse.meta.requestStatus === "fulfilled") {
-          navigate("/");
+          navigate("/orders");
           return { transactionState: "SUCCESS" };
         } else {
           console.error(
