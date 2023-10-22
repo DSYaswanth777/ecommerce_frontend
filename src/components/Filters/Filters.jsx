@@ -11,9 +11,11 @@ import {
   fetchProducts,
   filterProductsAsync,
 } from "../../redux/slice/productSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Spinner } from "react-bootstrap";
 
 function Filters({ isOpen, toggleMenu, categories }) {
+  const status = useSelector((state) => state?.categories?.status);
   // Initialize state to store selected subcategory IDs
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
   const dispatch = useDispatch();
@@ -75,29 +77,33 @@ function Filters({ isOpen, toggleMenu, categories }) {
         <OffcanvasBody className="nav-menu">
           <div>
             <hr />
-            {categories?.map((category) => (
-              <div key={category._id}>
-                <h5 className="bg-success text-white p-2 rounded">
-                  {category.name}
-                </h5>
-                {category?.subcategories?.map((subcategory) => (
-                  <div key={subcategory._id}>
-                    <Label className="ms-2">
-                      <Input
-                        type="checkbox"
-                        value={subcategory.name}
-                        className="border-dark me-2"
-                        checked={selectedSubcategories.includes(
-                          subcategory._id
-                        )}
-                        onChange={() => handleSubcategoryChange(subcategory)}
-                      />
-                      {subcategory.name}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            ))}
+            {status === "loaidng" ? (
+              <Spinner />
+            ) : (
+              categories?.map((category) => (
+                <div key={category._id}>
+                  <h5 className="bg-success text-white p-2 rounded">
+                    {category.name}
+                  </h5>
+                  {category?.subcategories?.map((subcategory) => (
+                    <div key={subcategory._id}>
+                      <Label className="ms-2">
+                        <Input
+                          type="checkbox"
+                          value={subcategory.name}
+                          className="border-dark me-2"
+                          checked={selectedSubcategories.includes(
+                            subcategory._id
+                          )}
+                          onChange={() => handleSubcategoryChange(subcategory)}
+                        />
+                        {subcategory.name}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              ))
+            )}
           </div>
         </OffcanvasBody>
       </Offcanvas>

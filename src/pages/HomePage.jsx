@@ -9,7 +9,9 @@ import {
   recentProductAsync,
   sortproductsAsync,
 } from "../redux/slice/productSlice";
-import Categories from "../components/Categories/categories";
+import { Shimmer } from "react-shimmer";
+import { Card } from "reactstrap";
+
 function Home() {
   const recentProducts = useSelector((state) => state.products?.recentproducts);
   const filteredProducts = useSelector(
@@ -17,31 +19,103 @@ function Home() {
   );
   const status = useSelector((state) => state.products?.status);
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (status === "idle") {
       dispatch(recentProductAsync());
     }
   }, [status, dispatch]);
+
   useEffect(() => {
     if (status === "idle") {
       dispatch(sortproductsAsync("lowtohigh"));
     }
   }, [status, dispatch]);
+
   return (
     <div>
       <Header />
       <HeroSection />
-      {/* <Categories/> */}
-      <Poster
-        title="Just In"
-        subtitle="New Arrivals for You"
-        products={recentProducts}
-      />
-      <Poster
-        title="Best Deals Await"
-        subtitle="Discover Affordable Finds: Prices Low to High"
-        products={filteredProducts}
-      />
+      {status === "loading" ? (
+        <div className="container pt-5">
+          <h4 className="text-center title">Just In</h4>
+          <h2 className="text-center mb-5 subtitle">New Arrivals for You</h2>
+          <div className="d-flex gap-4">
+            {recentProducts?.length > 0 ? (
+              recentProducts.map((product, index) => (
+                <div className="d-flex ">
+                  <Shimmer
+                    key={index}
+                    visible={true}
+                    autoRun={true}
+                    width={400}
+                    height={400}
+                  >
+                    <Card
+                      className="slider-content"
+                      style={{ width: "18rem" }}
+                    ></Card>
+                  </Shimmer>
+                </div>
+              ))
+            ) : (
+              <Shimmer visible={true} autoRun={true} width={400} height={400}>
+                <Card
+                  className="slider-content"
+                  style={{ width: "18rem" }}
+                ></Card>
+              </Shimmer>
+            )}
+          </div>
+        </div>
+      ) : (
+        <Poster
+          title="Just In"
+          subtitle="New Arrivals for You"
+          products={recentProducts}
+        />
+      )}
+      {status === "loading" ? (
+        <div className="container pt-5">
+          <h4 className="text-center title">Best Deals Await</h4>
+          <h2 className="text-center mb-5 subtitle">
+            Discover Affordable Finds: Prices Low to High
+          </h2>
+          <div className="d-flex gap-4">
+            {filteredProducts?.length > 0 ? (
+              filteredProducts.map((product, index) => (
+                <div className="d-flex ">
+                  <Shimmer
+                    key={index}
+                    visible={true}
+                    autoRun={true}
+                    width={400}
+                    height={400}
+                  >
+                    <Card
+                      className="slider-content"
+                      style={{ width: "18rem" }}
+                    ></Card>
+                  </Shimmer>
+                </div>
+              ))
+            ) : (
+              <Shimmer visible={true} autoRun={true} width={400} height={400}>
+                <Card
+                  className="slider-content"
+                  style={{ width: "18rem" }}
+                ></Card>
+              </Shimmer>
+            )}
+          </div>
+        </div>
+      ) : (
+        <Poster
+          title="Just In"
+          subtitle="New Arrivals for You"
+          products={filteredProducts}
+        />
+      )}
       <Footer />
     </div>
   );

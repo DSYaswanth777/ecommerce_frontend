@@ -7,6 +7,7 @@ import {
   fetchUserprofileAsync,
   profileEditAsync,
 } from "../../redux/slice/ProfileSlice";
+import { Shimmer } from "react-shimmer";
 
 const Profile = () => {
   const profileData = useSelector((state) => state.profile?.profile);
@@ -28,17 +29,14 @@ const Profile = () => {
   };
 
   const handleSaveChanges = async () => {
-    // Check if there are changes in the name or email
     if (editedName !== profileData.name || editedEmail !== profileData.email) {
-      // Dispatch the edited data to update the profile
-      await dispatch(profileEditAsync({ name: editedName, email: editedEmail }));
-      
-      // After successfully updating the profile, fetch the user profile again
+      await dispatch(
+        profileEditAsync({ name: editedName, email: editedEmail })
+      );
       dispatch(fetchUserprofileAsync());
     }
     setIsEditing(false);
   };
-  
 
   return (
     <div className="">
@@ -59,23 +57,32 @@ const Profile = () => {
           </div>
 
           <Label for="name">Name</Label>
-          <Input
-            type="text"
-            name="name"
-            value={isEditing ? editedName : profileData?.name || ""}
-            onChange={(e) => setEditedName(e.target.value)}
-            className="mb-3"
-            disabled={!isEditing}
-          />
+          {status === "loading" ? (
+            <Shimmer width={200} height={20} />
+          ) : (
+            <Input
+              type="text"
+              name="name"
+              value={isEditing ? editedName : profileData?.name || ""}
+              onChange={(e) => setEditedName(e.target.value)}
+              className="mb-3"
+              disabled={!isEditing}
+            />
+          )}
+
           <Label for="email">Email</Label>
-          <Input
-            type="email"
-            name="email"
-            value={isEditing ? editedEmail : profileData?.email || ""}
-            onChange={(e) => setEditedEmail(e.target.value)}
-            className="mb-3"
-            disabled={!isEditing}
-          />
+          {status === "loading" ? (
+            <Shimmer width={200} height={20} />
+          ) : (
+            <Input
+              type="email"
+              name="email"
+              value={isEditing ? editedEmail : profileData?.email || ""}
+              onChange={(e) => setEditedEmail(e.target.value)}
+              className="mb-3"
+              disabled={!isEditing}
+            />
+          )}
           <Label for="mobile">Mobile</Label>
           <Input
             type="number"
