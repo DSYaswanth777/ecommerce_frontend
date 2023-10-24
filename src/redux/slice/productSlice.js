@@ -1,5 +1,6 @@
 // productSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
@@ -162,9 +163,10 @@ export const sortproductsAsync = createAsyncThunk(
 export const filterProductsAsync = createAsyncThunk(
   "products/filterProducts",
   async (subcategoriesId) => {
-    const subcategoryIdsString = subcategoriesId.join(",");
+    console.log(subcategoriesId,"redux")
+    // const subcategoryIdsString = subcategoriesId.join(",");
     const response = await fetch(
-      `http://localhost:3000/api/v1/products/filters?subcategoryIds=${subcategoryIdsString}`
+      `http://localhost:3000/api/v1/products/filters?subcategoryIds=${subcategoriesId}`
     );
     const data = await response.json();
     return data;
@@ -180,6 +182,7 @@ const productSlice = createSlice({
     recentproducts: null,
     suggestedproducts: null,
     filteredproducts: null,
+    relevantproducts:null,
     status: "idle",
     error: null,
   },
@@ -225,6 +228,8 @@ const productSlice = createSlice({
       })
       .addCase(addProductAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
+        toast.success("Product added successfully");
+
       })
       .addCase(addProductAsync.rejected, (state, action) => {
         state.status = "failed";
@@ -235,10 +240,14 @@ const productSlice = createSlice({
       })
       .addCase(editProductAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
+        toast.success("You ahve edited the product succesfully");
+
       })
       .addCase(editProductAsync.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+        toast.success("Editing product failed");
+
       })
       .addCase(searchProductsAsync.pending, (state) => {
         state.status = "loading";
@@ -269,6 +278,7 @@ const productSlice = createSlice({
       .addCase(filterProductsAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.products = action.payload;
+        state.relevantproducts = action.payload;
       })
       .addCase(filterProductsAsync.rejected, (state, action) => {
         state.status = "failed";

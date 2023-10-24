@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 export const fetchUserprofileAsync = createAsyncThunk(
   "profile/fetchUserprofileAsync",
@@ -25,7 +26,6 @@ export const fetchUserprofileAsync = createAsyncThunk(
 export const profileEditAsync = createAsyncThunk(
     "profile/profileEditAsync",
     async (profileItemId, { getState }) => {
-        console.log(profileItemId)
       const token = getState().auth.token;
       try {
         // Create an object with the productId key
@@ -43,9 +43,11 @@ export const profileEditAsync = createAsyncThunk(
             body: JSON.stringify(profileItemId), // Send the requestData object as JSON
           }
         );
-  
+          if(response.ok){
+            toast.success("Changes were made succesfully")
+          }
         if (!response.ok) {
-          throw new Error("Error While Adding product to profile");
+          toast.error("Error saving the changes")
         }
   
         const data = await response.json();

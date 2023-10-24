@@ -7,14 +7,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { format } from "date-fns";
 import { useNavigate } from "react-router";
 import { Shimmer } from "react-shimmer";
+import { useMemo } from "react";
+import { v4 as uuidv4 } from "uuid"; // Import uuid
 
 function Orders() {
   const ordersData = useSelector((state) => state?.orders?.orders?.orders);
   const status = useSelector((state) => state?.orders?.status);
+  const memoizedOrdersData = useMemo(() => ordersData, [ordersData]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
-    if (status === "idle") {
+    if (status === "idle" ) {
       dispatch(fetchUserOrders());
     }
   }, [status, dispatch]);
@@ -31,6 +34,7 @@ function Orders() {
 
     return format(date, "dd/MM/yyyy");
   };
+
   return (
     <div style={{ overflow: "hidden" }}>
       <Header />
@@ -38,10 +42,10 @@ function Orders() {
       <div className="d-flex container flex-column gap-2 pt-2 pb-5">
         <div className="d-flex gap-4 flex-column flex-md-row pt-3 ">
           <div className="d-flex flex-column gap-3 w-100 ">
-            {status === "loading"
-              ? ordersData?.map((order) => (
+            {status === "loading" || status === "idle"
+              ? memoizedOrdersData?.map((order) => (
                   <Shimmer
-                    key={order._id}
+                    key={order.orderID}
                     visible={true}
                     autoRun={true}
                     width={1300}
@@ -55,10 +59,10 @@ function Orders() {
                     ></Card>
                   </Shimmer>
                 ))
-              : ordersData?.map((order) => (
+              : memoizedOrdersData?.map((order) => (
                   <Card
                     className=""
-                    key={order._id}
+                    key={uuidv4()} // Use uuid to generate a unique key
                     style={{ cursor: "pointer" }}
                     onClick={() => navigate(`/view/order/${order?.orderID}`)}
                   >
@@ -66,7 +70,7 @@ function Orders() {
                       <div className="d-flex flex-column flex-sm-row  gap-4 justify-content-between align-items-center">
                         {order?.cartItems?.map((item) => (
                           <img
-                            key={item.product._id}
+                            key={uuidv4()} // Use uuid to generate a unique key
                             src={item?.product?.productImages[0]}
                             alt=""
                             width={100}
@@ -79,13 +83,20 @@ function Orders() {
                             <span className="fw-bold">OrderID:</span>{" "}
                             {order?.orderID}
                           </h6>
-                          {order?.cartItems?.map((item, index) => (
-                            <h6 key={index}>{item?.product?.productName}</h6>
+                          {order?.cartItems?.map((item) => (
+                            <h6
+                              key={uuidv4()} // Use uuid to generate a unique key
+                            >
+                              {item?.product?.productName}
+                            </h6>
                           ))}
                         </div>
                         <div className="d-flex flex-column">
-                          <h5> <span className="me-2"> Total:
-                            </span>{formatCurrency(order.totalAmount)}</h5>
+                          <h5>
+                            {" "}
+                            <span className="me-2"> Total:</span>
+                            {formatCurrency(order?.totalAmount)}
+                          </h5>
                           <h6 className="text-muted">
                             {order?.paymentStatus === "Successful" ? (
                               <p className="text-success fw-bold text-uppercase">
@@ -100,8 +111,8 @@ function Orders() {
                           <h6>
                             Ordered on {formatDateForInput(order?.orderDate)}
                           </h6>
-                          <p>
-                            {order.paymentStatus === "Successful" ? (
+                          <>
+                            {order?.paymentStatus === "Successful" ? (
                               <p className="text-success fw-bold">
                                 {" "}
                                 You have placed your order Succesfully
@@ -111,7 +122,7 @@ function Orders() {
                                 Your order rquest has failed
                               </p>
                             )}
-                          </p>
+                          </>
                         </div>
                       </div>
                     </CardBody>

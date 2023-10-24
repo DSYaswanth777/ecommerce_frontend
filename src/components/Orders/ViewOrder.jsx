@@ -3,15 +3,12 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Carousel } from "react-responsive-carousel";
 import { formatCurrency } from "../../utilities/formatCurrency";
-import { Button, Badge } from "reactstrap";
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { viewOrderAsync } from "../../redux/slice/orderSlice";
 import { format } from "date-fns";
-
 
 function ViewOrder() {
   const { orderID } = useParams();
@@ -29,68 +26,97 @@ function ViewOrder() {
     if (!isoDate) {
       return ""; // Handle empty date
     }
-  
+
     const date = new Date(isoDate);
-  
+
     if (isNaN(date.getTime())) {
       return ""; // Handle invalid date
     }
-  
-    return format(date, "yyyy-MM-dd HH:mm:ss");
+
+    return format(date, "dd-MM-yyyy HH:mm:ss a");
   };
   
   return (
     <>
       <Header />
-      <div className="d-flex container flex-column flex-sm-column  flex-lg-row gap-5 pt-3">
-  
-        <div className="bg-white">
-        {orderData?.cartItems?.map((prod) =>
-                <img
-                  alt={prod?.product?.productName}
-                  src={prod.product.productImages[0]}
-                  width={100}
-                  height={100}
-                  className="me-3"
-                  key={prod.product._id}
-                />
-            )}
+      <div className="d-flex container flex-column gap-5 pt-3">
+        <div className="bg-light shadow-sm border w-100 text-center">
+          <h5 className=" fs-4 bg-secondar text-start  pt-3 px-3 rounded pb-3">
+            {" "}
+            Order Details
+          </h5>
+
+          {orderData?.cartItems?.map((prod) => (
+            <img
+              alt={prod?.product?.productName}
+              src={prod.product.productImages[0]}
+              width={150}
+              height={150}
+              className="me-3"
+              key={prod.product._id}
+            />
+          ))}
           {orderData?.cartItems?.map((prod) => (
             <>
-              <div className="fs-3 text-start fw-bold" key={prod.product._id}>
+              <div
+                className="fs-3 text-start fw-bold text-center"
+                key={prod.product._id}
+              >
                 {prod?.product?.productName}
               </div>
-              <p className="text-muted fs-5">
+              <p className="text-muted fs-5 text-center">
                 {prod?.product?.subcategoryId?.name}
               </p>
-              <p className="text-start fs-5">
+              <p className="text-start fs-5 text-center">
                 Price: &nbsp;{prod?.quantity} X
                 {formatCurrency(prod?.product?.productPrice)}/-
+                <hr/>
               </p>
             </>
           ))}
           <div>
             <h5>Total: &nbsp;{formatCurrency(orderData?.totalAmount)}/-</h5>
-            <p className="text-small text-muted">
+            <p className="text-mark text-danger text-sm">
               * Includes Standard Delivery Charges ₹50/-
             </p>
           </div>
         </div>
-        <div className="bg-white p-3 border h-50  shadow-sm">
-          <h5 className="text-uppercase">Order Details:</h5>
-          <p> <span className="fw-bold me-2">Order Date:</span>{formatDateForInput(orderData?.orderDate)}</p>
-          <p className="text-muted"> <span className="fw-bold me-2 text-muted">Order ID:</span>{orderData?.orderID}</p>
-         
+        <div className="bg-light p-3 border h-50  shadow-sm">
+          <p>
+            {" "}
+            <span className="fw-bold me-2">Order Date:</span>
+            {formatDateForInput(orderData?.orderDate)}
+          </p>
+          <p className="text-muted">
+            {" "}
+            <span className="fw-bold me-2 text-muted">Order ID:</span>
+            {orderData?.orderID}
+          </p>
+          <p className="w-100">
+            {" "}
+            <span className="fw-bold me-2">Order Status: </span>
+            {orderData?.paymentStatus === "Successful" ? (
+              <p className="text-success fw-bold">
+                {" "}
+                You have placed your order {orderData?.paymentStatus}ly. You
+                order will be shipped with 2-3 business days.Soon You will get
+                details from courier partner !
+              </p>
+            ) : (
+              `Payment ${orderData?.paymentStatus} place try again after Some time!`
+            )}
+          </p>
+
           <div className="">
-          <h6>Shipping Address:</h6>
-          <div className="d-flex flex-column">
-            <span>{orderData?.shippingAddress?.fullName}</span>
-            <span>{orderData?.shippingAddress?.landmark}</span>
-            <span>{orderData?.shippingAddress?.streetAddress}</span>
-            <span>{orderData?.shippingAddress?.townCity}</span>
-            {orderData?.shippingAddress?.pincode}
+            <h6>Shipping Address:</h6>
+            <div className="d-flex flex-column bg-light p-4 rounded shadow-sm border">
+              <span>{orderData?.shippingAddress?.fullName}</span>
+              <span>{orderData?.shippingAddress?.landmark}</span>
+              <span>{orderData?.shippingAddress?.streetAddress}</span>
+              <span>{orderData?.shippingAddress?.townCity}</span>
+              {orderData?.shippingAddress?.pincode}
+            </div>
           </div>
-        </div>
         </div>
       </div>
       <Footer />

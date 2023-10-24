@@ -8,6 +8,7 @@ import {
 import GooglePayButton from "@google-pay/button-react";
 import { useRef, useCallback } from "react";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 function AddressStep() {
   const cartData = useSelector((state) => state?.cart?.cart);
@@ -18,12 +19,12 @@ function AddressStep() {
     landmark: "",
     pincode: "",
     state: "",
-    townCity: "", 
+    townCity: "",
   });
   const dispatch = useDispatch();
   const addressRef = useRef(address);
   addressRef.current = address;
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
   const [pincodeDetails, setPincodeDetails] = useState(null);
   const [availableOptions, setAvailableOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
@@ -230,7 +231,6 @@ function AddressStep() {
             </InputGroup>
           </div>
           <div className=" pt-3 d-flex flex-column ">
-            
             <GooglePayButton
               environment="TEST"
               paymentRequest={{
@@ -277,6 +277,12 @@ function AddressStep() {
                 };
               }}
               onPaymentAuthorized={handleGooglePayClick}
+              onCancel={() => {
+                toast.error("Payment process was canceled by the user");
+              }}
+              onError={(error) => {
+                toast.error("Payment Error:", error);
+              }}
               existingPaymentMethodRequired="false"
               buttonColor="black"
               buttonType="Buy"

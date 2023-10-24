@@ -14,10 +14,12 @@ import "../Products/Products.scss";
 import { Trash } from "react-feather";
 import { cartAddAsync } from "../../redux/slice/cartSlice";
 import { Shimmer } from "react-shimmer";
+import { useNavigate } from "react-router";
 function Wishlist() {
   const status = useSelector((state) => state.wishlist?.status);
   const wishlistData = useSelector((state) => state.wishlist?.wishlist);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const handleDeleteItem = (itemId) => {
     // Dispatch the delete action
     dispatch(deleteWishlistAsync(itemId))

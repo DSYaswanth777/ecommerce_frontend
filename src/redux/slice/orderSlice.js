@@ -1,8 +1,8 @@
 // orderSlice.js
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
-// Define an async thunk to place an order
 export const placeOrder = createAsyncThunk(
   "orders/placeOrder",
   async (
@@ -37,22 +37,30 @@ export const placeOrder = createAsyncThunk(
         },
         body: JSON.stringify({ shippingAddress }),
       });
-      if (!response.ok) {
+
+      if (response.status === 200 || response.status === 201) {
         const data = await response.json();
+        toast.success(data.message);
+        return data;
+      } else if (response.status === 400 || response.status === 404) {
+        const data = await response.json();
+        // Display an error toast notification
+        toast.error(data.errorMessage, { duration: 4000 });
         return rejectWithValue(data);
+      } else {
+        throw new Error("Failed to place an order.");
       }
-      const data = await response.json();
-      return data;
     } catch (error) {
+      // Display an error toast notification for network errors
+      toast.error("Network error. Please try again.", { duration: 4000 });
       return rejectWithValue(error.message);
     }
   }
 );
-// Define an async thunk to update the payment status of an order
+
 export const updatePaymentStatus = createAsyncThunk(
   "orders/updatePaymentStatus",
   async ({ orderID, paymentStatus }, { getState, rejectWithValue }) => {
-    console.log(orderID);
     const token = getState().auth.token;
 
     try {
@@ -70,17 +78,26 @@ export const updatePaymentStatus = createAsyncThunk(
           }),
         }
       );
-      if (!response.ok) {
+
+      if (response.status === 200) {
         const data = await response.json();
+        return data;
+      } else if (response.status === 400 || response.status === 404) {
+        const data = await response.json();
+        // Display an error toast notification
+        toast.error(data.errorMessage, { duration: 4000 });
         return rejectWithValue(data);
+      } else {
+        throw new Error("Failed to update payment status.");
       }
-      const data = await response.json();
-      return data;
     } catch (error) {
+      // Display an error toast notification for network errors
+      toast.error("Network error. Please try again.", { duration: 4000 });
       return rejectWithValue(error.message);
     }
   }
 );
+
 export const fetchUserOrders = createAsyncThunk(
   "orders/fetchuserorders",
   async (_, { getState }) => {
@@ -97,7 +114,6 @@ export const fetchUserOrders = createAsyncThunk(
         config
       );
       const data = await response.json();
-      console.log(data);
       return data;
     } catch (error) {
       throw error;
@@ -174,7 +190,6 @@ export const downloadPDF = createAsyncThunk(
 export const fetchOrdersByOrderID = createAsyncThunk(
   "orders/fetchOrdersByDate",
   async (orderID, { getState }) => {
-    console.log(orderID);
     const token = getState().auth.token;
     try {
       const response = await fetch(
