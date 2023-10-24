@@ -9,6 +9,7 @@ import { useNavigate } from "react-router";
 import { Shimmer } from "react-shimmer";
 import { useMemo } from "react";
 import { v4 as uuidv4 } from "uuid"; // Import uuid
+import { ChevronRight } from "react-feather";
 
 function Orders() {
   const ordersData = useSelector((state) => state?.orders?.orders?.orders);
@@ -25,9 +26,7 @@ function Orders() {
     if (!isoDate) {
       return "";
     }
-
     const date = new Date(isoDate);
-
     if (isNaN(date.getTime())) {
       return ""; // Handle invalid date
     }
@@ -123,7 +122,9 @@ function Orders() {
                               </p>
                             )}
                           </>
+
                         </div>
+                        <ChevronRight/>
                       </div>
                     </CardBody>
                   </Card>
