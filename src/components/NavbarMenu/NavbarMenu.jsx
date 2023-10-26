@@ -4,7 +4,7 @@ import Logo from "../../assets/icons/brand_logo.svg";
 import { fetchCategoriesAsync } from "../../redux/slice/categoriesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { ChevronRight, Plus } from "react-feather";
+import { ChevronRight } from "react-feather";
 import { filterProductsAsync } from "../../redux/slice/productSlice";
 import { useNavigate } from "react-router";
 
@@ -67,6 +67,8 @@ const NavbarMenu = ({ isOpen, toggleMenu }) => {
                         key={subcat.id}
                         className="border-bottom border-2"
                         onClick={() => handleSubCatClick(subcat._id)}
+                        isOpen={isOpen}
+                        toggle={toggleMenu}
                       >
                         {subcat.name}
                       </p>

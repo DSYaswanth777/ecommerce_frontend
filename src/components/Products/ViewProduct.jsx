@@ -9,12 +9,11 @@ import { Button, Badge, Card, Spinner } from "reactstrap";
 import { FaCartPlus } from "react-icons/fa";
 import Poster from "../../components/Poster/Poster";
 import "./Products.scss";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import {
-  filterProductsAsync,
   recentProductAsync,
-  viewProductAsync,
+  viewProductAsync
 } from "../../redux/slice/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { cartAddAsync, fetchUsercartAsync } from "../../redux/slice/cartSlice";
@@ -26,6 +25,7 @@ import {
 import { BsFillHeartFill, BsSuitHeart } from "react-icons/bs";
 import toast from "react-hot-toast";
 import { Shimmer } from "react-shimmer";
+import { ArrowLeft } from "react-feather";
 
 function ViewProduct() {
   const { productId } = useParams();
@@ -36,7 +36,7 @@ function ViewProduct() {
   const wishlist = useSelector((state) => state?.wishlist?.wishlist);
   const status = useSelector((state) => state?.wishlist?.status);
   const [wishlistAdded, setWishlistAdded] = useState(false);
-
+const navigate = useNavigate()
   useEffect(() => {
     dispatch(viewProductAsync(productId));
   }, [dispatch, productId]);
@@ -108,7 +108,9 @@ function ViewProduct() {
   return (
     <>
       <Header />
+      <ArrowLeft size={30} className="ms-5 mt-3" style={{cursor:"pointer"}} onClick={()=>navigate("/products")}/>
       <div className="d-flex container flex-column flex-sm-column flex-lg-row gap-5 pt-3">
+
         <div className="img-carousel">
           {productStatus === "loading" ? (
             <Shimmer
@@ -126,32 +128,32 @@ function ViewProduct() {
               ></Card>
             </Shimmer>
           ) : (
-            <Carousel
-              autoPlay
-              interval="5000"
-              transitionTime="1000"
-              infiniteLoop
-              showThumbs={false}
-            >
-              {product?.productImages.map((img) => (
-                <img
-                  alt={product.name}
-                  src={img}
-                  width={400}
-                  height={400}
-                  key={product._id}
-                />
-              ))}
-            </Carousel>
+              <Carousel
+                autoPlay
+                interval="5000"
+                transitionTime="1000"
+                infiniteLoop
+                showThumbs={false}
+              >
+                {product?.productImages.map((img) => (
+                  <img
+                    alt={product.name}
+                    src={img}
+                    width={400}
+                    height={400}
+                    key={product._id}
+                  />
+                ))}
+              </Carousel>
           )}
         </div>
         <div className="img-carousel">
           <div className="fs-3 text-start d-flex gap-5 ">
-            <span className="me-5 pe-5" >{product?.productName}</span>
+            <span className="me-5 pe-5">{product?.productName}</span>
             {status === "loading" ? (
               <Spinner />
             ) : (
-              <span style={{cursor:"pointer"}}>
+              <span style={{ cursor: "pointer" }}>
                 {wishlistAdded ? (
                   <BsFillHeartFill
                     size={25}

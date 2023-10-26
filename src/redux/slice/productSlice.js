@@ -163,8 +163,6 @@ export const sortproductsAsync = createAsyncThunk(
 export const filterProductsAsync = createAsyncThunk(
   "products/filterProducts",
   async (subcategoriesId) => {
-    console.log(subcategoriesId,"redux")
-    // const subcategoryIdsString = subcategoriesId.join(",");
     const response = await fetch(
       `http://localhost:3000/api/v1/products/filters?subcategoryIds=${subcategoriesId}`
     );
@@ -182,7 +180,7 @@ const productSlice = createSlice({
     recentproducts: null,
     suggestedproducts: null,
     filteredproducts: null,
-    relevantproducts:null,
+    relevantproducts: null,
     status: "idle",
     error: null,
   },
@@ -195,6 +193,8 @@ const productSlice = createSlice({
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.products = action.payload;
+        state.sortedproducts = action.payload;
+
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.status = "failed";
@@ -216,8 +216,8 @@ const productSlice = createSlice({
       })
       .addCase(sortproductsAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.products = action.payload;
-        state.filteredproducts = action.payload;
+        // state.products = action.payload;
+        state.sortedproducts = action.payload;
       })
       .addCase(sortproductsAsync.rejected, (state, action) => {
         state.status = "failed";
@@ -229,7 +229,6 @@ const productSlice = createSlice({
       .addCase(addProductAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
         toast.success("Product added successfully");
-
       })
       .addCase(addProductAsync.rejected, (state, action) => {
         state.status = "failed";
@@ -240,22 +239,19 @@ const productSlice = createSlice({
       })
       .addCase(editProductAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
-        toast.success("You ahve edited the product succesfully");
-
+        toast.success("You have edited the product succesfully");
       })
       .addCase(editProductAsync.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
         toast.success("Editing product failed");
-
       })
       .addCase(searchProductsAsync.pending, (state) => {
         state.status = "loading";
       })
       .addCase(searchProductsAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.products = action.payload;
-        state.suggestedproducts = action.payload;
+        state.sortedproducts = action.payload;
       })
       .addCase(searchProductsAsync.rejected, (state, action) => {
         state.status = "failed";
@@ -277,8 +273,10 @@ const productSlice = createSlice({
       })
       .addCase(filterProductsAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.products = action.payload;
-        state.relevantproducts = action.payload;
+        // state.products = action.payload;
+        // state.relevantproducts = action.payload;
+        state.sortedproducts = action.payload;
+
       })
       .addCase(filterProductsAsync.rejected, (state, action) => {
         state.status = "failed";

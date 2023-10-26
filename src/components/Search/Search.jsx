@@ -1,53 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Header/Header";
 import { Button } from "reactstrap";
-import { Filter } from "react-feather";
 import Filters from "../Filters/Filters";
 import Products from "../Products/Products";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchProducts,
+  filterProductsAsync,
   sortproductsAsync,
 } from "../../redux/slice/productSlice";
-import { useEffect } from "react";
-import { fetchCategoriesAsync } from "../../redux/slice/categoriesSlice";
 import Select from "react-dropdown-select";
+import { useSearchParams } from "react-router-dom";
+import { Filter } from "react-feather";
+import { fetchCategoriesAsync } from "../../redux/slice/categoriesSlice";
 
 function Search() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const productData = useSelector((state) => state.products?.products);
+  const productData = useSelector((state) => state.products?.sortedproducts);
   const totalProducts = useSelector(
-    (state) => state.products?.products?.length
+    (state) => state.products?.sortedproducts?.length
   );
-
   const dispatch = useDispatch();
-  const status = useSelector((state) => state.products?.status);
   const categories = useSelector((state) => state?.categories?.categories);
-  const [selectedSortOption, setSelectedSortOption] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialSortValue = searchParams.get("sort");
+  const initialSubcategories = searchParams.get("subcategories")
+    ? searchParams.get("subcategories").split(",")
+    : [];
+  const [selectedSortOption, setSelectedSortOption] = useState(
+    initialSortValue
+      ? { value: initialSortValue, label: initialSortValue }
+      : null
+  );
+  const [selectedSubcategories, setSelectedSubcategories] =
+    useState(initialSubcategories);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchProducts());
-      dispatch(sortproductsAsync("featured"));
+    // Initial data fetch based on URL
+    if (!selectedSortOption && !selectedSubcategories.length) {
+      dispatch(sortproductsAsync());
+    } else {
+      if (selectedSortOption) {
+        dispatch(sortproductsAsync(selectedSortOption.value));
+      }
+      if (selectedSubcategories.length) {
+        dispatch(filterProductsAsync(selectedSubcategories));
+      }
     }
-  }, [status, dispatch]);
-
+  }, [selectedSortOption, selectedSubcategories, dispatch]);
   useEffect(() => {
     if (menuOpen === true) {
       dispatch(fetchCategoriesAsync());
     }
   }, [menuOpen, dispatch]);
-
-  useEffect(() => {
-    if (selectedSortOption != null) {
-      dispatch(sortproductsAsync(selectedSortOption[0].value));
-    }
-  }, [selectedSortOption, dispatch]);
-
   const sortOptions = [
     { value: "featured", label: "Featured" },
     { value: "lowtohigh", label: "Low to High" },
@@ -57,26 +65,78 @@ function Search() {
     { value: "hightolow&maxPrice=1500", label: "Under 1500" },
     { value: "hightolow&maxPrice=2000", label: "Under 2000" },
   ];
+
+  const handleSubcategoryChange = (subcategory) => {
+    let updatedSubcategories;
+    if (selectedSubcategories.includes(subcategory._id)) {
+      updatedSubcategories = selectedSubcategories.filter(
+        (id) => id !== subcategory._id
+      );
+    } else {
+      updatedSubcategories = [...selectedSubcategories, subcategory._id];
+    }
+    setSelectedSubcategories(updatedSubcategories);
+  
+    // Update URL with subcategories parameter
+    setSearchParams(
+      new URLSearchParams({
+        ...searchParams,
+        subcategories: updatedSubcategories.join(","),
+      })
+    );
+  };
+  const applyFilters = () => {
+    setSearchParams(
+      new URLSearchParams({
+        ...searchParams,
+        subcategories: selectedSubcategories.join(","),
+      })
+    );
+    toggleMenu();
+  };
+
+  const resetFilters = () => {
+    setSelectedSubcategories([]);
+    setSearchParams(new URLSearchParams());
+    dispatch(sortproductsAsync());
+    toggleMenu();
+  };
+  useEffect(() => {
+    // When the component mounts or URL params change, update the state and fetch results
+    const currentSubcategories = searchParams.get("subcategories")
+      ? searchParams.get("subcategories").split(",")
+      : [];
+  
+    const currentSortOption = searchParams.get("sort");
+  
+    setSelectedSubcategories(currentSubcategories);
+    setSelectedSortOption(
+      currentSortOption
+        ? { value: currentSortOption, label: currentSortOption }
+        : null
+    );
+  
+    if (currentSubcategories.length) {
+      dispatch(filterProductsAsync(currentSubcategories));
+    } else {
+      dispatch(sortproductsAsync(currentSortOption));
+    }
+  }, [dispatch, searchParams]);
+  
   return (
     <div>
       <Header />
       <div className="container pt-3">
         <div className="d-flex justify-content-between pt-3">
           <Button onClick={toggleMenu}>
-            {" "}
-            <Filter /> <span>Filters</span>
+            <Filter />
+            <span>Filters</span>
           </Button>
-
           <Select
             value={selectedSortOption}
             options={sortOptions}
             onChange={(selectedOption) => {
-              dispatch(
-                sortproductsAsync(
-                  selectedOption ? selectedOption[0].value : null
-                )
-              );
-              setSelectedSortOption(selectedOption);
+              setSelectedSortOption(selectedOption ? selectedOption[0] : null);
             }}
             placeholder="Sort By"
             className="text-dark"
@@ -84,13 +144,16 @@ function Search() {
         </div>
         <Products productData={productData} />
         <h5 className="pt-5 text-center">
-          Showing total of {totalProducts} items{" "}
+          Showing total of {totalProducts} items
         </h5>
       </div>
       <Filters
         isOpen={menuOpen}
         toggleMenu={toggleMenu}
         categories={categories}
+        handleSubcategoryChange={handleSubcategoryChange}
+        applyFilters={applyFilters}
+        resetFilters={resetFilters}
       />
     </div>
   );

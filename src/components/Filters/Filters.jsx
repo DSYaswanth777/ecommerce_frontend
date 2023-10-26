@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Offcanvas,
   OffcanvasBody,
@@ -7,47 +7,21 @@ import {
   Label,
   Button,
 } from "reactstrap";
-import {
-  fetchProducts,
-  filterProductsAsync,
-} from "../../redux/slice/productSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Spinner } from "react-bootstrap";
 
-function Filters({ isOpen, toggleMenu, categories }) {
+function Filters({
+  isOpen,
+  toggleMenu,
+  categories,
+  isButtonDisabled,
+  applyFilters,
+  resetFilters,
+  selectedSubcategories,
+  handleSubcategoryChange,
+}) {
   const status = useSelector((state) => state?.categories?.status);
-  // Initialize state to store selected subcategory IDs
-  const [selectedSubcategories, setSelectedSubcategories] = useState([]);
-  const dispatch = useDispatch();
-  // Function to handle checkbox changes
-  const handleSubcategoryChange = (subcategory) => {
-    // Check if the subcategory is already selected
-    if (selectedSubcategories.includes(subcategory._id)) {
-      // If selected, remove it from the list
-      setSelectedSubcategories(
-        selectedSubcategories.filter((id) => id !== subcategory._id)
-      );
-    } else {
-      // If not selected, add it to the list
-      setSelectedSubcategories([...selectedSubcategories, subcategory._id]);
-    }
-  };
-  const isButtonDisabled = selectedSubcategories.length === 0;
 
-  // Function to call the filterProductsAsync function with selected subcategories
-  const applyFilters = () => {
-    // Call your filter function with the selected subcategory IDs
-    dispatch(filterProductsAsync(selectedSubcategories));
-    toggleMenu();
-  };
-  const resetFilters = () => {
-    // Clear selected subcategories
-    setSelectedSubcategories([]);
-    // Close the Offcanvas
-    toggleMenu();
-    // Call fetchProductsAsync to reset the filters
-    dispatch(fetchProducts());
-  };
   return (
     <div>
       <Offcanvas
@@ -77,7 +51,7 @@ function Filters({ isOpen, toggleMenu, categories }) {
         <OffcanvasBody className="nav-menu">
           <div>
             <hr />
-            {status === "loaidng" ? (
+            {status === "loading" || status === "idle" ? (
               <Spinner />
             ) : (
               categories?.map((category) => (
@@ -92,7 +66,7 @@ function Filters({ isOpen, toggleMenu, categories }) {
                           type="checkbox"
                           value={subcategory.name}
                           className="border-dark me-2"
-                          checked={selectedSubcategories.includes(
+                          checked={selectedSubcategories?.includes(
                             subcategory._id
                           )}
                           onChange={() => handleSubcategoryChange(subcategory)}
