@@ -251,6 +251,7 @@ const productSlice = createSlice({
       })
       .addCase(searchProductsAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
+        state.products = action.payload
         state.sortedproducts = action.payload;
       })
       .addCase(searchProductsAsync.rejected, (state, action) => {

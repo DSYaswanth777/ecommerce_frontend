@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Header from "../Header/Header";
 import { Button } from "reactstrap";
 import Filters from "../Filters/Filters";
 import Products from "../Products/Products";
