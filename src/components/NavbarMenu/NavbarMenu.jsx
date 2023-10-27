@@ -7,12 +7,38 @@ import { useEffect } from "react";
 import { ChevronRight } from "react-feather";
 import { filterProductsAsync } from "../../redux/slice/productSlice";
 import { useNavigate } from "react-router";
+import { useSearchParams } from "react-router-dom";
 
 const NavbarMenu = ({ isOpen, toggleMenu }) => {
   const dispatch = useDispatch();
   const categories = useSelector((state) => state?.categories?.categories);
   const [expandedCategory, setExpandedCategory] = useState(null);
-  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialSubcategories = searchParams.get("subcategories")
+    ? searchParams.get("subcategories").split(",")
+    : [];
+  const [selectedSubcategories, setSelectedSubcategories] =
+    useState(initialSubcategories);
+  const handleSubcategoryChange = (subcategory) => {
+    let updatedSubcategories;
+    if (selectedSubcategories.includes(subcategory._id)) {
+      updatedSubcategories = selectedSubcategories.filter(
+        (id) => id !== subcategory._id
+      );
+    } else {
+      updatedSubcategories = [...selectedSubcategories, subcategory._id];
+    }
+    setSelectedSubcategories(updatedSubcategories);
+
+    // Update URL with subcategories parameter
+    setSearchParams(
+      new URLSearchParams({
+        ...searchParams,
+        subcategories: updatedSubcategories.join(","),
+      })
+    );
+  };
+  const navigate = useNavigate();
   useEffect(() => {
     if (isOpen === true) {
       dispatch(fetchCategoriesAsync());
@@ -32,7 +58,7 @@ const NavbarMenu = ({ isOpen, toggleMenu }) => {
     dispatch(filterProductsAsync(subcatID))
       .then(() => {
         // Redirect to the /products route after filtering is successful
-        navigate("/products");
+        navigate(`/products?subcategories=${subcatID}`);
       })
       .catch((error) => {
         // Handle errors if needed
@@ -52,21 +78,26 @@ const NavbarMenu = ({ isOpen, toggleMenu }) => {
         </OffcanvasHeader>
         <OffcanvasBody className="nav-menu">
           <div className="d-flex flex-column justify-content-start">
+            <p className="bg-light border-bottom p-2">Home</p>
+            <p className="bg-light border-bottom p-2">About Us</p>
+
             {categories?.map((category) => (
               <div key={category._id}>
                 <p
                   onClick={() => toggleCategory(category._id)}
-                  className="border-bottom p-1 fs-5"
+                  className="border-bottom p-2 fs-6 rounded"
+                  style={{ backgroundColor: "#2d7b8b", color: "#ffff" }}
                 >
-                  {category.name} <ChevronRight className="ms-2" />
+                  {category.name} <ChevronRight className="ms-2" size={15} />
                 </p>
                 {expandedCategory === category._id && (
-                  <div className="bg-light">
+                  <div className="bg-light p-1 ps-2">
                     {category?.subcategories?.map((subcat) => (
                       <p
                         key={subcat.id}
-                        className="border-bottom border-2"
+                        className="border-bottom border-2 p-2"
                         onClick={() => handleSubCatClick(subcat._id)}
+                        onChange={() => handleSubcategoryChange(subcat)}
                         isOpen={isOpen}
                         toggle={toggleMenu}
                       >
@@ -77,6 +108,7 @@ const NavbarMenu = ({ isOpen, toggleMenu }) => {
                 )}
               </div>
             ))}
+            <p className="bg-light border-bottom p-2">Contact Us</p>
           </div>
         </OffcanvasBody>
       </Offcanvas>

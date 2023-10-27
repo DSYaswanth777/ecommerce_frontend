@@ -172,16 +172,15 @@ export const verifyOtpAsync = createAsyncThunk(
     }
   }
 );
-
-const loadUserFromLocalStorage = () => {
-  const token = localStorage.getItem("token");
-  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+const loadUserFromSessionStorage = () => {
+  const token = sessionStorage.getItem("token");
+  const isAuthenticated = sessionStorage.getItem("isAuthenticated") === "true";
   if (token && isAuthenticated) {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
+      const user = JSON.parse(sessionStorage.getItem("user"));
       return { user };
     } catch (error) {
-      console.error("Error parsing user data from local storage:", error);
+      console.error("Error parsing user data from session storage:", error);
     }
   }
 
@@ -191,9 +190,9 @@ const loadUserFromLocalStorage = () => {
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: loadUserFromLocalStorage()?.user,
-    token: localStorage.getItem("token"),
-    isAuthenticated: loadUserFromLocalStorage() !== null,
+    user: loadUserFromSessionStorage()?.user,
+    token: sessionStorage.getItem("token"),
+    isAuthenticated: loadUserFromSessionStorage() !== null,
     isLoading: false,
     loginMessage: "",
     isUserNotVerified: false,
@@ -204,12 +203,12 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      localStorage.setItem("isAuthenticated", "false");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
+      sessionStorage.setItem("isAuthenticated", "false");
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: (builder)=> {
     builder
       .addCase(loginAsync.pending, (state) => {
         state.isLoading = true;
@@ -220,9 +219,9 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.isLoading = false;
         state.loginMessage = action.payload.message;
-        localStorage.setItem("token", action.payload.token);
-        localStorage.setItem("user", JSON.stringify(action.payload.user));
-        localStorage.setItem("isAuthenticated", "true");
+        sessionStorage.setItem("token", action.payload.token);
+        sessionStorage.setItem("user", JSON.stringify(action.payload.user));
+        sessionStorage.setItem("isAuthenticated", "true");
       })
       .addCase(loginAsync.rejected, (state) => {
         state.isLoading = false;
