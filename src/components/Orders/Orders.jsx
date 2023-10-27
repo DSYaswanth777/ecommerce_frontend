@@ -36,7 +36,6 @@ function Orders() {
 
   return (
     <div style={{ overflow: "hidden" }}>
-      <Header />
       <h3 className="text-center pt-3 text-uppercase">My Orders</h3>
       <div className="d-flex container flex-column gap-2 pt-2 pb-5">
         <div className="d-flex gap-4 flex-column flex-md-row pt-3 ">

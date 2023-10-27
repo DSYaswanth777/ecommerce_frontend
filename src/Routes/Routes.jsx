@@ -4,17 +4,17 @@ import { useSelector } from "react-redux";
 import Login from "../components/Login/Login";
 import Home from "../pages/HomePage";
 import Signup from "../components/SignUp/Signup";
-import Products from "../components/Products/Products";
-import Profile from "../components/Profile/Profile";
 import ResetPassword from "../components/ResetPassword/ResetPassword";
 import ChangePassword from "../components/ChangePassword/ChangePassword";
-import CheckOutCart from "../components/CheckoutCart/CheckOutCart";
 import Search from "../components/Search/Search";
-import Orders from "../components/Orders/Orders";
-import Wishlist from "../components/Wishlist/Wishlist";
 import Dashboard from "../components/Admin/Dashboard/Dashboard";
-import ViewProduct from "../components/Products/ViewProduct";
-import ViewOrder from "../components/Orders/ViewOrder";
+import CheckOutPage from "../pages/CheckOutPage";
+import OrdersPage from "../pages/OrdersPage";
+import ViewOrderPage from "../pages/ViewOrderPage";
+import ProfilePage from "../pages/ProfilePage";
+import WishListPage from "../pages/WishListPage";
+import ViewProductPage from "../pages/ViewProductPage";
+import AllProductsPage from "../pages/AllProductsPage";
 
 const PublicRoutes = () => {
   const user = useSelector((state) => state.auth);
@@ -26,16 +26,16 @@ const PublicRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgotpassword" element={<ResetPassword />} />
-        <Route path="/products" element={<Search />} />
+        <Route path="/products" element={<AllProductsPage />} />
         {user.isAuthenticated ? (
           <>
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/changepassword" element={<ChangePassword />} />
-            <Route path="/checkoutcart" element={<CheckOutCart />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/products/viewproduct/:productId" element={<ViewProduct/>}/>
-            <Route path="/view/order/:orderID" element={<ViewOrder/>}/>
+            <Route path="/checkout" element={<CheckOutPage />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/wishlist" element={<WishListPage />} />
+            <Route path="/products/viewproduct/:productId" element={<ViewProductPage/>}/>
+            <Route path="/view/order/:orderID" element={<ViewOrderPage/>}/>
           </>
         ) : (
           <Route path="*" element={<Navigate to="/login" />} />

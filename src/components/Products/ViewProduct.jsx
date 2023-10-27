@@ -107,7 +107,6 @@ const navigate = useNavigate()
 
   return (
     <>
-      <Header />
       <ArrowLeft size={30} className="ms-5 mt-3" style={{cursor:"pointer"}} onClick={()=>navigate("/products")}/>
       <div className="d-flex container flex-column flex-sm-column flex-lg-row gap-5 pt-3">
 

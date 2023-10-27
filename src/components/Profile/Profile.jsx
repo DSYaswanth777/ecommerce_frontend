@@ -40,7 +40,6 @@ const Profile = () => {
 
   return (
     <div className="">
-      <Header />
       <div className="container pt-5">
         <div className="border p-4">
           <div className="d-flex justify-content-between py-3">

@@ -42,7 +42,6 @@ function ViewOrder() {
 
   return (
     <>
-      <Header />
       <div className="d-flex container flex-column gap-5 pt-3">
         <div className="bg-light shadow-sm border w-100 text-center">
           <div className="d-flex justify-content-start align-items-center gap-2 p-3">

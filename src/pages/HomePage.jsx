@@ -15,7 +15,7 @@ import { Card } from "reactstrap";
 function Home() {
   const recentProducts = useSelector((state) => state.products?.recentproducts);
   const filteredProducts = useSelector(
-    (state) => state.products?.filteredproducts
+    (state) => state.products?.sortedproducts
   );
   const status = useSelector((state) => state.products?.status);
   const dispatch = useDispatch();
@@ -42,10 +42,10 @@ function Home() {
           <h2 className="text-center mb-5 subtitle">New Arrivals for You</h2>
           <div className="d-flex gap-4">
             {recentProducts?.length > 0 ? (
-              recentProducts.map((product, index) => (
+              recentProducts.map((product) => (
                 <div className="d-flex ">
                   <Shimmer
-                    key={index}
+                    key={product._id}
                     visible={true}
                     autoRun={true}
                     width={400}

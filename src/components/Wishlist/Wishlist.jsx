@@ -39,7 +39,6 @@ function Wishlist() {
   }, [status, dispatch]);
   return (
     <div>
-      <Header />
       <div className=" container pt-5">
         <div className="productsGri">
           {status === "loading"

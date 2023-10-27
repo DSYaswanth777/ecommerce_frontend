@@ -6,10 +6,8 @@ function App() {
     <>
       <Toaster
         toastOptions={{
-          // Define default options
           className: "",
           duration: 1000,
-          // Default options for specific types
           success: {
             duration: 1000,
           },

@@ -125,7 +125,6 @@ function Search() {
   
   return (
     <div>
-      <Header />
       <div className="container pt-3">
         <div className="d-flex justify-content-between pt-3">
           <Button onClick={toggleMenu}>

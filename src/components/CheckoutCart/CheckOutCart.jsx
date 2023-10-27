@@ -44,7 +44,6 @@ function CheckOutCart() {
 
   return (
     <div className=" ">
-      <Header />
       <h2 className=" py-3 text-center ">Checkout</h2>
       <div className="d-flex justify-content-between gap-3 align-items-center container">
         <div className="d-flex justify-content-center align-items-center gap-2">

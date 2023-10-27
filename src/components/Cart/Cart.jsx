@@ -120,13 +120,13 @@ function Cart({ cartData, cartTotalFee }) {
         {cartData?.length > 0 && (
           <Button style={{ backgroundColor: "#2D7B8B" }}>
             {" "}
-            <a href="/checkoutcart" className="text-white ">
+            <a href="/checkout" className="text-white ">
               View Cart
             </a>
           </Button>
         )}
         {cartData?.length > 0 && (
-          <Button style={{ backgroundColor: "#2D7B8B" }} href="/checkoutcart">
+          <Button style={{ backgroundColor: "#2D7B8B" }} href="/checkout">
             Proceed To CheckOut
           </Button>
         )}
