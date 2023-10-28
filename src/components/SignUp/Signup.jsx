@@ -20,7 +20,7 @@ const Signup = () => {
   const [signupSuccess, setSignupSuccess] = useState(false);
   const [otp, setOtp] = useState("");
   const [mobile, setMobile] = useState("");
-  const user = useSelector((state) => state.auth.user); 
+  const user = useSelector((state) => state.auth.user);
   const onSubmit = (data) => {
     const { name, email, password, confirmPassword, mobile } = data;
     dispatch(signupAsync({ name, email, password, confirmPassword, mobile }))
@@ -40,8 +40,8 @@ const Signup = () => {
     }
   }, [user]);
   const handleOtpSubmit = () => {
-    const mobileNumber = parseInt(mobile); 
-    const otpNumber = parseInt(otp, 10); 
+    const mobileNumber = parseInt(mobile);
+    const otpNumber = parseInt(otp, 10);
     dispatch(verifyOtpAsync({ mobile: mobileNumber, otp: otpNumber }))
       .then((success) => {
         if (success) {
@@ -101,7 +101,7 @@ const Signup = () => {
                 <img src={Logo} alt="Logo" />
               </div>
               <CardTitle tag="h4" className="mb-2 mt-3 text-center fw-medium">
-               Create an Account!
+                Create an Account!
               </CardTitle>
               <Form
                 className="auth-login-form mt-2"
@@ -236,15 +236,15 @@ const Signup = () => {
                   Sign Up
                 </Button>
               </Form>
-              <p className="text-center mt-2">
-                <span className="me-2">Already have an account ?</span>
-                <span>
-                  {" "}
-                  <p className="text-decoration-underline" onClick={()=>navigate("/login")}>
-                    Signin Instead
-                  </p>
-                </span>
-              </p>
+              <div className="text-center mt-2">
+                <span className="me-2">Already have an account ?</span>{" "}
+                <p
+                  className="text-decoration-underline"
+                  onClick={() => navigate("/login")}
+                >
+                  Signin Instead
+                </p>
+              </div>
             </div>
           </div>
         )}

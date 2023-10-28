@@ -17,6 +17,7 @@ import {
 } from "../../redux/slice/productSlice";
 import debounce from "lodash.debounce";
 import { useNavigate } from "react-router";
+import { Button } from "react-bootstrap";
 
 const Header = () => {
   const user = useSelector((state) => state.auth);
@@ -94,7 +95,7 @@ const Header = () => {
             <div className="mobile-menu-icon" onClick={toggleMenu}>
               <RxHamburgerMenu />
             </div>
-            <p onClick={()=>navigate("/")}>
+            <p onClick={() => navigate("/")}>
               {" "}
               <img src={Logo} alt="sds" className="nav_logo" />
             </p>
@@ -111,12 +112,12 @@ const Header = () => {
               {user.isAuthenticated ? (
                 <User onClick={toggleAccount} id="profileBox" />
               ) : (
-                <div
-                  className="text-primary text-center underline-none"
+                <Button
+                  className="text-white text-center underline-none login-btn"
                   onClick={() => navigate("/login")}
                 >
-                  <div className="login-btn py-2 px-3 rounded">Login</div>
-                </div>
+                  Login
+                </Button>
               )}
               {isAccountVisible && (
                 <div

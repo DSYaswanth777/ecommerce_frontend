@@ -3,13 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginAsync } from "../../redux/slice/authSlice";
 import Logo from "../../assets/icons/brand_logo.svg";
 import InputPasswordToggle from "../Input-password/Index";
-import {
-  CardBody, CardText,
-  Form,
-  Label,
-  Input,
-  Button
-} from "reactstrap";
+import { CardBody, CardText, Form, Label, Input, Button } from "reactstrap";
 import "./Login.scss";
 
 import { useNavigate } from "react-router-dom";
@@ -105,7 +99,10 @@ const Login = () => {
                         Password
                       </Label>
                       <small>
-                        <p onClick={()=>navigate("/forgotpassword")} className="text-decoration-underline fw-bold">
+                        <p
+                          onClick={() => navigate("/forgotpassword")}
+                          className="text-decoration-underline fw-bold"
+                        >
                           Forgot Password?
                         </p>
                       </small>
@@ -139,16 +136,16 @@ const Login = () => {
                     {isLoading ? "Signing in..." : "Sign in"}
                   </Button>
                 </Form>
-                <p className="text-center mt-4">
+                <div className="text-center mt-4">
                   <span className="me-2">New Customer?</span>
-                  <span
-                    className=""
-                    onClick={openSigUpModal}
-                    style={{ cursor: "pointer" }}
+
+                  <p
+                    className="text-decoration-underline "
+                    onClick={() => navigate("/signup")}
                   >
-                    <p className="text-decoration-underline " onClick={()=>navigate("/signup")}>Create an account</p>
-                  </span>
-                </p>
+                    Create an account
+                  </p>
+                </div>
               </CardBody>
             </div>
           )}
