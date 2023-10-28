@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./HeroSection.scss";
@@ -8,6 +8,9 @@ import { useNavigate } from "react-router";
 import heroSliderImg from "../../assets/images/1.png";
 import heroSliderImg2 from "../../assets/images/2.png";
 import heroSliderImg3 from "../../assets/images/3.png";
+
+const LazyImage = lazy(() => import("./LazyImage")); // Lazy loading the image component
+
 const images = [
   {
     src: heroSliderImg,
@@ -42,7 +45,9 @@ const HeroSection = () => {
       >
         {images.map((image, index) => (
           <div className="d-flex" onClick={handleImageClick} key={index}>
-            <img src={image.src} alt={image.alt} className="slider-image w-100" />
+            <Suspense fallback={<div>Loading...</div>}>
+              <LazyImage src={image.src} alt={image.alt} />
+            </Suspense>
           </div>
         ))}
       </Carousel>
