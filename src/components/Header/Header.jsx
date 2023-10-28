@@ -33,7 +33,6 @@ const Header = () => {
   const status = useSelector((state) => state.cart?.status);
   const cartData = useSelector((state) => state.cart?.cart?.cartItems);
   const cartTotalFee = useSelector((state) => state.cart?.cart.totalFee);
-
   const suggestedProducts = useSelector((state) => state?.products?.products);
   useEffect(() => {
     if (isCartVisible && status === "idle") {
@@ -112,12 +111,11 @@ const Header = () => {
               {user.isAuthenticated ? (
                 <User onClick={toggleAccount} id="profileBox" />
               ) : (
-                <div className="text-primary text-center underline-none">
-                  <div className="login-btn py-2 px-3 rounded">
-                    <a href="/login" className="text-white">
-                      Login
-                    </a>
-                  </div>
+                <div
+                  className="text-primary text-center underline-none"
+                  onClick={() => navigate("/login")}
+                >
+                  <div className="login-btn py-2 px-3 rounded">Login</div>
                 </div>
               )}
               {isAccountVisible && (
@@ -142,8 +140,10 @@ const Header = () => {
                   data-bs-target="#staticBackdrop"
                   aria-controls="staticBackdrop"
                 />
-          
-                <span className=" rounded-circle  cartCount ">{cartData?.length}</span>
+
+                <span className=" rounded-circle  cartCount ">
+                  {cartData?.length}
+                </span>
               </div>
               <div
                 className="offcanvas offcanvas-end"

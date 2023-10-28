@@ -6,7 +6,6 @@ import Home from "../pages/HomePage";
 import Signup from "../components/SignUp/Signup";
 import ResetPassword from "../components/ResetPassword/ResetPassword";
 import ChangePassword from "../components/ChangePassword/ChangePassword";
-import Search from "../components/Search/Search";
 import Dashboard from "../components/Admin/Dashboard/Dashboard";
 import CheckOutPage from "../pages/CheckOutPage";
 import OrdersPage from "../pages/OrdersPage";
