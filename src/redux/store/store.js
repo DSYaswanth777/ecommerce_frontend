@@ -10,7 +10,7 @@ import couponSlice from '../slice/couponSlice';
 import customerSlice from '../slice/customerSlice';
 import wishlistSlice from '../slice/wishlistSlice';
 import cartSlice from '../slice/cartSlice';
-import ProfileSlice from '../slice/ProfileSlice';
+import ProfileSlice from '../slice/profileSlice';
 import orderSlice from '../slice/orderSlice';
 const store = configureStore({
   reducer: {
