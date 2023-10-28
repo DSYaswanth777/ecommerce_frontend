@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+const apiEndpoint = import.meta.env.VITE_REACT_APP_API_ENDPOINT;
 
 export const fetchCustomers = createAsyncThunk("customers/fetchCustomers", async (_, { getState }) => {
   try {
@@ -10,7 +11,7 @@ export const fetchCustomers = createAsyncThunk("customers/fetchCustomers", async
         Authorization: `Bearer ${token}`,
       },
     };
-    const response = await axios.get("http://localhost:3000/api/v1/admin/customers", config);
+    const response = await axios.get(`${apiEndpoint}/api/v1/admin/customers`, config);
 
     if (response.status === 200) {
       return response.data.customers;

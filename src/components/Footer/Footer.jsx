@@ -6,7 +6,7 @@ import "./Footer.scss";
 
 const Footer = () => {
   return (
-    <footer className="bg-light pt-5 pb-5 footer">
+    <footer className="bg-light pt-4 pb-5 footer border-top">
       <div className="container">
         <div className="d-flex flex-wrap justify-content-between pt-4 flex-column flex-sm-row">
           <div className="footer-section col-lg-3 col-md-6 mt-md-4 mt-4 mt-sm-4 mt-lg-0 col-sm-12">
@@ -32,11 +32,21 @@ const Footer = () => {
                   Track Order at Indain Post
                 </a>
               </li>
-              <li></li>
-              <li>Return & Exchange</li>
-              <li>About Us</li>
-              <li>Contact Us</li>
-              <li>Our Store</li>
+              <li>
+                <a href="/aboutus" className="text-dark">
+                  About Us
+                </a>
+              </li>
+              <li>
+                <a href="/contactus" className="text-dark">
+                  Contact Us
+                </a>
+              </li>
+              <li>
+                <a href="/ourstore" className="text-dark">
+                  Our Store
+                </a>
+              </li>
             </ul>
           </div>
           <div className="footer-section col-lg-3 col-md-6 mt-md-4 mt-4 mt-sm-4 mt-lg-0 col-sm-12">
@@ -44,12 +54,26 @@ const Footer = () => {
             <hr />
 
             <ul className="list-unstyled">
-              <li>Shipping</li>
-              <li>Terms</li>
-              <li>Return/ Replace</li>
-              <li>Refund</li>
-              <li>Privacy</li>
-              <li>FAQs</li>
+              <li>
+                <a href="/return/policy" className="text-dark">
+                  Return & Exchange
+                </a>
+              </li>
+              <li>
+                <a href="/shipping" className="text-dark">
+                  Shipping
+                </a>
+              </li>
+              <li>
+                <a href="/privacy" className="text-dark">
+                  Privacy
+                </a>
+              </li>
+              <li>
+                <a href="/faqs" className="text-dark">
+                  FAQs
+                </a>
+              </li>
             </ul>
           </div>
           <hr />

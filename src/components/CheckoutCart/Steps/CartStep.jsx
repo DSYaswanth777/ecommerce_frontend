@@ -4,7 +4,9 @@ import { formatCurrency } from "../../../utilities/formatCurrency";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import {
+  cartQuantityDecreaseAsync,
   cartQuantityIncreaseAsync,
+  deletecartAsync,
   fetchUsercartAsync,
 } from "../../../redux/slice/cartSlice";
 import { Shimmer } from "react-shimmer";
@@ -17,8 +19,17 @@ function CartStep({ handleNextStep }) {
     (state) => state.cart?.cart?.deliveryCharge
   );
 
-  const handleQuantityIncrease = async () => {
-    await dispatch(cartQuantityIncreaseAsync());
+  const handleQuantityIncrease = async (productId) => {
+    await dispatch(cartQuantityIncreaseAsync(productId));
+    dispatch(fetchUsercartAsync());
+  };
+  const handleDecrease = async (productId) => {
+    await dispatch(cartQuantityDecreaseAsync(productId));
+    dispatch(fetchUsercartAsync());
+  };
+  const handleDelete = async (productId) => {
+    await dispatch(deletecartAsync(productId));
+    dispatch(fetchUsercartAsync());
   };
   useEffect(() => {
     if (status === "idle") {
@@ -68,7 +79,10 @@ function CartStep({ handleNextStep }) {
                           </Badge>
                         </h5>
                         <div className="d-flex justify-content-around align-items-center gap-3">
-                          <Button className="btn-sm bg-danger border-0">
+                          <Button
+                            className="btn-sm bg-danger border-0"
+                            onClick={() => handleDecrease(product._id)}
+                          >
                             -
                           </Button>
                           <Input
@@ -92,7 +106,12 @@ function CartStep({ handleNextStep }) {
                           {formatCurrency(product.product.productPrice)}
                         </h5>
 
-                        <Button className="bg-danger border-0">Remove</Button>
+                        <Button
+                          className="bg-danger border-0"
+                          onClick={() => handleDelete(product._id)}
+                        >
+                          Remove
+                        </Button>
                         <Button className="border-0 bg-success ">
                           Add to Wishlist
                         </Button>

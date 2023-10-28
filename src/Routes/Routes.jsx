@@ -15,6 +15,11 @@ import ProfilePage from "../pages/ProfilePage";
 import WishListPage from "../pages/WishListPage";
 import ViewProductPage from "../pages/ViewProductPage";
 import AllProductsPage from "../pages/AllProductsPage";
+import ReturnPolicyPage from "../pages/ReturnPolicyPage";
+import AboutUsPage from "../pages/AboutUsPage";
+import ShippingPage from "../pages/ShippingPage";
+import PrivacyPage from "../pages/PrivacyPage";
+import FAQSPage from "../pages/FAQSPage";
 
 const PublicRoutes = () => {
   const user = useSelector((state) => state.auth);
@@ -27,6 +32,11 @@ const PublicRoutes = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgotpassword" element={<ResetPassword />} />
         <Route path="/products" element={<AllProductsPage />} />
+        <Route path="/return/policy" element={<ReturnPolicyPage />} />
+        <Route path="/aboutus" element={<AboutUsPage />} />
+        <Route path="/shipping" element={<ShippingPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/faqs" element={<FAQSPage />} />
         {user.isAuthenticated ? (
           <>
             <Route path="/profile" element={<ProfilePage />} />
@@ -34,8 +44,11 @@ const PublicRoutes = () => {
             <Route path="/checkout" element={<CheckOutPage />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/wishlist" element={<WishListPage />} />
-            <Route path="/products/viewproduct/:productId" element={<ViewProductPage/>}/>
-            <Route path="/view/order/:orderID" element={<ViewOrderPage/>}/>
+            <Route
+              path="/products/viewproduct/:productId"
+              element={<ViewProductPage />}
+            />
+            <Route path="/view/order/:orderID" element={<ViewOrderPage />} />
           </>
         ) : (
           <Route path="*" element={<Navigate to="/login" />} />

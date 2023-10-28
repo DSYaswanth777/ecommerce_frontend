@@ -2,6 +2,7 @@
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
+const apiEndpoint = import.meta.env.VITE_REACT_APP_API_ENDPOINT;
 
 export const placeOrder = createAsyncThunk(
   "orders/placeOrder",
@@ -29,7 +30,7 @@ export const placeOrder = createAsyncThunk(
     try {
       const token = getState().auth.token;
 
-      const response = await fetch("http://localhost:3000/api/v1/place/order", {
+      const response = await fetch(`${apiEndpoint}/api/v1/place/order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +66,7 @@ export const updatePaymentStatus = createAsyncThunk(
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/verify/payment`,
+        `${apiEndpoint}/api/v1/verify/payment`,
         {
           method: "PUT",
           headers: {
@@ -110,7 +111,7 @@ export const fetchUserOrders = createAsyncThunk(
         },
       };
       const response = await fetch(
-        "http://localhost:3000/api/v1/user/orders",
+        `${apiEndpoint}/api/v1/user/orders`,
         config
       );
       const data = await response.json();
@@ -132,7 +133,7 @@ export const fetchAdminOrders = createAsyncThunk(
         },
       };
       const response = await fetch(
-        "http://localhost:3000/api/v1/admin/orders",
+        `${apiEndpoint}/api/v1/admin/orders`,
         config
       );
       const data = await response.json();
@@ -148,7 +149,7 @@ export const downloadPDF = createAsyncThunk(
     const token = getState().auth.token;
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/generate/shipping/address/${orderID}`,
+        `${apiEndpoint}v/api/v1/generate/shipping/address/${orderID}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -193,7 +194,7 @@ export const fetchOrdersByOrderID = createAsyncThunk(
     const token = getState().auth.token;
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/user/orders/filter/order?orderID=${orderID}`,
+        `${apiEndpoint}/api/v1/user/orders/filter/order?orderID=${orderID}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -219,7 +220,7 @@ export const fetchorderByDate = createAsyncThunk(
     const token = getState().auth.token;
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/user/filter?orderDate=${orderDate}`,
+        `${apiEndpoint}/api/v1/user/filter?orderDate=${orderDate}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -247,7 +248,7 @@ export const viewOrderAsync = createAsyncThunk(
     try {
       // You can pass the productName as a query parameter to your API endpoint
       const response = await fetch(
-        `http://localhost:3000/api/v1/user/orders/orderdetail/${orderID}`,
+        `${apiEndpoint}/api/v1/user/orders/orderdetail/${orderID}`,
         {
           headers: {
             "Content-Type": "application/json",

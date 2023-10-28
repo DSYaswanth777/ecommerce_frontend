@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+const apiEndpoint = import.meta.env.VITE_REACT_APP_API_ENDPOINT;
 
 export const fetchCoupons = createAsyncThunk("coupons/fetchcoupons", async (_, { getState }) => {
   try {
@@ -10,7 +11,8 @@ export const fetchCoupons = createAsyncThunk("coupons/fetchcoupons", async (_, {
         Authorization: `Bearer ${token}`,
       },
     };
-    const response = await axios.get("http://localhost:3000/api/v1/admin/coupons", config);
+    const response = await axios.get(
+      `${apiEndpoint}/api/v1/admin/coupons`, config);
 
     if (response.status === 200) {
       return response.data;
@@ -34,7 +36,8 @@ export const addCouponAsync = createAsyncThunk("coupons/addCoupon", async (coupo
       },
     };
 
-    const response = await axios.post("http://localhost:3000/api/v1/admin/add/coupon", couponData, config);
+    const response = await axios.post(
+      `${apiEndpoint}/api/v1/admin/add/coupon`, couponData, config);
 
     if (response.status === 201) {
       toast.success("Coupon added successfully");
@@ -58,7 +61,7 @@ export const deleteCouponAsync = createAsyncThunk("coupons/deleteCoupons", async
       },
     };
 
-    const response = await axios.delete(`http://localhost:3000/api/v1/admin/delete/coupon/${couponId}`, config);
+    const response = await axios.delete(`${apiEndpoint}/api/v1/admin/delete/coupon/${couponId}`, config);
 
     if (response.status === 200) {
       toast.success("Coupon deleted successfully");
@@ -84,7 +87,7 @@ export const editCouponAsync = createAsyncThunk("coupons/editCoupon", async (edi
     };
 
     const response = await axios.patch(
-      `http://localhost:3000/api/v1/admin/coupon/edit/${editCouponData.id}`,
+      `${apiEndpoint}/api/v1/admin/coupon/edit/${editCouponData.id}`,
       editCouponData,
       config
     );
@@ -114,7 +117,7 @@ export const searchCouponAsync = createAsyncThunk("coupons/searchcoupons", async
     };
 
     const response = await axios.get(
-      `http://localhost:3000/api/v1/admin/coupons/search?couponCode=${couponName}`,
+      `${apiEndpoint}/api/v1/admin/coupons/search?couponCode=${couponName}`,
       config
     );
 

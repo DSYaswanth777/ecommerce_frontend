@@ -95,7 +95,7 @@ function AddProduct({ isOpen, toggle, isEditing, productData }) {
         };
         const productId = productData._id;
         const response = await fetch(
-          `http://localhost:3000/api/v1/admin/products/edit/${productId}`,
+          `https://animated-rhythm-399204.el.r.appspot.com/api/v1/admin/products/edit/${productId}`,
           config
         );
 

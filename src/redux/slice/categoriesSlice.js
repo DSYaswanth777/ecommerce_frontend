@@ -1,13 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+const apiEndpoint = import.meta.env.VITE_REACT_APP_API_ENDPOINT;
 
 export const fetchCategoriesAsync = createAsyncThunk(
   "categories/fetchCategories",
   async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/v1/categories"
+        `${apiEndpoint}/api/v1/categories`,
       );
 
       if (response.status === 200) {
@@ -29,7 +30,7 @@ export const categoryAddAsync = createAsyncThunk(
     const token = getState().auth.token;
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/admin/add/category",
+        `${apiEndpoint}/api/v1/admin/add/category`,
         categoryName,
         {
           headers: {
@@ -59,7 +60,7 @@ export const subCategoryAddAsync = createAsyncThunk(
     const token = getState().auth.token;
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/v1/admin/add/categories/${categoryId}/subcategory`,
+        `${apiEndpoint}/api/v1/admin/add/categories/${categoryId}/subcategory`,
         subCategoryName,
         {
           headers: {
@@ -89,7 +90,7 @@ export const deleteSubCategoryAsync = createAsyncThunk(
     const token = getState().auth.token;
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/v1/admin/delete/categories/${categoryId}/subcategories/${subcategoryId}`,
+        `${apiEndpoint}/api/v1/admin/delete/categories/${categoryId}/subcategories/${subcategoryId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -118,7 +119,7 @@ export const deleteCategoryAsync = createAsyncThunk(
     try {
       const token = getState().auth.token;
       const response = await axios.delete(
-        `http://localhost:3000/api/v1/admin/delete/categories/${categoryId}`,
+        `${apiEndpoint}/api/v1/admin/delete/categories/${categoryId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -145,7 +146,7 @@ export const searchCategoriesAsync = createAsyncThunk(
   async (searchCategory) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/v1/categories/search?searchCategory=${searchCategory}`
+        `${apiEndpoint}/api/v1/categories/search?searchCategory=${searchCategory}`
       );
 
       if (response.status === 200) {

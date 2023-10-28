@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
+const apiEndpoint = import.meta.env.VITE_REACT_APP_API_ENDPOINT;
 
 export const fetchUserWishlistAsync = createAsyncThunk(
   "wishlist/fetchUserWishlistAsync",
@@ -13,7 +14,7 @@ export const fetchUserWishlistAsync = createAsyncThunk(
         },
       };
       const response = await fetch(
-        "http://localhost:3000/api/v1/wishlist",
+      `${apiEndpoint}/api/v1/wishlist`,
         config
       );
       const data = await response.json();
@@ -33,7 +34,7 @@ export const wishlistAddAsync = createAsyncThunk(
       };
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/wishlist/add`,
+        `${apiEndpoint}/api/v1/wishlist/add`,
         {
           method: "POST",
           headers: {
@@ -80,7 +81,7 @@ export const deleteWishlistAsync = createAsyncThunk(
       };
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/wishlist/delete`,
+        `${apiEndpoint}/api/v1/wishlist/delete`,
         {
           method: "DELETE",
           headers: {

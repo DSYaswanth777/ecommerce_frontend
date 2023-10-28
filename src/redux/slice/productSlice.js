@@ -1,11 +1,12 @@
 // productSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
+const apiEndpoint = import.meta.env.VITE_REACT_APP_API_ENDPOINT;
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    const response = await fetch(`http://localhost:3000/api/v1/products`);
+    const response = await fetch(`${apiEndpoint}/api/v1/products`);
     const data = await response.json();
     return data;
   }
@@ -24,7 +25,7 @@ export const addProductAsync = createAsyncThunk(
       };
 
       const response = await fetch(
-        "http://localhost:3000/api/v1/admin/add/product",
+        `${apiEndpoint}/api/v1/admin/add/product`,
         config
       );
       if (!response.ok) {
@@ -43,7 +44,7 @@ export const deleteProductAsync = createAsyncThunk(
     try {
       const token = getState().auth.token; // Assuming you have a token in your auth state
       const response = await fetch(
-        `http://localhost:3000/api/v1/admin/products/delete/${productId}`,
+        `${apiEndpoint}/api/v1/admin/products/delete/${productId}`,
         {
           method: "DELETE",
           headers: {
@@ -75,7 +76,7 @@ export const editProductAsync = createAsyncThunk(
         body: JSON.stringify(requestData),
       };
       const response = await fetch(
-        `http://localhost:3000/api/v1/admin/products/edit/${editProductData.id}`,
+        `${apiEndpoint}/api/v1/admin/products/edit/${editProductData.id}`,
         config
       );
 
@@ -95,7 +96,7 @@ export const searchProductsAsync = createAsyncThunk(
     try {
       if (!productName) {
         // Handle an empty search query by fetching all products
-        const response = await fetch(`http://localhost:3000/api/v1/products`);
+        const response = await fetch(`${apiEndpoint}/api/v1/products`);
         if (!response.ok) {
           throw new Error("Failed to fetch all products");
         }
@@ -105,7 +106,7 @@ export const searchProductsAsync = createAsyncThunk(
 
       // You can pass the productName as a query parameter to your API endpoint
       const response = await fetch(
-        `http://localhost:3000/api/v1/products/search?productName=${productName}`
+        `${apiEndpoint}/api/v1/products/search?productName=${productName}`
       );
 
       if (!response.ok) {
@@ -126,7 +127,7 @@ export const viewProductAsync = createAsyncThunk(
     try {
       // You can pass the productName as a query parameter to your API endpoint
       const response = await fetch(
-        `http://localhost:3000/api/v1/products/viewproduct/${productId}`
+        `${apiEndpoint}/api/v1/products/viewproduct/${productId}`
       );
 
       if (!response.ok) {
@@ -144,7 +145,7 @@ export const recentProductAsync = createAsyncThunk(
   "products/recentProducts",
   async () => {
     const response = await fetch(
-      `http://localhost:3000/api/v1/products/recentproducts`
+      `${apiEndpoint}/api/v1/products/recentproducts`
     );
     const data = await response.json();
     return data;
@@ -154,7 +155,7 @@ export const sortproductsAsync = createAsyncThunk(
   "products/sortProducts",
   async (sortBy) => {
     const response = await fetch(
-      `http://localhost:3000/api/v1/products/sort?sortBy=${sortBy}`
+      `${apiEndpoint}/api/v1/products/sort?sortBy=${sortBy}`
     );
     const data = await response.json();
     return data;
@@ -164,7 +165,7 @@ export const filterProductsAsync = createAsyncThunk(
   "products/filterProducts",
   async (subcategoriesId) => {
     const response = await fetch(
-      `http://localhost:3000/api/v1/products/filters?subcategoryIds=${subcategoriesId}`
+      `${apiEndpoint}/api/v1/products/filters?subcategoryIds=${subcategoriesId}`
     );
     const data = await response.json();
     return data;

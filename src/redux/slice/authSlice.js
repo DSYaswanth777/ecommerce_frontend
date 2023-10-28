@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+const apiEndpoint = import.meta.env.VITE_REACT_APP_API_ENDPOINT;
 export const loginAsync = createAsyncThunk(
   "auth/loginAsync",
   async (credentials) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/login",
+        `${apiEndpoint}/api/v1/login`,
         credentials,
         {
           headers: {
@@ -41,7 +41,7 @@ export const signupAsync = createAsyncThunk(
   async (userData) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/signup",
+        `${apiEndpoint}/api/v1/signup `,
         userData,
         {
           headers: {
@@ -76,7 +76,7 @@ export const forgotPasswordAsync = createAsyncThunk(
   async (userData) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/forgot-password",
+        `${apiEndpoint}/api/v1/forgot-password`,
         userData,
         {
           headers: {
@@ -110,7 +110,7 @@ export const resetPasswordAsync = createAsyncThunk(
   async (userData) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/reset-password",
+        `${apiEndpoint}/api/v1/reset-password `,
         userData,
         {
           headers: {
@@ -144,7 +144,7 @@ export const verifyOtpAsync = createAsyncThunk(
   async ({ mobile, otp }) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/verify-otp",
+        "https://animated-rhythm-399204.el.r.appspot.com/api/v1/verify-otp",
         { mobile, otp },
         {
           headers: {

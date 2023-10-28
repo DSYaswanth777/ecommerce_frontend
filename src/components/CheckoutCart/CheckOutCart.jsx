@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { ShoppingBag, ShoppingCart } from "react-feather";
-import Header from "../Header/Header";
 import CartStep from "./Steps/cartStep";
 import Footer from "../Footer/Footer";
 import "./CheckOutCard.scss";

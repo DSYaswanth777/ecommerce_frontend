@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
+const apiEndpoint = import.meta.env.VITE_REACT_APP_API_ENDPOINT;
 
 export const fetchUserprofileAsync = createAsyncThunk(
   "profile/fetchUserprofileAsync",
@@ -13,7 +14,7 @@ export const fetchUserprofileAsync = createAsyncThunk(
         },
       };
       const response = await fetch(
-        "http://localhost:3000/api/v1/profile",
+        `${apiEndpoint}/api/v1/profile`,
         config
       );
       const data = await response.json();
@@ -33,7 +34,7 @@ export const profileEditAsync = createAsyncThunk(
   
         // Make the API call using fetch or axios
         const response = await fetch(
-          `http://localhost:3000/api/v1/profile/update`,
+          `${apiEndpoint}/api/v1/profile/update`,
           {
             method: "PUT",
             headers: {

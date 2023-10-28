@@ -36,7 +36,7 @@ function Orders() {
 
   return (
     <div style={{ overflow: "hidden" }}>
-      <h3 className="text-center pt-3 text-uppercase">My Orders</h3>
+      <h3 className="text-center pt-3 text-uppercase">Your Orders</h3>
       <div className="d-flex container flex-column gap-2 pt-2 pb-5">
         <div className="d-flex gap-4 flex-column flex-md-row pt-3 ">
           <div className="d-flex flex-column gap-3 w-100 ">

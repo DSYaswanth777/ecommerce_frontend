@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-
+const apiEndpoint = import.meta.env.VITE_REACT_APP_API_ENDPOINT;
 export const fetchUsercartAsync = createAsyncThunk(
   "cart/fetchUserCartAsync",
   async (_, { getState }) => {
@@ -13,7 +13,7 @@ export const fetchUsercartAsync = createAsyncThunk(
         },
       };
       const response = await axios.get(
-        "http://localhost:3000/api/v1/user/cart",
+        `${apiEndpoint}/api/v1/user/cart `,
         config
       );
 
@@ -50,7 +50,7 @@ export const cartAddAsync = createAsyncThunk(
       };
 
       const response = await axios.post(
-        "http://localhost:3000/api/v1/user/cart/add",
+        `${apiEndpoint}/api/v1/user/cart/add`,
         requestData,
         config
       );
@@ -91,7 +91,7 @@ export const cartQuantityIncreaseAsync = createAsyncThunk(
       };
 
       const response = await axios.put(
-        "http://localhost:3000/api/v1/user/cart/increase",
+        `${apiEndpoint}/api/v1/user/cart/increase`,
         requestData,
         config
       );
@@ -132,7 +132,7 @@ export const cartQuantityDecreaseAsync = createAsyncThunk(
       };
 
       const response = await axios.put(
-        "http://localhost:3000/api/v1/user/cart/decrease",
+        `${apiEndpoint}/api/v1/user/cart/decrease`,
         requestData,
         config
       );
@@ -174,7 +174,7 @@ export const deletecartAsync = createAsyncThunk(
       };
 
       const response = await axios.delete(
-        "http://localhost:3000/api/v1/user/cart/remove",
+        `${apiEndpoint}/api/v1/user/cart/remove`,
         config
       );
 
