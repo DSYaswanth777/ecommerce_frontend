@@ -3,12 +3,12 @@ import { Card, CardBody, CardTitle } from "reactstrap";
 import { CgProfile } from "react-icons/cg";
 import OrdersIcon from "../../assets/icons/orders-icon.svg";
 import { BsFillSuitHeartFill } from "react-icons/bs";
-import { IoIosLogOut } from "react-icons/io";
 
 import "./Header.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutSuccess } from "../../redux/slice/authSlice";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { LogOut } from "react-feather";
 const AccountCard = () => {
   const user = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -63,14 +63,14 @@ const AccountCard = () => {
               <a href="/wishlist">Wishlist</a>
             </div>
             <div
-              className="border-bottom border-black pb-2"
+              className="border-bottom border-black pb-2 text-danger"
               style={{ cursor: "pointer" }}
               onClick={handleLogout}
             >
               {" "}
               <span className="me-2">
                 {" "}
-                <IoIosLogOut />
+                <LogOut  />
               </span>
               Logout
             </div>

@@ -4,10 +4,11 @@ import Logo from "../../assets/icons/brand_logo.svg";
 import { fetchCategoriesAsync } from "../../redux/slice/categoriesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { ChevronRight } from "react-feather";
+import { ChevronRight, LogOut } from "react-feather";
 import { filterProductsAsync } from "../../redux/slice/productSlice";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
+import { logoutSuccess } from "../../redux/slice/authSlice";
 
 const NavbarMenu = ({ isOpen, toggleMenu }) => {
   const dispatch = useDispatch();
@@ -52,7 +53,10 @@ const NavbarMenu = ({ isOpen, toggleMenu }) => {
       setExpandedCategory(categoryId); // Expand the clicked category
     }
   };
-
+  const handleLogout = () => {
+    dispatch(logoutSuccess());
+    navigate("/login");
+  };
   const handleSubCatClick = (subcatID) => {
     // Dispatch the action and handle the redirect
     dispatch(filterProductsAsync(subcatID))
@@ -109,6 +113,11 @@ const NavbarMenu = ({ isOpen, toggleMenu }) => {
               </div>
             ))}
             <p className="bg-light border-bottom p-2">Contact Us</p>
+            <a className="text-dark ms- bg-light p-2 border-bottom "
+            onClick={handleLogout}
+            >
+              Logout <LogOut className="ms-2 text-danger"/>
+            </a>
           </div>
         </OffcanvasBody>
       </Offcanvas>
