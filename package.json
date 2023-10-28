@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://ecommerce-frontend-hpv54v113-dsyaswanth777.vercel.app",
+  "homepage": "https://ecommerce-frontend-psi-seven.vercel.app",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
