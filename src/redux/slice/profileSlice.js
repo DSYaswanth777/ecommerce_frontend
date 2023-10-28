@@ -61,7 +61,7 @@ export const profileEditAsync = createAsyncThunk(
 
 
 //**  Create a slice for profile*/
-const profileSlice = createSlice({
+const ProfileSlice = createSlice({
   name: "profile",
   initialState: {
     profile: [],
@@ -98,4 +98,4 @@ const profileSlice = createSlice({
   },
 });
 
-export default profileSlice.reducer;
+export default ProfileSlice.reducer;

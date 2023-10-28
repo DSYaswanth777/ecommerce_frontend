@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Button, Input, Label } from "reactstrap";
-import Header from "../Header/Header";
 import { Edit } from "react-feather";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchUserprofileAsync,
   profileEditAsync,
-} from "../../redux/slice/ProfileSlice";
+} from "../../redux/slice/profileSlice";
 import { Shimmer } from "react-shimmer";
 
 const Profile = () => {
