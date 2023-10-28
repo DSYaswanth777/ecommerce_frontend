@@ -8,6 +8,7 @@ import { signupAsync, verifyOtpAsync } from "../../redux/slice/authSlice";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
 const Signup = () => {
   const {
     control,
@@ -28,7 +29,7 @@ const Signup = () => {
         setMobile(mobile);
       })
       .catch((error) => {
-        console.error("Signup failed:", error);
+        toast.error("Signup failed:", error);
       });
   };
   useEffect(() => {
@@ -239,9 +240,9 @@ const Signup = () => {
                 <span className="me-2">Already have an account ?</span>
                 <span>
                   {" "}
-                  <a href="/login" className="">
+                  <p className="text-decoration-underline" onClick={()=>navigate("/login")}>
                     Signin Instead
-                  </a>
+                  </p>
                 </span>
               </p>
             </div>

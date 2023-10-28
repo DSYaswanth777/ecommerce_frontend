@@ -11,11 +11,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Trash, X } from "react-feather";
 import Lottie from "lottie-react";
 import EmptyCart from "../../assets/icons/EmptyCart.json";
+import { useNavigate } from "react-router";
 function Cart({ cartData, cartTotalFee }) {
   const status = useSelector((state) => state?.cart?.status);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const handleDecrease = async (productId) => {
     setLoading(true);
     await dispatch(cartQuantityDecreaseAsync(productId));
@@ -65,7 +66,11 @@ function Cart({ cartData, cartTotalFee }) {
                 <div className="d-flex flex-column justify-content-start gap-3 align-items-start">
                   <div className="d-flex justify-content-between gap-4">
                     <h6>{product.product.productName}</h6>
-                    <Trash className="text-danger" size={20} onClick={() => handleDelete(product._id)} />
+                    <Trash
+                      className="text-danger"
+                      size={20}
+                      onClick={() => handleDelete(product._id)}
+                    />
                   </div>
                   <Badge
                     style={{ backgroundColor: "#2D7B8B" }}
@@ -118,15 +123,19 @@ function Cart({ cartData, cartTotalFee }) {
 
       <div className="d-flex flex-column gap-3">
         {cartData?.length > 0 && (
-          <Button style={{ backgroundColor: "#2D7B8B" }}>
+          <Button
+            style={{ backgroundColor: "#2D7B8B" }}
+            onClick={() => navigate("/checkout")}
+          >
             {" "}
-            <a href="/checkout" className="text-white ">
-              View Cart
-            </a>
+            <p className="text-white ">View Cart</p>
           </Button>
         )}
         {cartData?.length > 0 && (
-          <Button style={{ backgroundColor: "#2D7B8B" }} href="/checkout">
+          <Button
+            style={{ backgroundColor: "#2D7B8B" }}
+            onClick={() => navigate("/checkout")}
+          >
             Proceed To CheckOut
           </Button>
         )}

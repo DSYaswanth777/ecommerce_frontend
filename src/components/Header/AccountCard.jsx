@@ -20,7 +20,7 @@ const AccountCard = () => {
   return (
     <div>
       {" "}
-      <Card className="p-3 card-hover">
+      <Card className="p-2 card-hover pt-3">
         <CardTitle>
           <div
             className="d-flex gap-5 bg-white fw-bold justify-content-center  "
@@ -29,48 +29,42 @@ const AccountCard = () => {
             {user.user?.name}
           </div>
         </CardTitle>
-        <CardBody>
-          <div className="d-flex flex-column justify-content-start align-items-start gap-3">
-            <div
-              className=" border-bottom border-black pb-2"
-              style={{ cursor: "pointer" }}
-            >
+        <CardBody >
+          <div className="d-flex flex-column justify-content-start align-items-start bg- p-3 ">
+            <div className="  d-flex shadow-sm border bg-light pe-5 pt-1 ps-2 w-100" style={{ cursor: "pointer" }}>
               {" "}
               <span className="me-2">
                 <CgProfile size={20} />
               </span>
-              <a href="/profile">My Profile</a>
+              <p className=""onClick={() => navigate("/profile")}>My Profile</p>
             </div>
             <div
-              className="border-bottom border-black pb-2"
+              className=" d-flex shadow-sm border bg-light pe-5 pt-2 w-100 ps-2"
               style={{ cursor: "pointer" }}
             >
               {" "}
               <span className="me-2">
                 <img src={OrdersIcon} width={20} height={20} />
               </span>
-              <a href="/orders">My Orders</a>
+              <p onClick={() => navigate("/orders")}>Orders</p>
             </div>
-            <div
-              className="border-bottom border-black pb-2"
-              style={{ cursor: "pointer" }}
-            >
+            <div className="d-flex shadow-sm border bg-light pe-5 pt-1 ps-2 w-100" style={{ cursor: "pointer" }}>
               {" "}
               <span className="me-2">
                 {" "}
                 <BsFillSuitHeartFill />
               </span>
-              <a href="/wishlist">Wishlist</a>
+              <p onClick={() => navigate("/wishlist")}>Wishlist</p>
             </div>
             <div
-              className="border-bottom border-black pb-2 text-danger"
+              className="   text-danger shadow-sm border bg-light pe-5 pt-1 py-3 w-100 ps-2 "
               style={{ cursor: "pointer" }}
               onClick={handleLogout}
             >
               {" "}
               <span className="me-2">
                 {" "}
-                <LogOut  />
+                <LogOut />
               </span>
               Logout
             </div>

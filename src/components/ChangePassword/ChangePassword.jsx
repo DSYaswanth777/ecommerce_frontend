@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  CardText,
-  Form,
-  Label,
-  Input,
-  Button,
-} from "reactstrap";
+import { CardBody, CardTitle, Form, Label, Button } from "reactstrap";
 import Logo from "../../assets/icons/brand_logo.svg";
 import InputPasswordToggle from "../Input-password/Index";
 import { CgPassword } from "react-icons/cg";
@@ -53,7 +44,7 @@ function ChangePassword() {
                 />
               </div>
               <Button color="primary" block className="mb-4 mt-4">
-               Change Password{" "}
+                Change Password{" "}
               </Button>
             </Form>
           </CardBody>

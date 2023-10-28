@@ -105,9 +105,9 @@ const Login = () => {
                         Password
                       </Label>
                       <small>
-                        <a href="/forgotpassword" className="text-dark fw-bold">
+                        <p onClick={()=>navigate("/forgotpassword")} className="text-decoration-underline fw-bold">
                           Forgot Password?
-                        </a>
+                        </p>
                       </small>
                     </div>
                     <Controller
@@ -146,7 +146,7 @@ const Login = () => {
                     onClick={openSigUpModal}
                     style={{ cursor: "pointer" }}
                   >
-                    <a href="/signup">Create an account</a>
+                    <p className="text-decoration-underline " onClick={()=>navigate("/signup")}>Create an account</p>
                   </span>
                 </p>
               </CardBody>

@@ -3,8 +3,10 @@ import { BsInstagram, BsYoutube, BsWhatsapp, BsFacebook } from "react-icons/bs";
 import Dev from "../../assets/icons/favicon.svg";
 import Logo from "../../assets/icons/brand_logo.svg";
 import "./Footer.scss";
+import { useNavigate } from "react-router";
 
 const Footer = () => {
+  const navigate = useNavigate();
   return (
     <footer className="bg-light pt-4 pb-5 footer border-top">
       <div className="container">
@@ -33,19 +35,28 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="/aboutus" className="text-dark">
+                <p
+                  className="text-dark text-decoration-underline"
+                  onClick={() => navigate("/aboutus")}
+                >
                   About Us
-                </a>
+                </p>
               </li>
               <li>
-                <a href="/contactus" className="text-dark">
+                <p
+                  className="text-dark text-decoration-underline"
+                  onClick={() => navigate("/contactus")}
+                >
                   Contact Us
-                </a>
+                </p>
               </li>
               <li>
-                <a href="/ourstore" className="text-dark">
-                  Our Store
-                </a>
+                <p
+                  className="text-dark text-decoration-underline"
+                  onClick={() => navigate("/store")}
+                >
+                  Store
+                </p>
               </li>
             </ul>
           </div>
@@ -55,24 +66,36 @@ const Footer = () => {
 
             <ul className="list-unstyled">
               <li>
-                <a href="/return/policy" className="text-dark">
+                <p
+                  onClick={() => navigate("/return/policy")}
+                  className="text-decoration-underline"
+                >
                   Return & Exchange
-                </a>
+                </p>
               </li>
               <li>
-                <a href="/shipping" className="text-dark">
+                <p
+                  onClick={() => navigate("/shipping")}
+                  className="text-decoration-underline"
+                >
                   Shipping
-                </a>
+                </p>
               </li>
               <li>
-                <a href="/privacy" className="text-dark">
+                <p                   className="text-decoration-underline"
+                  onClick={() => navigate("/privacy")}
+
+>
                   Privacy
-                </a>
+                </p>
               </li>
               <li>
-                <a href="/faqs" className="text-dark">
+                <p
+                  className="text-decoration-underline"
+                  onClick={() => navigate("/faqs")}
+                >
                   FAQs
-                </a>
+                </p>
               </li>
             </ul>
           </div>

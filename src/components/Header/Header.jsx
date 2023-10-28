@@ -94,10 +94,10 @@ const Header = () => {
             <div className="mobile-menu-icon" onClick={toggleMenu}>
               <RxHamburgerMenu />
             </div>
-            <a href="/">
+            <p onClick={()=>navigate("/")}>
               {" "}
               <img src={Logo} alt="sds" className="nav_logo" />
-            </a>
+            </p>
           </h2>
           <div className="d-flex gap-3 justify-content-center align-items-center">
             <div
