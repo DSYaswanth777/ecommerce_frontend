@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ShoppingBag, ShoppingCart } from "react-feather";
-import CartStep from "./Steps/cartStep";
+import CartStep from "./Steps/CartStep";
 import Footer from "../Footer/Footer";
 import "./CheckOutCard.scss";
 import AddressStep from "./Steps/AddressStep";

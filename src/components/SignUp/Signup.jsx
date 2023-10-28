@@ -3,7 +3,6 @@ import { Button, CardTitle, Form, Input, Label } from "reactstrap";
 import Logo from "../../assets/icons/brand_logo.svg";
 import { signupValidationSchema } from "../../schema/validationSchema";
 import InputPasswordToggle from "../Input-password/Index";
-import "./Signup.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { signupAsync, verifyOtpAsync } from "../../redux/slice/authSlice";
 import { useState } from "react";
