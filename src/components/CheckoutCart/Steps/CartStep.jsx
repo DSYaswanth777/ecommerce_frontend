@@ -11,9 +11,10 @@ import {
 } from "../../../redux/slice/cartSlice";
 import { Shimmer } from "react-shimmer";
 import { useNavigate } from "react-router";
-function CartStep({ handleNextStep }) {
+import "../CheckOutCard.scss"
+function CartStep() {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const status = useSelector((state) => state.cart?.status);
   const cartData = useSelector((state) => state.cart?.cart?.cartItems);
   const totalfee = useSelector((state) => state.cart?.cart?.totalFee);
@@ -40,11 +41,11 @@ function CartStep({ handleNextStep }) {
   }, [status, dispatch]);
   return (
     <>
-      <div className="d-flex container justify-content-between pt-5 flex-column flex-lg-row flex-md-column flex gap-5   pb-5">
-        <div
-          className="d-flex flex-column gap-3 w-100 pb-5 pe-3"
-          // style={{ height: "", overflow: "scroll", overflowX: "hidden" }}
-        >
+      <div
+        className="d-flex cart container justify-content-between pt-5 flex-column flex-lg-row flex-md-column flex gap-5   pb-5"
+        
+      >
+        <div className="d-flex flex-column gap-3 h-100 w-100 pb-5 pe-3">
           {status === "loading"
             ? cartData?.map((cart) => (
                 <Shimmer
@@ -150,7 +151,7 @@ function CartStep({ handleNextStep }) {
                     </div>
                     <div className="">{formatCurrency(totalfee)}</div>
                   </div>
-                  <Button onClick={() =>navigate("/checkout")} color="success">
+                  <Button onClick={() => navigate("/checkout")} color="success">
                     Add Your address to place order
                   </Button>
                 </div>

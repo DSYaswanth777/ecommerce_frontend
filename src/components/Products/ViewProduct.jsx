@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+
 import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { formatCurrency } from "../../utilities/formatCurrency";
 import { Button, Badge, Card, Spinner } from "reactstrap";
 import { FaCartPlus } from "react-icons/fa";
@@ -26,7 +25,8 @@ import { BsFillHeartFill, BsSuitHeart } from "react-icons/bs";
 import toast from "react-hot-toast";
 import { Shimmer } from "react-shimmer";
 import { ArrowLeft } from "react-feather";
-
+import { v4 as uuidv4 } from "uuid";
+import "./Products.scss";
 function ViewProduct() {
   const { productId } = useParams();
   const dispatch = useDispatch();
@@ -121,14 +121,14 @@ function ViewProduct() {
         <div className="img-carousel">
           {productStatus === "loading" || status === "idle" ? (
             <Shimmer
-              key={product?.product?._id}
+              key={uuidv4()} // Use uuid to generate a unique key
               visible={true}
               autoRun={true}
               width={400}
               height={400}
             >
               <Card
-                className="slider-content"
+                className="slider-conte"
                 style={{
                   width: "18rem",
                 }}
@@ -148,7 +148,7 @@ function ViewProduct() {
                   src={img}
                   width={400}
                   height={400}
-                  key={product._id}
+                  key={uuidv4()} // Use uuid to generate a unique key
                 />
               ))}
             </Carousel>
@@ -173,42 +173,11 @@ function ViewProduct() {
               </span>
             )}
           </div>
-          {status === "loading" || status === "idle" ? (
-            <Shimmer
-              key={product?.subcategoryId.name}
-              visible={true}
-              autoRun={true}
-              width={200}
-              height={50}
-            >
-              <Card
-                className="slider-content"
-                style={{
-                  width: "18rem",
-                }}
-              ></Card>
-            </Shimmer>
-          ) : (
-            <p className="text-muted fs-5">{product?.subcategoryId.name}</p>
-          )}
-          {status === "loading" || status === "idle" ? (
-            <Shimmer
-              key={product?.productInfo}
-              visible={true}
-              autoRun={true}
-              width={400}
-              height={150}
-            >
-              <Card
-                className="slider-content"
-                style={{
-                  width: "18rem",
-                }}
-              ></Card>
-            </Shimmer>
-          ) : (
+          <p className="text-muted fs-5">{product?.subcategoryId?.name}</p>
+          
+          
             <p>{product?.productInfo}</p>
-          )}
+
           {status === "loading" || status === "idle" ? (
             <Shimmer
               key={product?.productInfo}
@@ -218,7 +187,7 @@ function ViewProduct() {
               height={50}
             >
               <Card
-                className="slider-content"
+                className=" "
                 style={{
                   width: "18rem",
                 }}
@@ -235,23 +204,24 @@ function ViewProduct() {
           )}
           {status === "loading" || status === "idle" ? (
             <Shimmer
-              key={product?.productInfo}
+              key={product?.productPrice}
               visible={true}
               autoRun={true}
-              width={150}
+              width={100}
               height={50}
             >
               <Card
-                className="slider-content"
+                className=" "
                 style={{
                   width: "18rem",
                 }}
               ></Card>
             </Shimmer>
           ) : (
+            <>
+            
             <p className="fs-4">{formatCurrency(product?.productPrice)}</p>
-          )}
-          <div className="d-flex gap-3">
+            <div className="d-flex gap-3">
             <Button
               className="text-uppercase"
               style={{ backgroundColor: "#2A798B" }}
@@ -262,6 +232,9 @@ function ViewProduct() {
               Add To Cart
             </Button>
           </div>
+            </>
+          )}
+      
         </div>
       </div>
       <Poster

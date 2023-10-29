@@ -139,14 +139,14 @@ const Header = () => {
             <div
               className="d-flex justify-content-center align-items-center gap-2"
               style={{ cursor: "pointer" }}
-              onClick={toggleCart}
+              onClick={()=>navigate("/cart")}
             >
               <div>
                 <FiShoppingCart
                   size={22}
-                  data-bs-toggle="offcanvas"
-                  data-bs-target="#staticBackdrop"
-                  aria-controls="staticBackdrop"
+                  // data-bs-toggle="offcanvas"
+                  // data-bs-target="#staticBackdrop"
+                  // aria-controls="staticBackdrop"
                 />
 
                 <span className=" rounded-circle  cartCount ">

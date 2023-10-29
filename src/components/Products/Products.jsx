@@ -12,6 +12,7 @@ import {
 import { BsSuitHeart } from "react-icons/bs";
 import { FaCartPlus } from "react-icons/fa";
 import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { useNavigate } from "react-router";
 import "./Products.scss";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,7 +34,6 @@ function Products({ productData }) {
         console.log(error);
       });
   };
-  const isLowStock = productData.product?.productStock < 20;
   const navigate = useNavigate();
   return (
     <div>
@@ -57,7 +57,7 @@ function Products({ productData }) {
             ))
           : productData?.map((product) => (
               <Card
-                key={product._id}
+                key={product?._id}
                 className="slider-content  "
                 style={{
                   width: "18rem",
@@ -65,7 +65,7 @@ function Products({ productData }) {
               >
                 <div
                   onClick={() =>
-                    navigate(`/products/viewproduct/${product._id}`)
+                    navigate(`/products/viewproduct/${product?._id}`)
                   }
                 >
                   <Carousel
@@ -74,7 +74,7 @@ function Products({ productData }) {
                     interval="3000"
                     transitionTime="1000"
                   >
-                    {product?.productImages.map((img) => (
+                    {product?.productImages?.map((img) => (
                       <img
                         alt="Sample"
                         src={img}
@@ -93,34 +93,36 @@ function Products({ productData }) {
 
                       <BsSuitHeart
                         size={25}
-                        onClick={() => dispatch(wishlistAddAsync(product._id))}
+                        onClick={() => dispatch(wishlistAddAsync(product?._id))}
                       />
                     </div>
                   </CardSubtitle>
                   {status === "loading" || status === "idle" ? (
-            <Shimmer
-              key={product?.productInfo}
-              visible={true}
-              autoRun={true}
-              width={150}
-              height={50}
-            >
-              <Card
-                className="slider-content"
-                style={{
-                  width: "18rem",
-                }}
-              ></Card>
-            </Shimmer>
-          ) : (
-            <Badge
-              className={`fs-6 ${product.productStock<20 ? "bg-danger" : ""}`}
-              color="success"
-            >
-              {" "}
-              Instock ({product?.productStock})
-            </Badge>
-          )}
+                    <Shimmer
+                      key={product?.productStock}
+                      visible={true}
+                      autoRun={true}
+                      width={150}
+                      height={50}
+                    >
+                      <Card
+                        className="slider-content"
+                        style={{
+                          width: "18rem",
+                        }}
+                      ></Card>
+                    </Shimmer>
+                  ) : (
+                    <Badge
+                      className={`fs-6 ${
+                        product.productStock < 20 ? "bg-danger" : "bg-success"
+                      }`}
+                      color="success"
+                    >
+                      {" "}
+                      Instock ({product?.productStock})
+                    </Badge>
+                  )}
                   <CardText className="fw-medium fs-5">
                     Price :{formatCurrency(product?.productPrice)}
                   </CardText>

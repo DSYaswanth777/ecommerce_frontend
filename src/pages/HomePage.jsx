@@ -86,7 +86,7 @@ function Home() {
               filteredProducts.map((product, index) => (
                 <div className="d-flex ">
                   <Shimmer
-                    key={index}
+                    key={product._id}
                     visible={true}
                     autoRun={true}
                     width={400}
