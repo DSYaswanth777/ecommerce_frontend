@@ -12,8 +12,6 @@ import {
 import { Shimmer } from "react-shimmer";
 import { useNavigate } from "react-router";
 import "../CheckOutCard.scss";
-import EmptyCart from "../../../assets/icons/EmptyCart.json";
-import Lottie from "lottie-react";
 import FallBackLoader from "../../FallBackLoader/FallBackLoader";
 import { BsCartX } from "react-icons/bs";
 
@@ -47,7 +45,7 @@ function CartStep() {
   }, [status, dispatch]);
   return (
     <>
-      {status === "loading" ||status==="idle"? (
+      {status === "loading" || status === "idle" ? (
         <FallBackLoader />
       ) : cartData?.length === 0 ? (
         <div className="d-flex justify-content-center flex-column gap-3 align-items-center pt-5 pb-5">
@@ -65,12 +63,12 @@ function CartStep() {
       ) : (
         <div className="d-flex cart container justify-content-between pt-5 flex-column flex-lg-row flex-md-column flex gap-5   pb-5">
           <div className="d-flex flex-column gap-3 h-100 w-100 pb-5 pe-3">
-            {status === "loading" || status==="idle"
+            {status === "loading" || status === "idle"
               ? cartData?.map((cart) => (
                   <Shimmer
                     key={cart._id}
                     visible={true}
-                    autoRun={true}                                                                        
+                    autoRun={true}
                     width={900}
                     height={300}
                   >

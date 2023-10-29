@@ -7,7 +7,6 @@ import Logo from "../../assets/icons/brand_logo.svg";
 import NavbarMenu from "../NavbarMenu/NavbarMenu";
 import AccountCard from "./AccountCard";
 import { Input, InputGroup, InputGroupText } from "reactstrap";
-import Cart from "../Cart/Cart";
 import { useDispatch, useSelector } from "react-redux";
 import { User } from "react-feather";
 import { fetchUsercartAsync } from "../../redux/slice/cartSlice";
@@ -52,18 +51,18 @@ const Header = () => {
   };
   const toggleCart = (e) => {
     e.stopPropagation();
-  
+
     if (!user.isAuthenticated) {
       navigate("/login");
       return;
     }
-  
+
     setCartVisible(!isCartVisible);
     if (!isCartVisible) {
       dispatch(fetchUsercartAsync());
     }
   };
-  
+
   document.addEventListener("click", (e) => {
     if (e.target !== searchIcon) {
       setSearchContainerVisible(false);
@@ -117,7 +116,7 @@ const Header = () => {
             </div>
             <div className=" profile ">
               {user.isAuthenticated ? (
-                <User onClick={toggleAccount} id="profileBox" /> 
+                <User onClick={toggleAccount} id="profileBox" />
               ) : (
                 <Button
                   className="text-white text-center underline-none login-btn"
@@ -131,7 +130,7 @@ const Header = () => {
                   className="card-hover"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <AccountCard />  
+                  <AccountCard />
                 </div>
               )}
             </div>
@@ -139,44 +138,16 @@ const Header = () => {
             <div
               className="d-flex justify-content-center align-items-center gap-2"
               style={{ cursor: "pointer" }}
-              onClick={()=>navigate("/cart")}
+              onClick={() => navigate("/cart")}
             >
               <div>
-                <FiShoppingCart
-                  size={22}
-                  // data-bs-toggle="offcanvas"
-                  // data-bs-target="#staticBackdrop"
-                  // aria-controls="staticBackdrop"
-                />
+                <FiShoppingCart size={22} />
 
                 <span className=" rounded-circle  cartCount ">
                   {cartData?.length}
                 </span>
               </div>
-              <div
-                className="offcanvas offcanvas-end"
-                data-bs-backdrop="static"
-                tabIndex="-1"
-                id="staticBackdrop"
-                aria-labelledby="staticBackdropLabel"
-              >
-                <div className="offcanvas-header">
-                  <h5 className="offcanvas-title" id="staticBackdropLabel">
-                    My Cart ({cartQuantity})
-                  </h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="offcanvas"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <div className="offcanvas-body">
-                  <Cart cartData={cartData} cartTotalFee={cartTotalFee} />
-                </div>
-              </div>
             </div>
-
           </div>
         </div>
       </div>
