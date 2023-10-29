@@ -1,20 +1,11 @@
-.totalCard{
-    width: 350px;
-    height: 100%;
-    @media screen and (max-device-width: 480px) and (orientation: portrait) {
+.totalCard {
+  width: 350px;
+  height: 100%;
+  @media screen and (max-device-width: 480px) and (orientation: portrait) {
     width: 100%;
-      }
-      @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-
-    
-      }
+  }
 }
-.pincodeDetails{
-  // position: absolute;
+.pincodeDetails {
   z-index: 2;
   top: 70px;
 }
-// .cart{
-//   height: 100vh; /* Set a fixed height, e.g., 100% of the viewport height */
-//   overflow-y: auto; 
-// }
