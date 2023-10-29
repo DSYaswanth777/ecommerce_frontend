@@ -41,7 +41,7 @@ function CartStep({ handleNextStep }) {
       <div className="d-flex container justify-content-between pt-5 flex-column flex-lg-row flex-md-column flex gap-5   pb-5">
         <div
           className="d-flex flex-column gap-3 w-100 pb-5 pe-3"
-          style={{ height: "540px", overflow: "scroll", overflowX: "hidden" }}
+          // style={{ height: "", overflow: "scroll", overflowX: "hidden" }}
         >
           {status === "loading"
             ? cartData?.map((cart) => (
@@ -57,7 +57,7 @@ function CartStep({ handleNextStep }) {
               ))
             : cartData?.map((product) => (
                 <Card
-                  className=" border shadow-sm p-3 h-60 w-100"
+                  className=" border shadow-sm p-3  w-100"
                   key={product._id}
                 >
                   <CardBody>

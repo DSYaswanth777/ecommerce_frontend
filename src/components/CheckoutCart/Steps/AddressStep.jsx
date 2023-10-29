@@ -93,7 +93,6 @@ function AddressStep() {
   const handleGooglePayClick = useCallback(async () => {
     try {
       const orderResponse = await dispatch(placeOrder(addressRef.current));
-      console.log(orderResponse);
       if (orderResponse.meta.requestStatus === "fulfilled") {
         const orderId = orderResponse.payload.orderID;
 
