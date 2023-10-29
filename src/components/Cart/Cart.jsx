@@ -127,7 +127,7 @@ function Cart({ cartData, cartTotalFee }) {
             style={{ backgroundColor: "#2D7B8B" }}
             onClick={() => navigate("/cart")}
           >
-            {" "}
+            
             <p className="text-white ">View Cart</p>
           </Button>
         )}

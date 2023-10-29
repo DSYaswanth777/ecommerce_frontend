@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, Input, InputGroup, Label } from "reactstrap";
 import {
@@ -94,6 +94,7 @@ function AddressStep() {
   const handleGooglePayClick = useCallback(async () => {
     try {
       const orderResponse = await dispatch(placeOrder(addressRef.current));
+      console.log(orderResponse)
       if (orderResponse.meta.requestStatus === "fulfilled") {
         const orderId = orderResponse.payload.orderID;
   
@@ -119,7 +120,6 @@ function AddressStep() {
       }
     } catch (error) {
       console.error("An unexpected error occurred:", error);
-      // Set paymentStatus to "FAILED" when there's an error
       await dispatch(
         updatePaymentStatus({ orderID: orderId, paymentStatus: "FAILED" })
       );

@@ -32,7 +32,7 @@ const Header = () => {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const status = useSelector((state) => state.cart?.status);
-  const cartData = useSelector((state) => state.cart?.cart?.cartItems);
+  const cartData = useSelector((state) => state?.cart?.cart?.cartItems);
   const cartTotalFee = useSelector((state) => state.cart?.cart.totalFee);
   const suggestedProducts = useSelector((state) => state?.products?.products);
   useEffect(() => {
