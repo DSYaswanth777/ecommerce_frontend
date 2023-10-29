@@ -7,6 +7,7 @@ import {
   CardTitle,
   CardSubtitle,
   CardText,
+  Badge,
 } from "reactstrap";
 import { BsSuitHeart } from "react-icons/bs";
 import { FaCartPlus } from "react-icons/fa";
@@ -32,6 +33,7 @@ function Products({ productData }) {
         console.log(error);
       });
   };
+  const isLowStock = productData.product?.productStock < 20;
   const navigate = useNavigate();
   return (
     <div>
@@ -95,6 +97,30 @@ function Products({ productData }) {
                       />
                     </div>
                   </CardSubtitle>
+                  {status === "loading" || status === "idle" ? (
+            <Shimmer
+              key={product?.productInfo}
+              visible={true}
+              autoRun={true}
+              width={150}
+              height={50}
+            >
+              <Card
+                className="slider-content"
+                style={{
+                  width: "18rem",
+                }}
+              ></Card>
+            </Shimmer>
+          ) : (
+            <Badge
+              className={`fs-6 ${product.productStock<20 ? "bg-danger" : ""}`}
+              color="success"
+            >
+              {" "}
+              Instock ({product?.productStock})
+            </Badge>
+          )}
                   <CardText className="fw-medium fs-5">
                     Price :{formatCurrency(product?.productPrice)}
                   </CardText>

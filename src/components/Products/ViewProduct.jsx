@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -12,7 +13,7 @@ import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import {
   recentProductAsync,
-  viewProductAsync
+  viewProductAsync,
 } from "../../redux/slice/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { cartAddAsync, fetchUsercartAsync } from "../../redux/slice/cartSlice";
@@ -35,7 +36,9 @@ function ViewProduct() {
   const wishlist = useSelector((state) => state?.wishlist?.wishlist);
   const status = useSelector((state) => state?.wishlist?.status);
   const [wishlistAdded, setWishlistAdded] = useState(false);
-const navigate = useNavigate()
+  const isLowStock = product?.productStock < 20; // Check if product stock is less than 20
+
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(viewProductAsync(productId));
   }, [dispatch, productId]);
@@ -106,11 +109,17 @@ const navigate = useNavigate()
 
   return (
     <>
-      <ArrowLeft size={30} className="ms-5 mt-3" style={{cursor:"pointer"}} onClick={()=>navigate("/products")}/>
+      <div className="container">
+        <ArrowLeft
+          size={30}
+          className=" mt-3"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate("/products")}
+        />
+      </div>
       <div className="d-flex container flex-column flex-sm-column flex-lg-row gap-5 pt-3">
-
         <div className="img-carousel">
-          {productStatus === "loading" ? (
+          {productStatus === "loading" || status === "idle" ? (
             <Shimmer
               key={product?.product?._id}
               visible={true}
@@ -126,29 +135,29 @@ const navigate = useNavigate()
               ></Card>
             </Shimmer>
           ) : (
-              <Carousel
-                autoPlay
-                interval="5000"
-                transitionTime="1000"
-                infiniteLoop
-                showThumbs={false}
-              >
-                {product?.productImages.map((img) => (
-                  <img
-                    alt={product.name}
-                    src={img}
-                    width={400}
-                    height={400}
-                    key={product._id}
-                  />
-                ))}
-              </Carousel>
+            <Carousel
+              autoPlay
+              interval="5000"
+              transitionTime="1000"
+              infiniteLoop
+              showThumbs={false}
+            >
+              {product?.productImages?.map((img) => (
+                <img
+                  alt={product?.name}
+                  src={img}
+                  width={400}
+                  height={400}
+                  key={product._id}
+                />
+              ))}
+            </Carousel>
           )}
         </div>
         <div className="img-carousel">
           <div className="fs-3 text-start d-flex gap-5 ">
             <span className="me-5 pe-5">{product?.productName}</span>
-            {status === "loading" ? (
+            {status === "loading" || status === "idle" ? (
               <Spinner />
             ) : (
               <span style={{ cursor: "pointer" }}>
@@ -164,13 +173,84 @@ const navigate = useNavigate()
               </span>
             )}
           </div>
-          <p className="text-muted fs-5">{product?.subcategoryId.name}</p>
-          <p>{product?.productInfo}</p>
-          <Badge className="fs-6" color="success">
-            {" "}
-            Instock ({product?.productStock})
-          </Badge>
-          <p className="fs-4">{formatCurrency(product?.productPrice)}</p>
+          {status === "loading" || status === "idle" ? (
+            <Shimmer
+              key={product?.subcategoryId.name}
+              visible={true}
+              autoRun={true}
+              width={200}
+              height={50}
+            >
+              <Card
+                className="slider-content"
+                style={{
+                  width: "18rem",
+                }}
+              ></Card>
+            </Shimmer>
+          ) : (
+            <p className="text-muted fs-5">{product?.subcategoryId.name}</p>
+          )}
+          {status === "loading" || status === "idle" ? (
+            <Shimmer
+              key={product?.productInfo}
+              visible={true}
+              autoRun={true}
+              width={400}
+              height={150}
+            >
+              <Card
+                className="slider-content"
+                style={{
+                  width: "18rem",
+                }}
+              ></Card>
+            </Shimmer>
+          ) : (
+            <p>{product?.productInfo}</p>
+          )}
+          {status === "loading" || status === "idle" ? (
+            <Shimmer
+              key={product?.productInfo}
+              visible={true}
+              autoRun={true}
+              width={150}
+              height={50}
+            >
+              <Card
+                className="slider-content"
+                style={{
+                  width: "18rem",
+                }}
+              ></Card>
+            </Shimmer>
+          ) : (
+            <Badge
+              className={`fs-6 ${isLowStock ? "bg-danger" : ""}`}
+              color="success"
+            >
+              {" "}
+              Instock ({product?.productStock})
+            </Badge>
+          )}
+          {status === "loading" || status === "idle" ? (
+            <Shimmer
+              key={product?.productInfo}
+              visible={true}
+              autoRun={true}
+              width={150}
+              height={50}
+            >
+              <Card
+                className="slider-content"
+                style={{
+                  width: "18rem",
+                }}
+              ></Card>
+            </Shimmer>
+          ) : (
+            <p className="fs-4">{formatCurrency(product?.productPrice)}</p>
+          )}
           <div className="d-flex gap-3">
             <Button
               className="text-uppercase"
