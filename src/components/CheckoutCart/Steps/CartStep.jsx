@@ -10,8 +10,10 @@ import {
   fetchUsercartAsync,
 } from "../../../redux/slice/cartSlice";
 import { Shimmer } from "react-shimmer";
+import { useNavigate } from "react-router";
 function CartStep({ handleNextStep }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const status = useSelector((state) => state.cart?.status);
   const cartData = useSelector((state) => state.cart?.cart?.cartItems);
   const totalfee = useSelector((state) => state.cart?.cart?.totalFee);
@@ -148,7 +150,7 @@ function CartStep({ handleNextStep }) {
                     </div>
                     <div className="">{formatCurrency(totalfee)}</div>
                   </div>
-                  <Button onClick={handleNextStep} color="success">
+                  <Button onClick={() =>navigate("/checkout")} color="success">
                     Add Your address to place order
                   </Button>
                 </div>

@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Suspense } from "react";
 import FallBackLoader from "../components/FallBackLoader/FallBackLoader";
+import CartPage from "../pages/CartPage";
+import FinalPage from "../pages/FinalPage";
 const Login = lazy(() => import("../components/Login/Login"));
 const Home = lazy(() => import("../pages/HomePage"));
 const Signup = lazy(() => import("../components/SignUp/Signup"));
@@ -130,7 +132,14 @@ const PublicRoutes = () => {
                 </Suspense>
               }
             />
-
+            <Route
+              path="/cart"
+              element={
+                <Suspense fallback={<LoadingFallback />}>
+                  <CartPage />{" "}
+                </Suspense>
+              }
+            />
             <Route
               path="/changepassword"
               element={
@@ -143,7 +152,7 @@ const PublicRoutes = () => {
               path="/checkout"
               element={
                 <Suspense fallback={<LoadingFallback />}>
-                  <CheckOutPage />{" "}
+                  <FinalPage />{" "}
                 </Suspense>
               }
             />

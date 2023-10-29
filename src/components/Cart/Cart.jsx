@@ -125,7 +125,7 @@ function Cart({ cartData, cartTotalFee }) {
         {cartData?.length > 0 && (
           <Button
             style={{ backgroundColor: "#2D7B8B" }}
-            onClick={() => navigate("/checkout")}
+            onClick={() => navigate("/cart")}
           >
             {" "}
             <p className="text-white ">View Cart</p>
