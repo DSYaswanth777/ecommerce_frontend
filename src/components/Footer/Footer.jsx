@@ -1,7 +1,7 @@
 import React from "react";
 import { BsInstagram, BsYoutube, BsWhatsapp, BsFacebook } from "react-icons/bs";
 import Dev from "../../assets/icons/favicon.svg";
-import Logo from "../../assets/icons/brand_logo.svg";
+import Logo from "../../assets/icons/brand_logo.svg"
 import "./Footer.scss";
 import { useNavigate } from "react-router";
 
