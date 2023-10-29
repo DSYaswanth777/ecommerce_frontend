@@ -15,7 +15,6 @@ const ChangePassword = lazy(() =>
   import("../components/ChangePassword/ChangePassword")
 );
 const Dashboard = lazy(() => import("../components/Admin/Dashboard/Dashboard"));
-const CheckOutPage = lazy(() => import("../pages/CheckOutPage"));
 const OrdersPage = lazy(() => import("../pages/OrdersPage"));
 const ViewOrderPage = lazy(() => import("../pages/ViewOrderPage"));
 const ProfilePage = lazy(() => import("../pages/ProfilePage"));
