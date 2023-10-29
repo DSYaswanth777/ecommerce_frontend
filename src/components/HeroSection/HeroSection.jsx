@@ -9,7 +9,7 @@ import heroSliderImg from "../../assets/images/1.png";
 import heroSliderImg2 from "../../assets/images/2.png";
 import heroSliderImg3 from "../../assets/images/3.png";
 
-const LazyImage = lazy(() => import("./LazyImage")); // Lazy loading the image component
+const LazyImage = lazy(() => import("./LazyImage"))
 
 const images = [
   {

@@ -6,6 +6,7 @@ import InputPasswordToggle from "../Input-password/Index";
 import { useDispatch } from "react-redux";
 import { forgotPasswordAsync, resetPasswordAsync } from "../../redux/slice/authSlice";
 import { useNavigate } from "react-router";
+import { validationRules } from "../../schema/validationSchema";
 
 function ResetPassword() {
   const {
@@ -22,33 +23,7 @@ function ResetPassword() {
   });
   const dispatch = useDispatch();
   const navigate = useNavigate()
-  const validationRules = {
-    mobile: {
-      required: "Mobile number is required",
-      pattern: {
-        value: /^[0-9]{10}$/,
-        message: "Enter a valid 10-digit Indian mobile number",
-      },
-    },
-    otp: {
-      required: "OTP is required",
-      pattern: {
-        value: /^[0-9]{4}$/,
-        message: "Enter a valid 4-digit OTP",
-      },
-    },
-    newPassword: {
-      required: "Password is required",
-      minLength: {
-        value: 6,
-        message: "Password must be at least 6 characters long",
-      },
-      maxLength: {
-        value: 10,
-        message: "Password must not exceed 10 characters",
-      },
-    },
-  };
+
   const [mobile, setMobile] = useState("");
   const onSubmit = (data) => {
     const { mobile, otp, newPassword } = data;

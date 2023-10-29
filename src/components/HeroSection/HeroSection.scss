@@ -1,36 +1,9 @@
 .slider-image {
-width: 100vw;
-height: 100vh;
+  width: 100vw;
+  height: 80vh !important;
   @media screen and (max-device-width: 480px) and (orientation: portrait) {
-width: 100vw;
-height: 50vh;
-
+    width: 100vw;
+    height: 50vh !important;
   }
-  @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-
-
-  }
-
-}
-.carousel-status{
-  display: none;
-}
-/* Custom styles for carousel arrows */
-.carousel .control-arrow {
-  font-size: 24px;
-  text-align: center;
-  color: #333;
-  border-radius: 50%; 
-  background-color: transparent !important;
-
 }
 
-
-.carousel .control-prev {
-  left: 10px; 
-}
-
-
-.carousel .control-next {
-  right: 10px; 
-}

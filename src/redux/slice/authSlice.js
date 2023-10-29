@@ -20,6 +20,8 @@ export const loginAsync = createAsyncThunk(
         const { user, token, message } = response.data;
         toast.success(message); // Display a success toast
         return { user, token, message };
+      } else if (response.status === 401) {
+        toast.error("Unauthorized:Please Login to continue");
       } else if (response.status === 404) {
         toast.error("User not found"); // Display an error toast
       } else if (response.status === 400) {
@@ -208,7 +210,7 @@ const authSlice = createSlice({
       sessionStorage.setItem("isAuthenticated", "false");
     },
   },
-  extraReducers: (builder)=> {
+  extraReducers: (builder) => {
     builder
       .addCase(loginAsync.pending, (state) => {
         state.isLoading = true;

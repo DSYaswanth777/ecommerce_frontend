@@ -5,6 +5,7 @@ const apiEndpoint = import.meta.env.VITE_REACT_APP_API_ENDPOINT;
 export const fetchUsercartAsync = createAsyncThunk(
   "cart/fetchUserCartAsync",
   async (_, { getState }) => {
+
     try {
       const token = getState().auth.token;
       const config = {
@@ -19,6 +20,8 @@ export const fetchUsercartAsync = createAsyncThunk(
 
       if (response.status === 200) {
         return response.data;
+      } else if (response.status === 401) {
+        toast.error("Unauthorized: Please to login to continue");
       } else if (response.status === 404) {
         toast.error("Cart not found"); // Display an error toast
       } else if (response.status === 500) {
@@ -60,6 +63,9 @@ export const cartAddAsync = createAsyncThunk(
         return response.data;
       } else if (response.status === 400) {
         toast.error("Bad request");
+      } else if (response.status === 401) {
+        toast.error("Unauthorized: Please to login to continue");
+        navigate("/login")
       } else if (response.status === 404) {
         toast.error("Product not found");
       } else if (response.status === 500) {

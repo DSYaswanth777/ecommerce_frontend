@@ -1,15 +1,14 @@
 import React, { useEffect } from "react";
-import Header from "../Header/Header";
 import { Card, CardBody } from "reactstrap";
 import { formatCurrency } from "../../utilities/formatCurrency";
 import { fetchUserOrders } from "../../redux/slice/orderSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { format } from "date-fns";
 import { useNavigate } from "react-router";
 import { Shimmer } from "react-shimmer";
 import { useMemo } from "react";
-import { v4 as uuidv4 } from "uuid"; // Import uuid
+import { v4 as uuidv4 } from "uuid"; 
 import { ChevronRight } from "react-feather";
+import { formatDateForInput } from "../../utilities/FormatInputDate";
 
 function Orders() {
   const ordersData = useSelector((state) => state?.orders?.orders?.orders);
@@ -22,17 +21,8 @@ function Orders() {
       dispatch(fetchUserOrders());
     }
   }, [status, dispatch]);
-  const formatDateForInput = (isoDate) => {
-    if (!isoDate) {
-      return "";
-    }
-    const date = new Date(isoDate);
-    if (isNaN(date.getTime())) {
-      return ""; // Handle invalid date
-    }
 
-    return format(date, "dd/MM/yyyy");
-  };
+  
 
   return (
     <div style={{ overflow: "hidden" }}>
@@ -40,7 +30,7 @@ function Orders() {
       <div className="d-flex container flex-column gap-2 pt-2 pb-5">
         <div className="d-flex gap-4 flex-column flex-md-row pt-3 ">
           <div className="d-flex flex-column gap-3 w-100 ">
-            {status === "loading" || status === "idle"
+            {status === "idle" || status === "loading"
               ? memoizedOrdersData?.map((order) => (
                   <Shimmer
                     key={order.orderID}
@@ -60,7 +50,7 @@ function Orders() {
               : memoizedOrdersData?.map((order) => (
                   <Card
                     className=""
-                    key={uuidv4()} // Use uuid to generate a unique key
+                    key={uuidv4()} 
                     style={{ cursor: "pointer" }}
                     onClick={() => navigate(`/view/order/${order?.orderID}`)}
                   >
@@ -70,7 +60,7 @@ function Orders() {
                           <img
                             key={uuidv4()} // Use uuid to generate a unique key
                             src={item?.product?.productImages[0]}
-                            alt=""
+                            alt={item?.product?.productName}
                             width={100}
                             height={100}
                           />

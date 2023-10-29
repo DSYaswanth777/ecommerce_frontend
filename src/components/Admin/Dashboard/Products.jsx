@@ -160,7 +160,7 @@ const navigate = useNavigate()
   return (
     <div className=" mb-5 shadow w-100 justify-content-center align-items-center gap-2 mt-2 border p-5 pt-2">
       <div className="d-flex justify-content-between gap-5 align-items-center gap-5">
-        <img src={Logo} alt="" />
+        <img src={Logo} alt="brand_logo" />
         <InputGroup className="d-flex justify-content-between align-items-center inpu w-50">
           <Input
             type="search"

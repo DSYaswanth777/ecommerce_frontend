@@ -1,5 +1,4 @@
 import React from "react";
-import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -8,16 +7,16 @@ import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { viewOrderAsync } from "../../redux/slice/orderSlice";
-import { format } from "date-fns";
 import { Shimmer } from "react-shimmer";
 import { Card } from "reactstrap";
-import { v4 as uuidv4 } from "uuid"; // Import uuid
+import { v4 as uuidv4 } from "uuid";
 import { ArrowLeft } from "react-feather";
+import { formatDateForInput } from "../../utilities/FormatInputDate";
 
 function ViewOrder() {
   const { orderID } = useParams();
   const dispatch = useDispatch();
-  const orderData = useSelector((state) => state?.orders?.order?.order); // Change from 'orders' to 'order'
+  const orderData = useSelector((state) => state?.orders?.order?.order); 
   const orderStatus = useSelector((state) => state?.orders?.status);
   const navigate = useNavigate();
   useEffect(() => {
@@ -26,19 +25,7 @@ function ViewOrder() {
     window.scrollTo(0, 0);
   }, [dispatch, orderID]);
 
-  const formatDateForInput = (isoDate) => {
-    if (!isoDate) {
-      return ""; // Handle empty date
-    }
-
-    const date = new Date(isoDate);
-
-    if (isNaN(date.getTime())) {
-      return ""; // Handle invalid date
-    }
-
-    return format(date, "dd-MM-yyyy HH:mm:ss a");
-  };
+  
 
   return (
     <>
@@ -70,7 +57,7 @@ function ViewOrder() {
             ))
           )}
           {orderStatus === "loading" || orderStatus === "idle"
-            ? orderData?.cartItems?.map((prod) => (
+            ? orderData?.cartItems?.map(() => (
                 <Shimmer
                   key={uuidv4()}
                   visible={true}

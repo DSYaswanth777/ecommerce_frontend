@@ -2,6 +2,7 @@ import React, { lazy } from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Suspense } from "react";
+import FallBackLoader from "../components/FallBackLoader/FallBackLoader";
 const Login = lazy(() => import("../components/Login/Login"));
 const Home = lazy(() => import("../pages/HomePage"));
 const Signup = lazy(() => import("../components/SignUp/Signup"));
@@ -26,7 +27,11 @@ const PrivacyPage = lazy(() => import("../pages/PrivacyPage"));
 const FAQSPage = lazy(() => import("../pages/FAQSPage"));
 
 const PublicRoutes = () => {
-  const LoadingFallback = () => <div>Loading...</div>;
+  const LoadingFallback = () => (
+    <div>
+      <FallBackLoader />
+    </div>
+  );
 
   const user = useSelector((state) => state.auth);
   const userRole = useSelector((state) => state.auth.user?.role);
@@ -41,6 +46,7 @@ const PublicRoutes = () => {
             </Suspense>
           }
         />
+
         <Route
           path="/login"
           element={
@@ -124,6 +130,7 @@ const PublicRoutes = () => {
                 </Suspense>
               }
             />
+
             <Route
               path="/changepassword"
               element={

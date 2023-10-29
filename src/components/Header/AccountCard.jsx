@@ -23,15 +23,14 @@ const AccountCard = () => {
       <Card className="p-2 card-hover pt-3">
         <CardTitle>
           <div
-            className="d-flex gap-5 bg-white fw-bold justify-content-center  "
-            style={{ cursor: "pointer" }}
+            className="d-flex  bg-white fw-bold justify-content-center  "
           >
             {user.user?.name}
           </div>
         </CardTitle>
         <CardBody >
-          <div className="d-flex flex-column justify-content-start align-items-start bg- p-3 ">
-            <div className="  d-flex shadow-sm border bg-light pe-5 pt-1 ps-2 w-100" style={{ cursor: "pointer" }}>
+          <div className="d-flex flex-column justify-content-start align-items-start  ">
+            <div className="  d-flex        bg-white pe-5 pt-1 ps-2 w-100" style={{ cursor: "pointer" }}>
               {" "}
               <span className="me-2">
                 <CgProfile size={20} />
@@ -39,7 +38,7 @@ const AccountCard = () => {
               <p className=""onClick={() => navigate("/profile")}>My Profile</p>
             </div>
             <div
-              className=" d-flex shadow-sm border bg-light pe-5 pt-2 w-100 ps-2"
+              className=" d-flex        bg-white pe-5 pt-2 w-100 ps-2"
               style={{ cursor: "pointer" }}
             >
               {" "}
@@ -48,7 +47,7 @@ const AccountCard = () => {
               </span>
               <p onClick={() => navigate("/orders")}>Orders</p>
             </div>
-            <div className="d-flex shadow-sm border bg-light pe-5 pt-1 ps-2 w-100" style={{ cursor: "pointer" }}>
+            <div className="d-flex        bg-white pe-5 pt-1 ps-2 w-100" style={{ cursor: "pointer" }}>
               {" "}
               <span className="me-2">
                 {" "}
@@ -57,7 +56,7 @@ const AccountCard = () => {
               <p onClick={() => navigate("/wishlist")}>Wishlist</p>
             </div>
             <div
-              className="   text-danger shadow-sm border bg-light pe-5 pt-1 py-3 w-100 ps-2 "
+              className="   text-danger        bg-white pe-5 pt-1 py-3 w-100 ps-2 "
               style={{ cursor: "pointer" }}
               onClick={handleLogout}
             >

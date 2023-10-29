@@ -51,12 +51,19 @@ const Header = () => {
     e.stopPropagation();
   };
   const toggleCart = (e) => {
-    setCartVisible(!isCartVisible);
     e.stopPropagation();
+  
+    if (!user.isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+  
+    setCartVisible(!isCartVisible);
     if (!isCartVisible) {
       dispatch(fetchUsercartAsync());
     }
   };
+  
   document.addEventListener("click", (e) => {
     if (e.target !== searchIcon) {
       setSearchContainerVisible(false);
@@ -97,7 +104,7 @@ const Header = () => {
             </div>
             <p onClick={() => navigate("/")}>
               {" "}
-              <img src={Logo} alt="sds" className="nav_logo" />
+              <img src={Logo} alt="brand_logo" className="nav_logo" />
             </p>
           </h2>
           <div className="d-flex gap-3 justify-content-center align-items-center">
@@ -110,7 +117,7 @@ const Header = () => {
             </div>
             <div className=" profile ">
               {user.isAuthenticated ? (
-                <User onClick={toggleAccount} id="profileBox" />
+                <User onClick={toggleAccount} id="profileBox" /> 
               ) : (
                 <Button
                   className="text-white text-center underline-none login-btn"
@@ -124,7 +131,7 @@ const Header = () => {
                   className="card-hover"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <AccountCard />
+                  <AccountCard />  
                 </div>
               )}
             </div>
@@ -169,6 +176,7 @@ const Header = () => {
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>

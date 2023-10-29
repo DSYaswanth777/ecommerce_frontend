@@ -18,30 +18,12 @@ import { wishlistAddAsync } from "../../redux/slice/wishlistSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Shimmer } from "react-shimmer";
 import { cartAddAsync } from "../../redux/slice/cartSlice";
+import { responsive } from "../../utilities/carouselSettings";
 
 const Poster = ({ title, subtitle, products }) => {
   const status = useSelector((state) => state.products?.status);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 3000 },
-      items: 5,
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 4,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
-  };
 
   return (
     <div className="container mt-5 pt-3 mb-5 pb-5">
@@ -58,28 +40,22 @@ const Poster = ({ title, subtitle, products }) => {
                   width={300}
                   height={300}
                 >
-
                   <Card
                     className="slider-content"
-                    style={{
-                      width: "18rem",
-                    }}
+                    
                   ></Card>
                 </Shimmer>
               ))
             : products.map((product) => (
                 <Card
                   className="slider-content"
-                  style={{
-                    width: "18rem",
-                  }}
+                  
                   key={product._id}
                 >
                   <img
                     alt={product?.name}
                     src={product?.productImages[0]}
-                    width={285}
-                    height={290}
+                   className="poster_img"
                     onClick={() =>
                       navigate(`/products/viewproduct/${product._id}`)
                     }

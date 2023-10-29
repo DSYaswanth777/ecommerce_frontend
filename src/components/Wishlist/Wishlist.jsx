@@ -77,7 +77,7 @@ function Wishlist() {
                     >
                       {product.product.productImages.map((img) => (
                         <img
-                          alt="Sample"
+                          alt="Product Image"
                           src={img}
                           width={300}
                           height={300}

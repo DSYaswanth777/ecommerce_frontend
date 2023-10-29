@@ -42,8 +42,8 @@ function Home() {
           <h2 className="text-center mb-5 subtitle">New Arrivals for You</h2>
           <div className="d-flex gap-4">
             {recentProducts?.length > 0 ? (
-              recentProducts.map((product) => (
-                <div className="d-flex ">
+              recentProducts?.map((product) => (
+                <div className="d-flex " key={product._id}>
                   <Shimmer
                     key={product._id}
                     visible={true}
@@ -111,8 +111,8 @@ function Home() {
         </div>
       ) : (
         <Poster
-          title="Just In"
-          subtitle="New Arrivals for You"
+          title="Best Deals Await"
+          subtitle="Discover Affordable Finds: Prices Low to High"
           products={filteredProducts}
         />
       )}

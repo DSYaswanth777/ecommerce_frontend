@@ -7,7 +7,7 @@ import {
   editCouponAsync,
   fetchCoupons,
 } from "../../../redux/slice/couponSlice";
-import { format } from "date-fns";
+import { formatDateForInput } from "../../../utilities/FormatInputDate";
 
 function AddCoupon({ isOpen, toggle, isEditing, couponData }) {
   const [formData, setFormData] = useState({
@@ -18,19 +18,7 @@ function AddCoupon({ isOpen, toggle, isEditing, couponData }) {
   });
   const [isUploading, setIsUploading] = useState(false);
   const dispatch = useDispatch();
-  const formatDateForInput = (isoDate) => {
-    if (!isoDate) {
-      return ""; // Handle empty date
-    }
 
-    const date = new Date(isoDate);
-
-    if (isNaN(date.getTime())) {
-      return ""; // Handle invalid date
-    }
-
-    return format(date, "yyyy-MM-dd");
-  };
 
   useEffect(() => {
     dispatch(fetchCoupons());

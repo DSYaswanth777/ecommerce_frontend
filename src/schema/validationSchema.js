@@ -46,3 +46,50 @@ export const signupValidationSchema = {
     validate: (value, values) => value === values.password,
   },
 };
+export const validationRules = {
+  mobile: {
+    required: "Mobile number is required",
+    pattern: {
+      value: /^[0-9]{10}$/,
+      message: "Enter a valid 10-digit Indian mobile number",
+    },
+  },
+  otp: {
+    required: "OTP is required",
+    pattern: {
+      value: /^[0-9]{4}$/,
+      message: "Enter a valid 4-digit OTP",
+    },
+  },
+  newPassword: {
+    required: "Password is required",
+    minLength: {
+      value: 6,
+      message: "Password must be at least 6 characters long",
+    },
+    maxLength: {
+      value: 10,
+      message: "Password must not exceed 10 characters",
+    },
+  },
+};
+export const  profileEditSchema = {
+  name: {
+    required: "Name is required",
+    minLength: {
+      value: 4,
+      message: "Name must have at least 4 characters",
+    },
+    pattern: {
+      value: /^[A-Za-z\s]+$/,
+      message: "Special characters and numbers are not allowed",
+    },
+  },
+  email: {
+    required: "Email is required",
+    pattern: {
+      value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/,
+      message: "Invalid email address",
+    },
+  },
+};

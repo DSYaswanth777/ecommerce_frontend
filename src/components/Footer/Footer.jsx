@@ -12,20 +12,20 @@ const Footer = () => {
       <div className="container">
         <div className="d-flex flex-wrap justify-content-between pt-4 flex-column flex-sm-row">
           <div className="footer-section col-lg-3 col-md-6 mt-md-4 mt-4 mt-sm-4 mt-lg-0 col-sm-12">
-            <h5 className="footer-list-heading text-uppercase">Useful Links</h5>
+            <h5 className="footer-list-heading ">Useful Links</h5>
             <hr />
 
             <ul className="list-unstyled ">
-              <li>
+              <li className="">
                 <a
                   href="https://www.dtdc.in/tracking.asp"
                   target="_blank"
-                  className="text-dark"
+                  className="text-dark "
                 >
                   Track Order at DTDC
                 </a>
               </li>
-              <li>
+              <li className="py-3">
                 <a
                   href="https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx"
                   target="_blank"
@@ -61,7 +61,7 @@ const Footer = () => {
             </ul>
           </div>
           <div className="footer-section col-lg-3 col-md-6 mt-md-4 mt-4 mt-sm-4 mt-lg-0 col-sm-12">
-            <h5 className="footer-list-heading text-uppercase">Policies</h5>
+            <h5 className="footer-list-heading ">Policies</h5>
             <hr />
 
             <ul className="list-unstyled">
@@ -82,10 +82,10 @@ const Footer = () => {
                 </p>
               </li>
               <li>
-                <p                   className="text-decoration-underline"
+                <p
+                  className="text-decoration-underline"
                   onClick={() => navigate("/privacy")}
-
->
+                >
                   Privacy
                 </p>
               </li>
@@ -97,12 +97,13 @@ const Footer = () => {
                   FAQs
                 </p>
               </li>
+              
             </ul>
           </div>
           <hr />
           <div className=" col-lg-3 col-md-6  col-sm-12">
             <div className="text-center pb-3">
-              <img src={Logo} alt="" />
+              <img src={Logo} alt="brand_logo" />
             </div>
             <p>
               <span className="fw-bold">Manufacturer Details:</span> GSR
@@ -125,16 +126,16 @@ const Footer = () => {
 
             <div className="d-flex  justify-content-center gap-3 align-items-center pt-3">
               <BsFacebook size={25} className="me-2" />
-              <BsInstagram size={25} className="me-2" />{" "}
+              <BsInstagram size={25} className="me-2" />
               <BsYoutube size={25} className="me-2" />
-              <BsWhatsapp size={25} className="me-2" />{" "}
+              <BsWhatsapp size={25} className="me-2" />
             </div>
             <div className="pt-4 d-flex flex-column justify-content-center align-items-center">
               <p className="text-center fw-medium">
                 Desgined and Developed By{" "}
               </p>
               <div>
-                <img src={Dev} alt="" />{" "}
+                <img src={Dev} alt="dev logo" />{" "}
                 <a
                   href="https://www.yaswanthdasari.in/"
                   target="_blank"

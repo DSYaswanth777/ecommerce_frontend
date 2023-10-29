@@ -7,15 +7,21 @@ import {
   profileEditAsync,
 } from "../../redux/slice/profileSlice";
 import { Shimmer } from "react-shimmer";
+import { useForm, Controller } from "react-hook-form"; // Import React Hook Form
+import { profileEditSchema } from "../../schema/validationSchema";
 
 const Profile = () => {
   const profileData = useSelector((state) => state.profile?.profile);
   const status = useSelector((state) => state.profile?.status);
   const dispatch = useDispatch();
+  const [editedEmail, setEditedEmail] = useState(profileData?.email);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editedName, setEditedName] = useState(profileData?.name);
-  const [editedEmail, setEditedEmail] = useState(profileData?.email);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm(); // Initialize React Hook Form
 
   useEffect(() => {
     if (status === "idle") {
@@ -27,22 +33,22 @@ const Profile = () => {
     setIsEditing(true);
   };
 
-  const handleSaveChanges = async () => {
-    if (editedName !== profileData.name || editedEmail !== profileData.email) {
-      await dispatch(
-        profileEditAsync({ name: editedName, email: editedEmail })
-      );
+  const handleSaveChanges = async (data) => {
+    if (!isEditing) return;
+
+    if (data.name !== profileData.name || data.email !== profileData.email) {
+      await dispatch(profileEditAsync({ name: data.name, email: data.email }));
       dispatch(fetchUserprofileAsync());
     }
     setIsEditing(false);
   };
 
   return (
-    <div className="">
+    <>
       <div className="container pt-5">
         <div className="border p-4">
           <div className="d-flex justify-content-between py-3">
-            <h4 className="text-center">MY PROFILE</h4>
+            <h4 className="text-center"> PROFILE</h4>
             <div className="d-flex"></div>
             <p
               className="fs-5 d-flex gap-2 justify-content-center align-items-center"
@@ -55,32 +61,59 @@ const Profile = () => {
           </div>
 
           <Label for="name">Name</Label>
-          {status === "loading" ? (
-            <Shimmer width={200} height={20} />
-          ) : (
-            <Input
-              type="text"
-              name="name"
-              value={isEditing ? editedName : profileData?.name || ""}
-              onChange={(e) => setEditedName(e.target.value)}
-              className="mb-3"
-              disabled={!isEditing}
-            />
-          )}
+          <Controller
+            name="name"
+            control={control}
+            defaultValue={profileData?.name || ""}
+            rules={profileEditSchema.name}
+            render={({ field }) => (
+              <>
+                {status === "loading" ? (
+                  <Shimmer width={200} height={20} />
+                ) : (
+                  <Input
+                    type="text"
+                    name="name"
+                    {...field}
+                    value={isEditing ? field.value : profileData?.name || ""}
+                    className={`mb-3 ${errors.name ? "is-invalid" : ""}`}
+                    disabled={!isEditing}
+                  />
+                )}
+                {errors.name && (
+                  <div className="invalid-feedback">{errors.name.message}</div>
+                )}
+              </>
+            )}
+          />
 
           <Label for="email">Email</Label>
-          {status === "loading" ? (
-            <Shimmer width={200} height={20} />
-          ) : (
-            <Input
-              type="email"
-              name="email"
-              value={isEditing ? editedEmail : profileData?.email || ""}
-              onChange={(e) => setEditedEmail(e.target.value)}
-              className="mb-3"
-              disabled={!isEditing}
-            />
-          )}
+          <Controller
+            name="email"
+            control={control}
+            defaultValue={profileData?.email || ""}
+            rules={profileEditSchema.email}
+            render={({ field }) => (
+              <>
+                {status === "loading" ? (
+                  <Shimmer width={200} height={20} />
+                ) : (
+                  <Input
+                    type="text"
+                    name="email"
+                    {...field}
+                    value={isEditing ? field.value : profileData?.email || ""}
+                    className={`mb-3 ${errors.email ? "is-invalid" : ""}`}
+                    disabled={!isEditing}
+                  />
+                )}
+                {errors.email && (
+                  <div className="invalid-feedback">{errors.email.message}</div>
+                )}
+              </>
+            )}
+          />
+
           <Label for="mobile">Mobile</Label>
           <Input
             type="number"
@@ -92,10 +125,10 @@ const Profile = () => {
           <Button
             className="mt-3 text-right"
             color="success"
-            onClick={handleSaveChanges}
+            onClick={handleSubmit(handleSaveChanges)}
             disabled={
               !isEditing ||
-              (editedName === profileData.name &&
+              (editedEmail === profileData.name &&
                 editedEmail === profileData.email)
             }
           >
@@ -103,7 +136,7 @@ const Profile = () => {
           </Button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

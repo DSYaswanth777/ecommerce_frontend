@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, CardBody, Input, Badge } from "reactstrap";
 import { formatCurrency } from "../../utilities/formatCurrency";
 import {
@@ -8,15 +8,15 @@ import {
   fetchUsercartAsync,
 } from "../../redux/slice/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Trash, X } from "react-feather";
+import { Trash } from "react-feather";
 import Lottie from "lottie-react";
 import EmptyCart from "../../assets/icons/EmptyCart.json";
 import { useNavigate } from "react-router";
 function Cart({ cartData, cartTotalFee }) {
   const status = useSelector((state) => state?.cart?.status);
+  const navigate = useNavigate();  
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const handleDecrease = async (productId) => {
     setLoading(true);
     await dispatch(cartQuantityDecreaseAsync(productId));
@@ -46,7 +46,7 @@ function Cart({ cartData, cartTotalFee }) {
   return (
     <div className="d-flex flex-column">
       <div className="px-2">
-        {status === "loading" ? (
+        {status === "loading"  ? (
           <Lottie animationData={EmptyCart} />
         ) : cartData?.length === 0 ? (
           <>

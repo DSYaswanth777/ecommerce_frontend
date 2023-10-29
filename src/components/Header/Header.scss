@@ -2,7 +2,6 @@
   a{
     text-decoration: none;
   }
-  // background-color: #f9f4f4 !important;
   .nav_logo {
     @media screen and (max-device-width: 480px) and (orientation: portrait) {
       width: 100px;
@@ -50,8 +49,8 @@
 .card-hover{
   width: 255px;
   position: absolute;
-  left: 65%;
-  top: 90%;
+  left: 70%;
+  top: 73%;
   @media screen and (max-device-width: 480px) and (orientation: portrait) {
     left:10%;
   }
@@ -94,20 +93,20 @@
 }
 .cartCount{
 position: absolute;
-top: 15px;
- right: 72px;
- width: 22px;
- height: 22px;
+top: 23px;
+ right: 78px;
+ width: 21px;
+ height: 21px;
  text-align: center;
  color: #ffff;
  background-color: #2A798B;
  @media screen and (max-device-width: 480px) and (orientation: portrait) {
-  right: 6px;
-  width: 17px;
-  height: 17px;
+top: 20px;
+  right: 4px;
+  width: 21px;
+  height: 21px;
 }
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-
-
+  right: 23px;
 }
 }

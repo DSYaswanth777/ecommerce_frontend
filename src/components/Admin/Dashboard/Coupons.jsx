@@ -4,7 +4,6 @@ import DataTable from "react-data-table-component";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import Swal from "sweetalert2";
-
 import { Button, Input, InputGroup, InputGroupText } from "reactstrap";
 import { BsSearch } from "react-icons/bs";
 import Logo from "../../../assets/icons/brand_logo.svg";
@@ -16,7 +15,7 @@ import {
   searchCouponAsync,
 } from "../../../redux/slice/couponSlice";
 import AddCoupon from "./AddCoupon";
-import { format } from "date-fns";
+import { formatDateForInput } from "../../../utilities/FormatInputDate";
 function Coupons() {
   const dispatch = useDispatch();
   const couponData = useSelector((state) => state.coupons?.coupons);
@@ -26,10 +25,7 @@ function Coupons() {
   const [selectedCoupon, setselectedCoupon] = useState(null);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const formatDateForInput = (isoDate) => {
-    const date = new Date(isoDate);
-    return format(date, "yyyy-MM-dd");
-  };
+  
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchCoupons());

@@ -11,25 +11,13 @@ import {
 } from "../../../redux/slice/orderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { format } from "date-fns";
 import Logo from "../../../assets/icons/brand_logo.svg";
-import { Input, InputGroup, InputGroupText, Button } from "reactstrap";
+import { Input, InputGroup, InputGroupText } from "reactstrap";
 import debounce from "lodash.debounce";
 import { useNavigate } from "react-router";
+import { formatDateForInput } from "../../../utilities/FormatInputDate";
 
-const formatDateForInput = (isoDate) => {
-  if (!isoDate) {
-    return "";
-  }
 
-  const date = new Date(isoDate);
-
-  if (isNaN(date.getTime())) {
-    return ""; // Handle invalid date
-  }
-
-  return format(date, "dd/MM/yyyy");
-};
 function Orders() {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -110,7 +98,7 @@ function Orders() {
   return (
     <div className="mb-5 shadow w-100 justify-content-center align-items-center gap-2 mt-2 border p-5 pt-2">
       <div className="d-flex justify-content-between gap-5 align-items-center gap-5">
-        <img src={Logo} alt="" />
+        <img src={Logo} alt="brand_logo" />
         <InputGroup className="d-flex justify-content-between align-items-center inpu w-50">
           <Input
             type="search"

@@ -9,8 +9,9 @@ import GooglePayButton from "@google-pay/button-react";
 import { useRef, useCallback } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
-const THIRD_PARTY_API_ENDPOINT = import.meta.env.VITE_REACT_THIRD_PARTY_API_ENDPOINT;
-const STATE = import.meta.env.VITE_STATE
+const THIRD_PARTY_API_ENDPOINT = import.meta.env
+  .VITE_REACT_THIRD_PARTY_API_ENDPOINT;
+const STATE = import.meta.env.VITE_STATE;
 function AddressStep() {
   const cartData = useSelector((state) => state?.cart?.cart);
   const [address, setAddress] = useState({
@@ -44,9 +45,7 @@ function AddressStep() {
 
   const fetchAddressDetails = async (pincode) => {
     try {
-      const response = await fetch(
-        `${THIRD_PARTY_API_ENDPOINT}${pincode}`
-      );
+      const response = await fetch(`${THIRD_PARTY_API_ENDPOINT}${pincode}`);
 
       if (response.ok) {
         const data = await response.json();
@@ -94,16 +93,16 @@ function AddressStep() {
   const handleGooglePayClick = useCallback(async () => {
     try {
       const orderResponse = await dispatch(placeOrder(addressRef.current));
-
+      console.log(orderResponse);
       if (orderResponse.meta.requestStatus === "fulfilled") {
         const orderId = orderResponse.payload.orderID;
 
         const paymentResponse = await dispatch(
-          updatePaymentStatus({ orderID: orderId, paymentStatus:STATE })
+          updatePaymentStatus({ orderID: orderId, paymentStatus: STATE })
         );
 
         if (paymentResponse.meta.requestStatus === "fulfilled") {
-          navigate("/orders");
+          navigate("/");
           return { transactionState: "SUCCESS" };
         } else {
           console.error(
