@@ -20,7 +20,9 @@
     width: 18.4rem;
 
   }
-  
+  @media (max-width: 360px) {
+    width: 20.9rem;
+  }
 }
 .poster_img {
   width: 294px;
@@ -37,4 +39,9 @@
     width: 292px;
     height: 280px;
   }
+  @media (max-width: 360px) {
+    width: 329px;
+    height: 280px;
+  }
+
 }
