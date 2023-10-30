@@ -194,8 +194,6 @@ const productSlice = createSlice({
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.products = action.payload;
-        state.sortedproducts = action.payload;
-
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.status = "failed";
@@ -217,7 +215,6 @@ const productSlice = createSlice({
       })
       .addCase(sortproductsAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // state.products = action.payload;
         state.sortedproducts = action.payload;
       })
       .addCase(sortproductsAsync.rejected, (state, action) => {
@@ -274,9 +271,7 @@ const productSlice = createSlice({
         state.status = "loading";
       })
       .addCase(filterProductsAsync.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        // state.products = action.payload;
-        // state.relevantproducts = action.payload;
+        state.status = "succeeded";;
         state.sortedproducts = action.payload;
 
       })

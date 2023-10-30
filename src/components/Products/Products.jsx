@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { formatCurrency } from "../../utilities/formatCurrency";
 import {
   Button,
@@ -8,20 +8,39 @@ import {
   CardSubtitle,
   CardText,
   Badge,
+  Spinner,
 } from "reactstrap";
-import { BsSuitHeart } from "react-icons/bs";
+import { BsFillHeartFill, BsSuitHeart } from "react-icons/bs";
 import { FaCartPlus } from "react-icons/fa";
 import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { useNavigate } from "react-router";
 import "./Products.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { wishlistAddAsync } from "../../redux/slice/wishlistSlice";
+import {
+  deleteWishlistAsync,
+  fetchUserWishlistAsync,
+  wishlistAddAsync,
+} from "../../redux/slice/wishlistSlice";
 import { cartAddAsync, fetchUsercartAsync } from "../../redux/slice/cartSlice";
 import { Shimmer } from "react-shimmer";
 function Products({ productData }) {
   const status = useSelector((state) => state?.products?.status);
+  const wishlistStatus = useSelector((state) => state?.wishlist?.status);
+  const wishlist = useSelector((state) => state?.wishlist?.wishlist);
+  const [wishlistAdded, setWishlistAdded] = useState(false);
+
   const dispatch = useDispatch();
+  const [isLoaded, setIsLoaded] = useState(false);
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+  useEffect(() => {
+    if (isLoaded && wishlistStatus === "idle") {
+      dispatch(fetchUserWishlistAsync());
+    }
+  }, [wishlistStatus, isLoaded, dispatch]);
+
   const handleAddCartItem = (productId) => {
     // Dispatch the delete action
     dispatch(cartAddAsync(productId))
@@ -34,6 +53,36 @@ function Products({ productData }) {
         console.log(error);
       });
   };
+  const isProductInWishlist = (productId) => {
+    return wishlist.some((item) => item.product._id === productId);
+  };
+  const handleAddToWishlist = (product) => {
+    const wishlistItem = wishlist.find(
+      (item) => item.product._id === product
+    );
+    if (wishlistItem) {
+      // Product is already in the wishlist, remove it using the wishlist's _id
+      dispatch(deleteWishlistAsync(wishlistItem._id))
+        .then(() => {
+          setWishlistAdded(false);
+          dispatch(fetchUserWishlistAsync());
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      // Product is not in the wishlist, add it using the product's _id
+      dispatch(wishlistAddAsync(product))
+        .then(() => {
+          setWishlistAdded(true);
+          dispatch(fetchUserWishlistAsync());
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
   const navigate = useNavigate();
   return (
     <div>
@@ -58,7 +107,7 @@ function Products({ productData }) {
           : productData?.map((product) => (
               <Card
                 key={product?._id}
-                className="slider-content  "
+                className="  "
                 style={{
                   width: "18rem",
                 }}
@@ -91,10 +140,24 @@ function Products({ productData }) {
                     <div className="d-flex justify-content-between ">
                       {product?.subcategoryId?.name}
 
-                      <BsSuitHeart
-                        size={25}
-                        onClick={() => dispatch(wishlistAddAsync(product?._id))}
-                      />
+                      {wishlistStatus === "loading" || wishlistStatus === "idle" ? (
+                        <Spinner />
+                      ) : (
+                        <span style={{ cursor: "pointer" }}>
+                          {isProductInWishlist(product?._id) ? (
+                            <BsFillHeartFill
+                              size={25}
+                              className="text-danger"
+                              onClick={() => handleAddToWishlist(product?._id)}
+                            />
+                          ) : (
+                            <BsSuitHeart
+                              size={25}
+                              onClick={() => handleAddToWishlist(product?._id)}
+                            />
+                          )}
+                        </span>
+                      )}
                     </div>
                   </CardSubtitle>
                   {status === "loading" || status === "idle" ? (

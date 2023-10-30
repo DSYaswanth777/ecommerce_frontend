@@ -3,7 +3,7 @@
   height: 80vh;
   @media screen and (max-device-width: 480px) and (orientation: portrait) {
     width: 100vw;
-    height: 50vh;
+    height: 50vh !important;
   }
 }
 

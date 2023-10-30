@@ -6,7 +6,6 @@ import "./Header.scss";
 import Logo from "../../assets/icons/brand_logo.svg";
 import NavbarMenu from "../NavbarMenu/NavbarMenu";
 import AccountCard from "./AccountCard";
-import { Input, InputGroup, InputGroupText } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { User } from "react-feather";
 import { fetchUsercartAsync } from "../../redux/slice/cartSlice";
@@ -17,6 +16,7 @@ import {
 import debounce from "lodash.debounce";
 import { useNavigate } from "react-router";
 import { Button } from "react-bootstrap";
+import SearchResults from "./SearchResults";
 
 const Header = () => {
   const user = useSelector((state) => state.auth);
@@ -32,7 +32,6 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const status = useSelector((state) => state.cart?.status);
   const cartData = useSelector((state) => state?.cart?.cart?.cartItems);
-  const cartTotalFee = useSelector((state) => state.cart?.cart.totalFee);
   const suggestedProducts = useSelector((state) => state?.products?.products);
   useEffect(() => {
     if (isCartVisible && status === "idle") {
@@ -48,19 +47,6 @@ const Header = () => {
   const toggleAccount = (e) => {
     setAccountVisible(!isAccountVisible);
     e.stopPropagation();
-  };
-  const toggleCart = (e) => {
-    e.stopPropagation();
-
-    if (!user.isAuthenticated) {
-      navigate("/login");
-      return;
-    }
-
-    setCartVisible(!isCartVisible);
-    if (!isCartVisible) {
-      dispatch(fetchUsercartAsync());
-    }
   };
 
   document.addEventListener("click", (e) => {
@@ -79,17 +65,15 @@ const Header = () => {
   }, 300);
 
   useEffect(() => {
-    // Only perform the search when debouncedSearchQuery changes
-    if (debouncedSearchQuery) {
+    // Only perform the search when debouncedSearchQuery changes and isSearchContainerVisible is true
+    if (debouncedSearchQuery && isSearchContainerVisible) {
       debouncedHandleSearch();
-    } else {
+    } else if (isSearchContainerVisible) {
       dispatch(fetchProducts());
     }
   }, [debouncedSearchQuery, searchQuery]);
-  const cartQuantity = useSelector(
-    (state) => state?.cart.cart.cartItems?.length
-  );
-  const handleSearch = (e) => {
+
+  const handleSearch = () => {
     navigate(`/products?search=${debouncedSearchQuery}`);
   };
 
@@ -102,8 +86,12 @@ const Header = () => {
               <RxHamburgerMenu />
             </div>
             <p onClick={() => navigate("/")}>
-              {" "}
-              <img src={Logo} alt="brand_logo" className="nav_logo" />
+              <img
+                src={Logo}
+                alt="brand_logo"
+                className="nav_logo"
+                style={{ cursor: "pointer" }}
+              />
             </p>
           </h2>
           <div className="d-flex gap-3 justify-content-center align-items-center">
@@ -138,7 +126,9 @@ const Header = () => {
             <div
               className="d-flex justify-content-center align-items-center gap-2"
               style={{ cursor: "pointer" }}
-              onClick={() => navigate("/cart")}
+              onClick={() => {
+                navigate("/cart"), setCartVisible(true);
+              }}
             >
               <div>
                 <FiShoppingCart size={22} />
@@ -152,37 +142,13 @@ const Header = () => {
         </div>
       </div>
       {isSearchContainerVisible && (
-        <div className="container pb-3 d-flex justify-content-center search-container">
-          <InputGroup className="d-flex justify-content-center align-items-center input">
-            <Input
-              type="search"
-              name=""
-              id=""
-              placeholder="Search your product..."
-              className="border border-end-0 input-search"
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setDebouncedSearchQuery(e.target.value);
-              }}
-              onClick={(e) => e.stopPropagation()}
-            />
-            <InputGroupText className="p-2 input-text">
-              <BsSearch size={20} className="" />
-            </InputGroupText>
-          </InputGroup>
-          <ul className="search-results bg-white py-2 px-2">
-            {suggestedProducts?.slice(0, 5)?.map((suggestion, index) => (
-              <p
-                key={index}
-                className="border-bottom border-2 text-left "
-                onClick={handleSearch}
-              >
-                {suggestion?.productName}
-              </p>
-            ))}
-          </ul>
-        </div>
+        <SearchResults
+          searchQuery={searchQuery}
+          handleSearch={handleSearch}
+          suggestedProducts={suggestedProducts}
+          setSearchQuery={setSearchQuery}
+          setDebouncedSearchQuery={setDebouncedSearchQuery}
+        />
       )}
       <NavbarMenu isOpen={menuOpen} toggleMenu={toggleMenu} />
     </div>

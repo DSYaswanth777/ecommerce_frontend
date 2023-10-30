@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Badge, Button, Card, CardBody, CardTitle, Input } from "reactstrap";
 import { formatCurrency } from "../../../utilities/formatCurrency";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,13 +19,13 @@ function CartStep() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const status = useSelector((state) => state.cart?.status);
+  const [isLoaded, setIsLoaded] = useState(false);
   const cartData = useSelector((state) => state.cart?.cart?.cartItems);
   const totalfee = useSelector((state) => state.cart?.cart?.totalFee);
-
   const deliveryCharge = useSelector(
     (state) => state.cart?.cart?.deliveryCharge
   );
-
+ 
   const handleQuantityIncrease = async (productId) => {
     await dispatch(cartQuantityIncreaseAsync(productId));
     dispatch(fetchUsercartAsync());
@@ -39,10 +39,12 @@ function CartStep() {
     dispatch(fetchUsercartAsync());
   };
   useEffect(() => {
-    if (status === "idle") {
+    // if (isLoaded) {
+      window.scrollTo(0, 0);
+
       dispatch(fetchUsercartAsync());
-    }
-  }, [status, dispatch]);
+    // }
+  }, []);
   return (
     <>
       {status === "loading" || status === "idle" ? (

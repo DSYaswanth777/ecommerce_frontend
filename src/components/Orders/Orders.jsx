@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardBody } from "reactstrap";
 import { formatCurrency } from "../../utilities/formatCurrency";
 import { fetchUserOrders } from "../../redux/slice/orderSlice";
@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { Shimmer } from "react-shimmer";
 import { useMemo } from "react";
-import { v4 as uuidv4 } from "uuid"; 
+import { v4 as uuidv4 } from "uuid";
 import { ChevronRight } from "react-feather";
 import { formatDateForInput } from "../../utilities/FormatInputDate";
 
@@ -14,15 +14,17 @@ function Orders() {
   const ordersData = useSelector((state) => state?.orders?.orders?.orders);
   const status = useSelector((state) => state?.orders?.status);
   const memoizedOrdersData = useMemo(() => ordersData, [ordersData]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
-    if (status === "idle" ) {
+    if (isLoaded && status === "idle") {
       dispatch(fetchUserOrders());
     }
-  }, [status, dispatch]);
-
-  
+  }, [status, dispatch, isLoaded]);
 
   return (
     <div style={{ overflow: "hidden" }}>
@@ -50,7 +52,7 @@ function Orders() {
               : memoizedOrdersData?.map((order) => (
                   <Card
                     className=""
-                    key={uuidv4()} 
+                    key={uuidv4()}
                     style={{ cursor: "pointer" }}
                     onClick={() => navigate(`/view/order/${order?.orderID}`)}
                   >
@@ -111,9 +113,8 @@ function Orders() {
                               </p>
                             )}
                           </>
-
                         </div>
-                        <ChevronRight/>
+                        <ChevronRight />
                       </div>
                     </CardBody>
                   </Card>

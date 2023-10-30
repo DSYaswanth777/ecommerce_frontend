@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Footer from "../Footer/Footer";
-
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { formatCurrency } from "../../utilities/formatCurrency";
@@ -33,33 +32,38 @@ function ViewProduct() {
   const product = useSelector((state) => state.products?.product);
   const productStatus = useSelector((state) => state.products?.status);
   const recentproducts = useSelector((state) => state.products?.recentproducts);
-  const wishlist = useSelector((state) => state?.wishlist?.wishlist);
-  const status = useSelector((state) => state?.wishlist?.status);
   const [wishlistAdded, setWishlistAdded] = useState(false);
-  const isLowStock = product?.productStock < 20; // Check if product stock is less than 20
+  const isLowStock = product?.productStock < 20;
+  const [isLoaded, setIsLoaded] = useState(false);
+  const wishlistStatus = useSelector((state) => state?.wishlist?.status);
+  const wishlist = useSelector((state) => state?.wishlist?.wishlist);
 
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
   const navigate = useNavigate();
-  useEffect(() => {
-    dispatch(viewProductAsync(productId));
-  }, [dispatch, productId]);
 
   useEffect(() => {
-    dispatch(viewProductAsync(productId));
-    // Scroll to the top of the page when the component mounts
-    window.scrollTo(0, 0);
-  }, [dispatch, productId]);
-
-  useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchUserWishlistAsync());
+    if (isLoaded) {
+      window.scrollTo(0, 0);
+      dispatch(viewProductAsync(productId));
     }
-  }, [status, dispatch]);
-
+  }, [isLoaded, dispatch, productId]);
+  const isProductInWishlist = (productId) => {
+    return wishlist.some((item) => item.product._id === productId);
+  };
   useEffect(() => {
-    if (productStatus === "idle") {
+    if (isLoaded && productStatus === "idle") {
       dispatch(recentProductAsync());
     }
-  }, [status, dispatch]);
+  }, [productStatus, isLoaded, dispatch]);
+
+  useEffect(() => {
+    if (isLoaded && wishlistStatus === "idle") {
+      dispatch(fetchUserWishlistAsync());
+    }
+  }, [wishlistStatus, isLoaded, dispatch]);
+
   const handleAddCartItem = (productId) => {
     // Dispatch the delete action
     dispatch(cartAddAsync(productId))
@@ -73,36 +77,27 @@ function ViewProduct() {
       });
   };
 
-  useEffect(() => {
-    // Check if the product is in the wishlist
-    const isProductInWishlist = wishlist.some(
-      (wishlistItem) => wishlistItem.product._id === productId
-    );
-    setWishlistAdded(isProductInWishlist);
-  }, [wishlist, productId]);
-
-  const handleAddToWishlist = () => {
-    if (wishlistAdded) {
-      // If the product is already in the wishlist, remove it
-      dispatch(deleteWishlistAsync(product._id))
+  const handleAddToWishlist = (product) => {
+    const wishlistItem = wishlist.find((item) => item.product._id === product);
+    if (wishlistItem) {
+      // Product is already in the wishlist, remove it using the wishlist's _id
+      dispatch(deleteWishlistAsync(wishlistItem._id))
         .then(() => {
-          // Wishlist delete was successful
-          setWishlistAdded(false); // Update the state to indicate that the product is not in the wishlist
+          setWishlistAdded(false);
+          dispatch(fetchUserWishlistAsync());
         })
         .catch((error) => {
-          // Handle any errors, if needed
-          toast.error(error);
+          console.log(error);
         });
     } else {
-      // If the product is not in the wishlist, add it
-      dispatch(wishlistAddAsync(product._id))
+      // Product is not in the wishlist, add it using the product's _id
+      dispatch(wishlistAddAsync(product))
         .then(() => {
-          // Wishlist add was successful
-          setWishlistAdded(true); // Update the state to indicate that the product is in the wishlist
+          setWishlistAdded(true);
+          dispatch(fetchUserWishlistAsync());
         })
         .catch((error) => {
-          // Handle any errors, if needed
-          toast.error(error);
+          console.log(error);
         });
     }
   };
@@ -119,9 +114,9 @@ function ViewProduct() {
       </div>
       <div className="d-flex container flex-column flex-sm-column flex-lg-row gap-5 pt-3">
         <div className="img-carousel">
-          {productStatus === "loading" || status === "idle" ? (
+          {productStatus === "loading" || productStatus === "idle" ? (
             <Shimmer
-              key={uuidv4()} // Use uuid to generate a unique key
+              key={uuidv4()}
               visible={true}
               autoRun={true}
               width={400}
@@ -157,28 +152,30 @@ function ViewProduct() {
         <div className="img-carousel">
           <div className="fs-3 text-start d-flex gap-5 ">
             <span className="me-5 pe-5">{product?.productName}</span>
-            {status === "loading" || status === "idle" ? (
+            {wishlistStatus === "loading" || wishlistStatus === "idle" ? (
               <Spinner />
             ) : (
               <span style={{ cursor: "pointer" }}>
-                {wishlistAdded ? (
+                {isProductInWishlist(product?._id) ? (
                   <BsFillHeartFill
                     size={25}
                     className="text-danger"
-                    onClick={handleAddToWishlist}
+                    onClick={() => handleAddToWishlist(product?._id)}
                   />
                 ) : (
-                  <BsSuitHeart size={25} onClick={handleAddToWishlist} />
+                  <BsSuitHeart
+                    size={25}
+                    onClick={() => handleAddToWishlist(product?._id)}
+                  />
                 )}
               </span>
             )}
           </div>
           <p className="text-muted fs-5">{product?.subcategoryId?.name}</p>
-          
-          
-            <p>{product?.productInfo}</p>
 
-          {status === "loading" || status === "idle" ? (
+          <p>{product?.productInfo}</p>
+
+          {productStatus === "loading" || productStatus === "idle" ? (
             <Shimmer
               key={product?.productInfo}
               visible={true}
@@ -202,7 +199,7 @@ function ViewProduct() {
               Instock ({product?.productStock})
             </Badge>
           )}
-          {status === "loading" || status === "idle" ? (
+          {productStatus === "loading" || productStatus === "idle" ? (
             <Shimmer
               key={product?.productPrice}
               visible={true}
@@ -219,22 +216,20 @@ function ViewProduct() {
             </Shimmer>
           ) : (
             <>
-            
-            <p className="fs-4">{formatCurrency(product?.productPrice)}</p>
-            <div className="d-flex gap-3">
-            <Button
-              className="text-uppercase"
-              style={{ backgroundColor: "#2A798B" }}
-              onClick={() => handleAddCartItem(product._id)}
-            >
-              {" "}
-              <FaCartPlus className="me-2" />
-              Add To Cart
-            </Button>
-          </div>
+              <p className="fs-4">{formatCurrency(product?.productPrice)}</p>
+              <div className="d-flex gap-3">
+                <Button
+                  className="text-uppercase"
+                  style={{ backgroundColor: "#2A798B" }}
+                  onClick={() => handleAddCartItem(product._id)}
+                >
+                  {" "}
+                  <FaCartPlus className="me-2" />
+                  Add To Cart
+                </Button>
+              </div>
             </>
           )}
-      
         </div>
       </div>
       <Poster
@@ -242,7 +237,6 @@ function ViewProduct() {
         subtitle="Check Out these"
         products={recentproducts}
       />
-      <Footer />
     </>
   );
 }

@@ -15,6 +15,10 @@ import { fetchCategoriesAsync } from "../../redux/slice/categoriesSlice";
 function Search() {
   const [menuOpen, setMenuOpen] = useState(false);
   const productData = useSelector((state) => state.products?.sortedproducts);
+  const [isLoaded, setIsLoaded] = useState(false);
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
   const totalProducts = useSelector(
     (state) => state.products?.sortedproducts?.length
   );
@@ -39,22 +43,26 @@ function Search() {
 
   useEffect(() => {
     // Initial data fetch based on URL
-    if (!selectedSortOption && !selectedSubcategories.length) {
-      dispatch(sortproductsAsync());
-    } else {
-      if (selectedSortOption) {
-        dispatch(sortproductsAsync(selectedSortOption.value));
-      }
-      if (selectedSubcategories.length) {
-        dispatch(filterProductsAsync(selectedSubcategories));
+    if (isLoaded) {
+      if (!selectedSortOption && !selectedSubcategories.length) {
+        dispatch(sortproductsAsync());
+      } else {
+        if (selectedSortOption) {
+          dispatch(sortproductsAsync(selectedSortOption.value));
+        }
+        if (selectedSubcategories.length) {
+          dispatch(filterProductsAsync(selectedSubcategories));
+        }
       }
     }
-  }, [selectedSortOption, selectedSubcategories, dispatch]);
+  }, [isLoaded, selectedSortOption, selectedSubcategories, dispatch]);
+
   useEffect(() => {
-    if (menuOpen === true) {
+    if (isLoaded && menuOpen === true) {
       dispatch(fetchCategoriesAsync());
     }
-  }, [menuOpen, dispatch]);
+  }, [menuOpen, dispatch, isLoaded]);
+
   const sortOptions = [
     { value: "featured", label: "Featured" },
     { value: "lowtohigh", label: "Low to High" },
@@ -75,7 +83,7 @@ function Search() {
       updatedSubcategories = [...selectedSubcategories, subcategory._id];
     }
     setSelectedSubcategories(updatedSubcategories);
-  
+
     // Update URL with subcategories parameter
     setSearchParams(
       new URLSearchParams({
@@ -84,6 +92,7 @@ function Search() {
       })
     );
   };
+
   const applyFilters = () => {
     setSearchParams(
       new URLSearchParams({
@@ -100,28 +109,29 @@ function Search() {
     dispatch(sortproductsAsync());
     toggleMenu();
   };
+
   useEffect(() => {
     // When the component mounts or URL params change, update the state and fetch results
     const currentSubcategories = searchParams.get("subcategories")
       ? searchParams.get("subcategories").split(",")
       : [];
-  
+
     const currentSortOption = searchParams.get("sort");
-  
+
     setSelectedSubcategories(currentSubcategories);
     setSelectedSortOption(
       currentSortOption
         ? { value: currentSortOption, label: currentSortOption }
         : null
     );
-  
-    if (currentSubcategories.length) {
+
+    if (isLoaded && currentSubcategories.length) {
       dispatch(filterProductsAsync(currentSubcategories));
     } else {
       dispatch(sortproductsAsync(currentSortOption));
     }
-  }, [dispatch, searchParams]);
-  
+  }, [dispatch, searchParams, isLoaded]);
+
   return (
     <div>
       <div className="container pt-3">

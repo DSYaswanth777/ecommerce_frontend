@@ -15,6 +15,10 @@ const NavbarMenu = ({ isOpen, toggleMenu }) => {
   const categories = useSelector((state) => state?.categories?.categories);
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isLoaded, setIsLoaded] = useState(false);
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
   const initialSubcategories = searchParams.get("subcategories")
     ? searchParams.get("subcategories").split(",")
     : [];
@@ -41,10 +45,10 @@ const NavbarMenu = ({ isOpen, toggleMenu }) => {
   };
   const navigate = useNavigate();
   useEffect(() => {
-    if (isOpen === true) {
+    if (isLoaded && isOpen === true) {
       dispatch(fetchCategoriesAsync());
     }
-  }, [isOpen, dispatch]);
+  }, [isOpen, dispatch,isLoaded]);
 
   const toggleCategory = (categoryId) => {
     if (expandedCategory === categoryId) {
@@ -59,15 +63,17 @@ const NavbarMenu = ({ isOpen, toggleMenu }) => {
   };
   const handleSubCatClick = (subcatID) => {
     // Dispatch the action and handle the redirect
-    dispatch(filterProductsAsync(subcatID))
-      .then(() => {
-        // Redirect to the /products route after filtering is successful
-        navigate(`/products?subcategories=${subcatID}`);
-      })
-      .catch((error) => {
-        // Handle errors if needed
-        console.error("Filtering products failed:", error);
-      });
+    if (isLoaded) {
+      dispatch(filterProductsAsync(subcatID))
+        .then(() => {
+          // Redirect to the /products route after filtering is successful
+          navigate(`/products?subcategories=${subcatID}`);
+        })
+        .catch((error) => {
+          // Handle errors if needed
+          console.error("Filtering products failed:", error);
+        });
+    }
   };
   return (
     <div>
@@ -113,10 +119,11 @@ const NavbarMenu = ({ isOpen, toggleMenu }) => {
               </div>
             ))}
             <p className="bg-light border-bottom p-2">Contact Us</p>
-            <a className="text-dark ms- bg-light p-2 border-bottom "
-            onClick={handleLogout}
+            <a
+              className="text-dark ms- bg-light p-2 border-bottom "
+              onClick={handleLogout}
             >
-              Logout <LogOut className="ms-2 text-danger"/>
+              Logout <LogOut className="ms-2 text-danger" />
             </a>
           </div>
         </OffcanvasBody>

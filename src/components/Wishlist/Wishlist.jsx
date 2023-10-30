@@ -1,5 +1,4 @@
-import React from "react";
-import Header from "../Header/Header";
+import React, { useState } from "react";
 import { Card, CardBody, CardTitle, CardText, Button, Badge } from "reactstrap";
 import { formatCurrency } from "../../utilities/formatCurrency";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,17 +8,23 @@ import {
 } from "../../redux/slice/wishlistSlice";
 import { useEffect } from "react";
 import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { FaCartPlus } from "react-icons/fa";
 import "../Products/Products.scss";
 import { Trash } from "react-feather";
 import { cartAddAsync } from "../../redux/slice/cartSlice";
 import { Shimmer } from "react-shimmer";
 import { useNavigate } from "react-router";
+import "../Products/Products.scss";
 function Wishlist() {
   const status = useSelector((state) => state.wishlist?.status);
   const wishlistData = useSelector((state) => state.wishlist?.wishlist);
+  const [isLoaded, setIsLoaded] = useState(false);
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleDeleteItem = (itemId) => {
     // Dispatch the delete action
     dispatch(deleteWishlistAsync(itemId))
@@ -33,10 +38,10 @@ function Wishlist() {
       });
   };
   useEffect(() => {
-    if (status === "idle") {
+    if (isLoaded && status === "idle") {
       dispatch(fetchUserWishlistAsync());
     }
-  }, [status, dispatch]);
+  }, [status, dispatch, isLoaded]);
   return (
     <div>
       <div className=" container pt-5">
@@ -51,7 +56,7 @@ function Wishlist() {
                   height={300}
                 >
                   <Card
-                    className="slider-content"
+                    className=" "
                     style={{
                       width: "18rem",
                     }}
@@ -61,7 +66,7 @@ function Wishlist() {
             : wishlistData.map((product) => (
                 <Card
                   key={product.product._id}
-                  className="slider-content"
+                  className=" "
                   style={{ width: "18rem" }}
                 >
                   <div

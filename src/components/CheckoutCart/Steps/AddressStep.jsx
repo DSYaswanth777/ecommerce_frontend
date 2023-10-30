@@ -43,7 +43,6 @@ function AddressStep() {
     }
   };
 
-
   const fetchAddressDetails = async (pincode) => {
     try {
       const response = await fetch(`${THIRD_PARTY_API_ENDPOINT}${pincode}`);
@@ -94,22 +93,21 @@ function AddressStep() {
   const handleGooglePayClick = useCallback(async () => {
     try {
       const orderResponse = await dispatch(placeOrder(addressRef.current));
-      console.log(orderResponse)
       if (orderResponse.meta.requestStatus === "fulfilled") {
         const orderId = orderResponse.payload.orderID;
-  
         const paymentResponse = await dispatch(
           updatePaymentStatus({ orderID: orderId, paymentStatus: STATE })
         );
-  
         if (paymentResponse.meta.requestStatus === "fulfilled") {
           navigate("/");
           return { transactionState: "SUCCESS" };
         } else {
-          console.error("Error updating payment status:", paymentResponse.error);
-          // Set paymentStatus to "FAILED" when there's an error
+          console.error(
+            "Error updating payment status:",
+            paymentResponse.error
+          );
           await dispatch(
-            updatePaymentStatus({ orderID: orderId, paymentStatus: "FAILED" })
+            updatePaymentStatus({ orderID: orderId, paymentStatus: "failed" })
           );
           return { transactionState: "ERROR" };
         }
@@ -121,12 +119,12 @@ function AddressStep() {
     } catch (error) {
       console.error("An unexpected error occurred:", error);
       await dispatch(
-        updatePaymentStatus({ orderID: orderId, paymentStatus: "FAILED" })
+        updatePaymentStatus({ orderID: orderId, paymentStatus: "failed" })
       );
       return { transactionState: "ERROR" };
     }
   }, [dispatch]);
-  
+
   return (
     <div className="container py-5 d-flex flex-column flex-sm-row justify-content-between gap-5">
       <Card className="p-5 w-100">
@@ -285,7 +283,13 @@ function AddressStep() {
                 toast.error("Payment process was cancelled");
               }}
               onError={(error) => {
-                toast.error("Payment Error:", error);                                                                                   
+                toast.error("Payment Error:", error);
+                dispatch(
+                  updatePaymentStatus({
+                    orderID: orderId,
+                    paymentStatus: "failed",
+                  })
+                );
               }}
               existingPaymentMethodRequired="false"
               buttonColor="black"
