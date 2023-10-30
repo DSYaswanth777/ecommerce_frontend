@@ -149,7 +149,7 @@ export const downloadPDF = createAsyncThunk(
     const token = getState().auth.token;
     try {
       const response = await fetch(
-        `${apiEndpoint}v/api/v1/generate/shipping/address/${orderID}`,
+        `${apiEndpoint}/api/v1/generate/shipping/address/${orderID}`,
         {
           headers: {
             "Content-Type": "application/json",
