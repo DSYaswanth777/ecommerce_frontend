@@ -45,14 +45,6 @@ const Footer = () => {
               <li>
                 <p
                   className="text-dark text-decoration-underline"
-                  onClick={() => navigate("/contactus")}
-                >
-                  Contact Us
-                </p>
-              </li>
-              <li>
-                <p
-                  className="text-dark text-decoration-underline"
                   onClick={() => navigate("/store")}
                 >
                   Store

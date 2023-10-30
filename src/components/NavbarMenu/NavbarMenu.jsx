@@ -48,7 +48,7 @@ const NavbarMenu = ({ isOpen, toggleMenu }) => {
     if (isLoaded && isOpen === true) {
       dispatch(fetchCategoriesAsync());
     }
-  }, [isOpen, dispatch,isLoaded]);
+  }, [isOpen, dispatch, isLoaded]);
 
   const toggleCategory = (categoryId) => {
     if (expandedCategory === categoryId) {
@@ -84,13 +84,22 @@ const NavbarMenu = ({ isOpen, toggleMenu }) => {
         className="nav-menu"
       >
         <OffcanvasHeader toggle={toggleMenu} className="text-center bg-white">
-          <img src={Logo} width={120} alt="" />
+          <img src={Logo} width={120} alt="" onClick={() => navigate("/")} />
         </OffcanvasHeader>
         <OffcanvasBody className="nav-menu">
           <div className="d-flex flex-column justify-content-start">
-            <p className="bg-light border-bottom p-2">Home</p>
-            <p className="bg-light border-bottom p-2">About Us</p>
-
+            <p
+              className="bg-light border-bottom p-2"
+              onClick={() => navigate("/")}
+            >
+              Home
+            </p>
+            <p
+              className="bg-light border-bottom p-2"
+              onClick={() => navigate("/aboutus")}
+            >
+              About Us
+            </p>
             {categories?.map((category) => (
               <div key={category._id}>
                 <p
@@ -117,8 +126,7 @@ const NavbarMenu = ({ isOpen, toggleMenu }) => {
                   </div>
                 )}
               </div>
-            ))}
-            <p className="bg-light border-bottom p-2">Contact Us</p>
+            ))}{" "}
             <a
               className="text-dark ms- bg-light p-2 border-bottom "
               onClick={handleLogout}
