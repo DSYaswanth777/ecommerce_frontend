@@ -16,9 +16,6 @@ const Login = () => {
   const isLoading = useSelector((state) => state.auth.isLoading);
   const user = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  const openSigUpModal = () => {
-    setSignupModalOpen(true);
-  };
   const {
     handleSubmit,
     control,
@@ -66,7 +63,7 @@ const Login = () => {
                       className="form-label fw-medium"
                       htmlFor="login-email"
                     >
-                      Email
+                      Email/Mobile Number
                     </Label>
                     <Controller
                       name="email"

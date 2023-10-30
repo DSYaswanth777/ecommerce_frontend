@@ -227,6 +227,42 @@ const authSlice = createSlice({
       })
       .addCase(loginAsync.rejected, (state) => {
         state.isLoading = false;
+      })
+      .addCase(signupAsync.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(signupAsync.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(signupAsync.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(forgotPasswordAsync.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(forgotPasswordAsync.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(forgotPasswordAsync.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(resetPasswordAsync.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(resetPasswordAsync.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(resetPasswordAsync.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(verifyOtpAsync.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(verifyOtpAsync.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(verifyOtpAsync.rejected, (state) => {
+        state.isLoading = false;
       });
   },
 });
