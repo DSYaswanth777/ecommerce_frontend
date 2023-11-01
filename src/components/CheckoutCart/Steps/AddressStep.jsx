@@ -10,6 +10,7 @@ import {
 import toast from "react-hot-toast";
 const THIRD_PARTY_API_ENDPOINT = import.meta.env
   .VITE_REACT_THIRD_PARTY_API_ENDPOINT;
+const RAZORPAY_KEY = import.meta.env.VITE_YOUR_RAZORPAY_KEY_ID;
 function AddressStep() {
   const [address, setAddress] = useState({
     fullName: "",
@@ -93,7 +94,7 @@ function AddressStep() {
         const orderData = order.payload.order; // This should contain the necessary data for Razorpay
         const options = {
           // Create options for Razorpay payment
-          key: "rzp_test_wywb8ONB6LP3HN",
+          key: RAZORPAY_KEY,
           amount: orderData.totalAmount * 100, // Amount in paise
           currency: "INR",
           name: "GSR Handlooms",

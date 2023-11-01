@@ -28,7 +28,7 @@ export const placeOrder = createAsyncThunk(
     try {
       const token = getState().auth.token;
 
-      const response = await fetch(`http://localhost:3000/api/v1/place/order`, {
+      const response = await fetch(`${apiEndpoint}/api/v1/place/order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,7 +62,6 @@ export const updatePaymentStatus = createAsyncThunk(
   async (
     {
       orderID,
-      paymentStatus,
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
@@ -73,7 +72,7 @@ export const updatePaymentStatus = createAsyncThunk(
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/verify/payment`,
+        `${apiEndpoint}/api/v1/verify/payment`,
         {
           method: "PUT",
           headers: {
