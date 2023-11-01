@@ -1,5 +1,3 @@
-// orderSlice.js
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 const apiEndpoint = import.meta.env.VITE_REACT_APP_API_ENDPOINT;
@@ -30,7 +28,7 @@ export const placeOrder = createAsyncThunk(
     try {
       const token = getState().auth.token;
 
-      const response = await fetch(`${apiEndpoint}/api/v1/place/order`, {
+      const response = await fetch(`http://localhost:3000/api/v1/place/order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +40,7 @@ export const placeOrder = createAsyncThunk(
       if (response.status === 200 || response.status === 201) {
         const data = await response.json();
         toast.success(data.message);
-        return data;
+        return data; // Return the data for payment
       } else if (response.status === 400 || response.status === 404) {
         const data = await response.json();
         // Display an error toast notification
@@ -61,12 +59,21 @@ export const placeOrder = createAsyncThunk(
 
 export const updatePaymentStatus = createAsyncThunk(
   "orders/updatePaymentStatus",
-  async ({ orderID, paymentStatus }, { getState, rejectWithValue }) => {
+  async (
+    {
+      orderID,
+      paymentStatus,
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+    },
+    { getState, rejectWithValue }
+  ) => {
     const token = getState().auth.token;
 
     try {
       const response = await fetch(
-        `${apiEndpoint}/api/v1/verify/payment`,
+        `http://localhost:3000/api/v1/verify/payment`,
         {
           method: "PUT",
           headers: {
@@ -75,7 +82,9 @@ export const updatePaymentStatus = createAsyncThunk(
           },
           body: JSON.stringify({
             orderID,
-            paymentStatus,
+            razorpay_order_id,
+            razorpay_payment_id,
+            razorpay_signature,
           }),
         }
       );
@@ -110,10 +119,7 @@ export const fetchUserOrders = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await fetch(
-        `${apiEndpoint}/api/v1/user/orders`,
-        config
-      );
+      const response = await fetch(`${apiEndpoint}/api/v1/user/orders`, config);
       const data = await response.json();
       return data;
     } catch (error) {
@@ -242,7 +248,7 @@ export const fetchorderByDate = createAsyncThunk(
 );
 export const viewOrderAsync = createAsyncThunk(
   "orders/vieworder",
-  async (orderID,{getState}) => {
+  async (orderID, { getState }) => {
     const token = getState().auth.token;
 
     try {
@@ -274,7 +280,7 @@ const orderSlice = createSlice({
   initialState: {
     orders: null,
     status: "idle",
-    order:null
+    order: null,
   },
   reducers: {},
   extraReducers: (builder) => {

@@ -1,19 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, Input, InputGroup, Label } from "reactstrap";
+import { Button, Card, Input, InputGroup, Label } from "reactstrap";
+import { useRef } from "react";
+import { useNavigate } from "react-router";
 import {
   placeOrder,
   updatePaymentStatus,
 } from "../../../redux/slice/orderSlice";
-import GooglePayButton from "@google-pay/button-react";
-import { useRef, useCallback } from "react";
-import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 const THIRD_PARTY_API_ENDPOINT = import.meta.env
   .VITE_REACT_THIRD_PARTY_API_ENDPOINT;
-const STATE = import.meta.env.VITE_STATE;
 function AddressStep() {
-  const cartData = useSelector((state) => state?.cart?.cart);
   const [address, setAddress] = useState({
     fullName: "",
     mobileNumber: "",
@@ -89,42 +86,64 @@ function AddressStep() {
     setAvailableOptions([]);
     setSelectedOption("");
   };
-
-  const handleGooglePayClick = useCallback(async () => {
+  const handleProceedToPayment = async () => {
     try {
-      const orderResponse = await dispatch(placeOrder(addressRef.current));
-      if (orderResponse.meta.requestStatus === "fulfilled") {
-        const orderId = orderResponse.payload.orderID;
-        const paymentResponse = await dispatch(
-          updatePaymentStatus({ orderID: orderId, paymentStatus: STATE })
-        );
-        if (paymentResponse.meta.requestStatus === "fulfilled") {
-          navigate("/");
-          return { transactionState: "SUCCESS" };
-        } else {
-          console.error(
-            "Error updating payment status:",
-            paymentResponse.error
-          );
-          await dispatch(
-            updatePaymentStatus({ orderID: orderId, paymentStatus: "failed" })
-          );
-          return { transactionState: "ERROR" };
-        }
+      const order = await dispatch(placeOrder(address));
+      if (order.payload) {
+        const orderData = order.payload.order; // This should contain the necessary data for Razorpay
+        const options = {
+          // Create options for Razorpay payment
+          key: "rzp_test_wywb8ONB6LP3HN",
+          amount: orderData.totalAmount * 100, // Amount in paise
+          currency: "INR",
+          name: "GSR Handlooms",
+          description: "Payment for your order",
+          order_id: orderData.razorpayOrderID,
+          modal: {
+            ondismiss: function () {
+              toast.error("Payment was failed");
+              navigate("/orders");
+            },
+          },
+          handler: async (response) => {
+            try {
+              const updatedStatus = await dispatch(
+                updatePaymentStatus({
+                  orderID: orderData.orderID,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                })
+              );
+              if (updatedStatus.meta.requestStatus === "fulfilled") {
+                // Payment successful, you can navigate to a success page
+                navigate("/");
+              } else {
+                // Payment status update failed, handle it as needed
+                console.error("Payment status update failed");
+                navigate("/orders");
+              }
+            } catch (error) {
+              console.error("Error updating payment status:", error);
+              navigate("/orders");
+            }
+          },
+        };
+
+        // Create a new Razorpay instance and open the payment modal
+        const rzp = new Razorpay(options);
+        rzp.open();
       } else {
-        navigate("/checkout");
-        console.error("Error creating the order:", orderResponse.error);
-        return { transactionState: "ERROR" };
+        // Handle the error in placing the order
+        navigate("/orders");
+        console.error("Error placing the order");
+        // You can display an error message to the user
       }
     } catch (error) {
-      console.error("An unexpected error occurred:", error);
-      await dispatch(
-        updatePaymentStatus({ orderID: orderId, paymentStatus: "failed" })
-      );
-      return { transactionState: "ERROR" };
+      console.error("Error placing the order:", error);
+      navigate("/orders");
     }
-  }, [dispatch]);
-
+  };
   return (
     <div className="container py-5 d-flex flex-column flex-sm-row justify-content-between gap-5">
       <Card className="p-5 w-100">
@@ -233,68 +252,10 @@ function AddressStep() {
             </InputGroup>
           </div>
           <div className=" pt-3 d-flex flex-column ">
-            <GooglePayButton
-              environment="TEST"
-              paymentRequest={{
-                apiVersion: 2,
-                apiVersionMinor: 0,
-                allowedPaymentMethods: [
-                  {
-                    type: "CARD",
-                    parameters: {
-                      allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
-                      allowedCardNetworks: ["MASTERCARD", "VISA"],
-                    },
-                    tokenizationSpecification: {
-                      type: "PAYMENT_GATEWAY",
-                      parameters: {
-                        gateway: "example",
-                        gatewayMerchantId: "exampleGatewayMerchantId",
-                      },
-                    },
-                  },
-                ],
-                merchantInfo: {
-                  merchantId: "12345678901234567890",
-                  merchantName: "Demo Merchant",
-                },
-                transactionInfo: {
-                  totalPriceStatus: "FINAL",
-                  totalPriceLabel: "Total",
-                  totalPrice: cartData?.totalFee.toString(),
-                  currencyCode: "INR",
-                  countryCode: "US",
-                },
-                shippingAddressRequired: true,
-                callbackIntents: ["SHIPPING_ADDRESS", "PAYMENT_AUTHORIZATION"],
-              }}
-              onPaymentDataChanged={() => {
-                return {
-                  newShippingOptionParameters: {},
-                  newTransactionInfo: {
-                    totalPriceStatus: "FINAL",
-                    totalPrice: cartData.totalFee.toString(),
-                    currencyCode: "INR",
-                  },
-                };
-              }}
-              onPaymentAuthorized={handleGooglePayClick}
-              onCancel={() => {
-                toast.error("Payment process was cancelled");
-              }}
-              onError={(error) => {
-                toast.error("Payment Error:", error);
-                dispatch(
-                  updatePaymentStatus({
-                    orderID: orderId,
-                    paymentStatus: "failed",
-                  })
-                );
-              }}
-              existingPaymentMethodRequired="false"
-              buttonColor="black"
-              buttonType="Buy"
-            />
+            <Button onClick={handleProceedToPayment}>
+              {" "}
+              Proceed to Payment
+            </Button>
           </div>
         </div>
       </Card>
