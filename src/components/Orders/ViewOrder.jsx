@@ -104,7 +104,7 @@ function ViewOrder() {
               <h5>Total: &nbsp;{formatCurrency(orderData?.totalAmount)}/-</h5>
             )}
             <p className="text-mark text-danger text-sm">
-              * Includes Standard Delivery Charges ₹50/-
+              * Includes Standard Delivery Charges
             </p>
           </div>
         </div>
