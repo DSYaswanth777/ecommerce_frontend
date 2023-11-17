@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "react-feather";
 import { Badge } from "reactstrap";
 import { Spinner } from "react-bootstrap";
+import NoData from "../../NoData/NoData";
 
 function Customers() {
   const customersData = useSelector((state) => state.customers?.customers);
@@ -55,6 +56,8 @@ function Customers() {
           fixedHeader
           pointerOnHover
           paginationPerPage={10}
+        noDataComponent={<NoData/>}
+
         />
       )}
     </div>

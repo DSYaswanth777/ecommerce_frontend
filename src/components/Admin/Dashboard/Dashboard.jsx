@@ -6,8 +6,6 @@ import Categories from "./Categories"
 import Orders from "./Orders"
 import Customers from "./Customers"
 import Coupons from "./Coupons";
-
-// Separate components for each section
 function ProductsSection() {
   return <Products/>
 }

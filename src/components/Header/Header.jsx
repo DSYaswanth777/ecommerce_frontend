@@ -17,6 +17,7 @@ import debounce from "lodash.debounce";
 import { useNavigate } from "react-router";
 import { Button } from "react-bootstrap";
 import SearchResults from "./SearchResults";
+import Navbar from "../Navbar/Navbar";
 
 const Header = () => {
   const user = useSelector((state) => state.auth);
@@ -78,7 +79,7 @@ const Header = () => {
   };
 
   return (
-    <div className="header  bg-white sticky-top border-bottom ">
+    <div className="header  bg-white sticky-top border-bottom border-1  ">
       <div className="container">
         <div className="d-flex justify-content-between align-items-center">
           <h2 className="d-flex gap-3 justify-content-center align-items-center">
@@ -140,6 +141,7 @@ const Header = () => {
             </div>
           </div>
         </div>
+        {!isSearchContainerVisible && <Navbar />}
       </div>
       {isSearchContainerVisible && (
         <SearchResults

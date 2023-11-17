@@ -10,13 +10,15 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import AddProduct from "./AddProduct";
-import { Button, Input, InputGroup, InputGroupText } from "reactstrap";
+import { Button, Input, InputGroup, InputGroupText, Spinner } from "reactstrap";
 import { BsSearch } from "react-icons/bs";
 import Logo from "../../../assets/icons/brand_logo.svg";
-import debounce from "lodash.debounce"; 
+import debounce from "lodash.debounce";
 import { Loader } from "react-feather";
 import { formatCurrency } from "../../../utilities/formatCurrency";
 import { useNavigate } from "react-router";
+import NoData from "../../NoData/NoData";
+import FallBackLoader from "../../FallBackLoader/FallBackLoader";
 
 function Products() {
   const dispatch = useDispatch();
@@ -26,7 +28,7 @@ function Products() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-const navigate = useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
@@ -42,8 +44,8 @@ const navigate = useNavigate()
     if (debouncedSearchQuery) {
       debouncedHandleSearch();
     }
-  }, [debouncedSearchQuery]) 
-  
+  }, [debouncedSearchQuery]);
+
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
       confirmButton: "btn btn-success me-5",
@@ -95,7 +97,7 @@ const navigate = useNavigate()
       name: "Product Name",
       selector: (row) => row.productName,
       sortable: true,
-      maxWidth: "220px"
+      maxWidth: "220px",
     },
     {
       name: "Product Image",
@@ -106,35 +108,30 @@ const navigate = useNavigate()
           style={{ width: "50px", height: "50px" }}
         />
       ),
-      maxWidth: "120px"
-
+      maxWidth: "120px",
     },
     {
       name: "Price",
-      selector: (row) =>(formatCurrency(row.productPrice)) ,
+      selector: (row) => formatCurrency(row.productPrice),
       sortable: true,
-      maxWidth: "80px"
-
+      maxWidth: "80px",
     },
     {
       name: "Product Info",
       selector: (row) => row.productInfo,
-      maxWidth: "280px"
-
+      maxWidth: "280px",
     },
     {
       name: "Subcategory",
       selector: (row) => row.subcategoryId.name,
       sortable: true,
-      maxWidth: "180px"
-
+      maxWidth: "180px",
     },
     {
       name: "Stock",
       selector: (row) => row.productStock,
       sortable: true,
-      maxWidth: "50px"
-
+      maxWidth: "50px",
     },
     {
       name: "Edit",
@@ -143,8 +140,7 @@ const navigate = useNavigate()
           <FaEdit size={18} onClick={() => handleEditClick(row)} />
         </div>
       ),
-      maxWidth: "50px"
-
+      maxWidth: "50px",
     },
     {
       name: "Delete",
@@ -153,8 +149,7 @@ const navigate = useNavigate()
           <FaTrash size={18} onClick={() => handleDelete(row)} />
         </div>
       ),
-      maxWidth: "50px"
-
+      maxWidth: "50px",
     },
   ];
   return (
@@ -173,7 +168,6 @@ const navigate = useNavigate()
               setSearchQuery(e.target.value);
               setDebouncedSearchQuery(e.target.value);
             }}
-
             onClick={(e) => e.stopPropagation()}
           />
           <InputGroupText className="p-2 input-tex">
@@ -184,7 +178,11 @@ const navigate = useNavigate()
           Add New Product
         </Button>
       </div>
-      {status === "loading" && <Loader>Loading...</Loader>}
+      {status === "loading" && (
+        <div className="d-flex justify-content-center">
+          <FallBackLoader />
+        </div>
+      )}
       {status === "failed" && <Loader>Error: Unable to fetch products.</Loader>}
       {status === "succeeded" && (
         <DataTable
@@ -195,8 +193,9 @@ const navigate = useNavigate()
           fixedHeader
           pointerOnHover
           paginationPerPage={10}
+          noDataComponent={<NoData />}
           paginationPerPageOptions={[10, 20, 30]}
-          onRowClicked={(row)=>navigate(`/products/viewproduct/${row._id}`)}
+          onRowClicked={(row) => navigate(`/products/viewproduct/${row._id}`)}
         />
       )}
 
@@ -205,7 +204,6 @@ const navigate = useNavigate()
         toggle={toggleModal}
         isEditing={!!selectedProduct}
         productData={selectedProduct}
-        
       />
     </div>
   );

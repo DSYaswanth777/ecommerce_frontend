@@ -9,9 +9,15 @@ import AddCategory from "./AddCategory";
 import { Badge, Button, Input, InputGroup, InputGroupText } from "reactstrap";
 import { BsSearch } from "react-icons/bs";
 import Logo from "../../../assets/icons/brand_logo.svg";
-import debounce from "lodash.debounce"; 
+import debounce from "lodash.debounce";
 import { Loader } from "react-feather";
-import { deleteCategoryAsync, fetchCategoriesAsync, searchCategoriesAsync } from "../../../redux/slice/categoriesSlice";
+import {
+  deleteCategoryAsync,
+  fetchCategoriesAsync,
+  searchCategoriesAsync,
+} from "../../../redux/slice/categoriesSlice";
+import NoData from "../../NoData/NoData";
+import FallBackLoader from "../../FallBackLoader/FallBackLoader";
 
 function Categories() {
   const dispatch = useDispatch();
@@ -36,8 +42,7 @@ function Categories() {
     if (debouncedSearchQuery) {
       debouncedHandleSearch();
     }
-  }, [debouncedSearchQuery]) 
-
+  }, [debouncedSearchQuery]);
 
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
@@ -47,7 +52,7 @@ function Categories() {
     buttonsStyling: false,
   });
   const openAddModal = () => {
-    setselectedCategory(null); 
+    setselectedCategory(null);
     setModalOpen(true);
   };
   const handleDelete = (row) => {
@@ -96,7 +101,11 @@ function Categories() {
       cell: (row) => (
         <div>
           {row?.subcategories?.map((subcategory) => (
-            <Badge  key={subcategory._id} color="primary" className="me-2 mb-2 mt-1 text-center">
+            <Badge
+              key={subcategory._id}
+              color="primary"
+              className="me-2 mb-2 mt-1 text-center"
+            >
               {subcategory.name}
             </Badge>
           ))}
@@ -136,7 +145,6 @@ function Categories() {
               setSearchQuery(e.target.value);
               setDebouncedSearchQuery(e.target.value);
             }}
-
             onClick={(e) => e.stopPropagation()}
           />
           <InputGroupText className="p-2 input-tex">
@@ -147,8 +155,14 @@ function Categories() {
           Add New Category
         </Button>
       </div>
-      {status === "loading" && <Loader>Loading...</Loader>}
-      {status === "failed" && <Loader>Error: Unable to fetch categories.</Loader>}
+      {status === "loading" && (
+        <div className="d-flex justify-content-center">
+          <FallBackLoader />
+        </div>
+      )}
+      {status === "failed" && (
+          <FallBackLoader />
+          )}
       {status === "succeeded" && (
         <DataTable
           title="Categories List"
@@ -158,6 +172,7 @@ function Categories() {
           fixedHeader
           pointerOnHover
           paginationPerPage={10}
+          noDataComponent={<NoData />}
           paginationPerPageOptions={[10, 20, 30]}
         />
       )}
@@ -165,7 +180,7 @@ function Categories() {
       <AddCategory
         isOpen={isModalOpen}
         toggle={toggleModal}
-        isEditing={!!selectedCategory} 
+        isEditing={!!selectedCategory}
         categoriesData={selectedCategory}
       />
     </div>

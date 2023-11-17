@@ -1,0 +1,5 @@
+.navbar-container{
+    @media screen and (max-device-width: 480px) and (orientation: portrait) {
+        display: none;
+      }
+}

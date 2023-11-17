@@ -16,6 +16,7 @@ import { Input, InputGroup, InputGroupText } from "reactstrap";
 import debounce from "lodash.debounce";
 import { useNavigate } from "react-router";
 import { formatDateForInput } from "../../../utilities/FormatInputDate";
+import NoData from "../../NoData/NoData";
 
 
 function Orders() {
@@ -130,6 +131,7 @@ function Orders() {
         pointerOnHover
         onRowClicked={(row)=>navigate(`/view/order/${row.orderID}`)}
         paginationPerPage={10}
+        noDataComponent={<NoData/>}
       />
     </div>
   );

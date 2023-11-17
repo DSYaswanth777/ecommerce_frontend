@@ -16,16 +16,17 @@ import {
 } from "../../../redux/slice/couponSlice";
 import AddCoupon from "./AddCoupon";
 import { formatDateForInput } from "../../../utilities/FormatInputDate";
+import NoData from "../../NoData/NoData";
 function Coupons() {
   const dispatch = useDispatch();
   const couponData = useSelector((state) => state.coupons?.coupons);
-  
+
   const status = useSelector((state) => state.coupons?.status);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedCoupon, setselectedCoupon] = useState(null);
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchCoupons());
@@ -34,7 +35,7 @@ function Coupons() {
   const debouncedHandleSearch = debounce(() => {
     // Dispatch the searchCouponsAsync action with the debounced search query
     dispatch(searchCouponAsync(debouncedSearchQuery));
-  }, 300); 
+  }, 300);
 
   useEffect(() => {
     // Only perform the search when debouncedSearchQuery changes
@@ -50,7 +51,7 @@ function Coupons() {
     buttonsStyling: false,
   });
   const openAddModal = () => {
-    setselectedCoupon(null); 
+    setselectedCoupon(null);
     setModalOpen(true);
   };
   const handleDelete = (row) => {
@@ -164,6 +165,7 @@ function Coupons() {
           pointerOnHover
           paginationPerPage={10}
           paginationPerPageOptions={[10, 20, 30]}
+          noDataComponent={<NoData />}
         />
       )}
 
