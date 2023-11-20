@@ -1,16 +1,12 @@
-
-import { format } from "date-fns";
-
 export const formatDateForInput = (isoDate) => {
-  if (!isoDate) {
-    return ""; // Handle empty date
-  }
-
   const date = new Date(isoDate);
+  const formattedDate = date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-  if (isNaN(date.getTime())) {
-    return ""; // Handle invalid date
-  }
-
-  return format(date, "dd-MM-yyyy HH:mm:ss a");
+  return formattedDate;
 };

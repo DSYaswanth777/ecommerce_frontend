@@ -29,9 +29,6 @@ export const profileEditAsync = createAsyncThunk(
     async (profileItemId, { getState }) => {
       const token = getState().auth.token;
       try {
-        // Create an object with the productId key
-
-  
         // Make the API call using fetch or axios
         const response = await fetch(
           `${apiEndpoint}/api/v1/profile/update`,
@@ -59,7 +56,36 @@ export const profileEditAsync = createAsyncThunk(
     }
   );
 
+export const changePasswordAsync = createAsyncThunk(
+  "profile/changePassword",
+  async (profileItemId, { getState }) => {
+    const token = getState().auth.token;
+    try {
+      const response = await fetch(
+        `${apiEndpoint}/api/v1/change-password`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(profileItemId), // Send the requestData object as JSON
+        }
+      );
+        if(response.ok){
+          toast.success("Password Changed successfully")
+        }
+      if (!response.ok) {
+        toast.error("Error saving the changes")
+      }
 
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+)
 //**  Create a slice for profile*/
 const profileSlice = createSlice({
   name: "profile",

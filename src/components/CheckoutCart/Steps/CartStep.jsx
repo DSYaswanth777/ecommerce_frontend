@@ -14,18 +14,31 @@ import { useNavigate } from "react-router";
 import "../CheckOutCard.scss";
 import FallBackLoader from "../../FallBackLoader/FallBackLoader";
 import { BsCartX } from "react-icons/bs";
+import { applyCoupon, removeCoupon } from "../../../redux/slice/couponSlice";
+import { IoMdClose } from "react-icons/io";
 
 function CartStep() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const status = useSelector((state) => state.cart?.status);
-  const [isLoaded, setIsLoaded] = useState(false);
   const cartData = useSelector((state) => state.cart?.cart?.cartItems);
+  const actualPrice = useSelector((state) => state.cart?.cart?.actualPrice);
+
   const totalfee = useSelector((state) => state.cart?.cart?.totalFee);
+  const couponInfo = useSelector((state) => state?.cart?.cart?.appliedCoupon);
+  const [couponCode, setCouponCode] = useState(couponInfo?.code || "");
+
   const deliveryCharge = useSelector(
     (state) => state.cart?.cart?.deliveryCharge
   );
- 
+  const handleApplyCouponCode = async () => {
+    await dispatch(applyCoupon({ couponCode: couponCode }));
+    dispatch(fetchUsercartAsync());
+  };
+  const handleRemoveCouponCode = async () => {
+    await dispatch(removeCoupon({ couponCode: couponCode }));
+    dispatch(fetchUsercartAsync());
+  };
   const handleQuantityIncrease = async (productId) => {
     await dispatch(cartQuantityIncreaseAsync(productId));
     dispatch(fetchUsercartAsync());
@@ -40,11 +53,12 @@ function CartStep() {
   };
   useEffect(() => {
     // if (isLoaded) {
-      window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
 
-      dispatch(fetchUsercartAsync());
+    dispatch(fetchUsercartAsync());
     // }
   }, []);
+
   return (
     <>
       {status === "loading" || status === "idle" ? (
@@ -81,6 +95,7 @@ function CartStep() {
                   <Card
                     className=" border shadow-sm p-3  w-100"
                     key={product._id}
+                    style={{ cursor: "pointer" }}
                   >
                     <CardBody>
                       <div className="d-flex justify-content-between flex-column flex-sm-row gap-5 align-items-center">
@@ -89,12 +104,16 @@ function CartStep() {
                           alt=""
                           width={150}
                           height={150}
+                          onClick={() =>
+                            navigate(
+                              `/products/viewproduct/${product?.product?._id}`
+                            )
+                          }
                         />
                         <div className="d-flex flex-column justify-content-center align-items-center gap-4">
                           <div className="productName text-center">
                             {product.product.productName}
                           </div>
-                          <p>{product.product.subcategoryId}</p>
                           <h5>
                             <Badge color="success">
                               InStock {product.product.productStock}
@@ -153,22 +172,64 @@ function CartStep() {
               <CardBody className="totalCard">
                 <div className="d-flex flex-column gap-2">
                   <h6 className="fw-bold pt-2">Price Details</h6>
-                  <div className="d-flex justify-content-between gap-5  align-items-center">
-                    <div>Total </div>
-                    <div className="">
-                      {formatCurrency(totalfee - deliveryCharge)}
-                    </div>
+                  <div className="d-flex justify-content-between gap-5 align-items-center">
+                    <div>Price</div>
+                    
+                      <div className="">
+                        {formatCurrency(actualPrice)}
+                      </div>
+                    
+                  </div>
+                  <div className="d-flex justify-content-between gap-5 align-items-center">
+                    <div>Coupon Discount</div>
+                    {couponInfo ? (
+                      <div className="">
+                        {formatCurrency(couponInfo?.discountAmount)}
+                      </div>
+                    ) : (
+                      <div className="">{formatCurrency("0")}</div>
+                    )}
                   </div>
                   <div className="d-flex justify-content-between gap-5 align-items-center">
                     <div>Delivery Charges</div>
                     <div className="">{formatCurrency(deliveryCharge)}</div>
                   </div>
+                  <hr/>
+                  <div className="d-flex justify-content-between">
+                    <p>Coupon</p>
+                    <u
+                      className=""
+                      style={{ cursor: "pointer" }}
+                      onClick={handleApplyCouponCode}
+                    >
+                      Apply
+                    </u>
+                  </div>
+                  {couponInfo ? (
+                    <div className="d-flex bg-primary w-50 justify-content-between  align-items-center shadow-sm bg-light border border-dark p-1">
+                      <small className="fw-bold">{couponInfo?.code}</small>
+                      <IoMdClose
+                        size={20}
+                        style={{ cursor: "pointer" }}
+                        onClick={handleRemoveCouponCode}
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  <Input
+                    type="text"
+                    name="couponCode"
+                    className="border border-dark"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                  />
                   <hr />
                   <div className="d-flex flex-column gap-3">
-                    <div className="d-flex justify-content-between align-items-center">
+                    <div className="d-flex justify-content-between align-items-center border border-dark p-2 shadow-sm">
                       <div>
                         Total <br />
-                        (*Includes Delivery fee)
                       </div>
                       <div className="">{formatCurrency(totalfee)}</div>
                     </div>

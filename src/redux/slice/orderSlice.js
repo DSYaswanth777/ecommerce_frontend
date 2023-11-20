@@ -56,16 +56,10 @@ export const placeOrder = createAsyncThunk(
     }
   }
 );
-
 export const updatePaymentStatus = createAsyncThunk(
   "orders/updatePaymentStatus",
   async (
-    {
-      orderID,
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-    },
+    { orderID, razorpay_order_id, razorpay_payment_id, razorpay_signature },
     { getState, rejectWithValue }
   ) => {
     const token = getState().auth.token;
@@ -106,7 +100,6 @@ export const updatePaymentStatus = createAsyncThunk(
     }
   }
 );
-
 export const fetchUserOrders = createAsyncThunk(
   "orders/fetchuserorders",
   async (_, { getState }) => {
@@ -270,6 +263,46 @@ export const viewOrderAsync = createAsyncThunk(
       return data;
     } catch (error) {
       throw error;
+    }
+  }
+);
+export const editOrderAsync = createAsyncThunk(
+  "orders/editOrder",
+  async (
+    editorderData,
+
+    { getState, rejectWithValue }
+  ) => {
+    console.log(editorderData,"dsadsasad")
+    const token = getState().auth.token;
+    try {
+      const response = await fetch(
+        `${apiEndpoint}/api/v1/admin/orders/${orderID}/edit`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(editorderData),
+        }
+      );
+
+      if (response.status === 200) {
+        const data = await response.json();
+        return data;
+      } else if (response.status === 400 || response.status === 404) {
+        const data = await response.json();
+        // Display an error toast notification
+        toast.error(data.errorMessage, { duration: 4000 });
+        return rejectWithValue(data);
+      } else {
+        throw new Error("Failed to edit the order");
+      }
+    } catch (error) {
+      // Display an error toast notification for network errors
+      // toast.error("Network error. Please try again.", { duration: 4000 });
+      return rejectWithValue(error.message);
     }
   }
 );

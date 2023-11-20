@@ -9,7 +9,6 @@ import NoData from "../../NoData/NoData";
 
 function Customers() {
   const customersData = useSelector((state) => state.customers?.customers);
-  console.log(customersData);
   const status = useSelector((state) => state.customers?.status);
   const dispatch = useDispatch();
   useEffect(() => {

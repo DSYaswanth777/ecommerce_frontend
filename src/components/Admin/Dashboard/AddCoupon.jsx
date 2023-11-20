@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { Form, Input, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addCouponAsync,
   editCouponAsync,
   fetchCoupons,
 } from "../../../redux/slice/couponSlice";
-import { formatDateForInput } from "../../../utilities/FormatInputDate";
+import moment from "moment-timezone";
+import { fetchCustomers } from "../../../redux/slice/customerSlice";
 
 function AddCoupon({ isOpen, toggle, isEditing, couponData }) {
   const [formData, setFormData] = useState({
@@ -15,42 +16,65 @@ function AddCoupon({ isOpen, toggle, isEditing, couponData }) {
     discountedAmount: "",
     maxUses: "",
     expirationDate: "",
+    forSpecificUser: false, // New field for checkbox
+    targetUsers: [], // New field for dropdown
   });
   const [isUploading, setIsUploading] = useState(false);
+  const customersData = useSelector((state) => state.customers?.customers);
+  const status = useSelector((state) => state.customers?.status);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchCustomers());
+    }
+  }, [status, dispatch]);
 
   useEffect(() => {
     dispatch(fetchCoupons());
     if (isEditing && couponData) {
-      // Initialize the form data with the product information when in edit mode
       setFormData({
         code: couponData.code,
         discountedAmount: couponData.discountedAmount,
         maxUses: couponData.maxUses,
-        expirationDate: couponData.expirationDate,
+        expirationDate: moment(couponData.expirationDate)
+          .tz("Asia/Kolkata")
+          .format("YYYY-MM-DDTHH:mm"),
+          
       });
     }
-    // setselectedCouponId(couponData.id)
   }, [dispatch, isEditing, couponData]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked, options } = e.target;
 
-    setFormData({ ...formData, [name]: value });
+    if (type === "checkbox") {
+      setFormData({ ...formData, [name]: checked });
+    } else if (type === "select-multiple") {
+      const selectedOptions = Array.from(options)
+        .filter((option) => option.selected)
+        .map((option) => option.value);
+
+      setFormData({ ...formData, [name]: selectedOptions });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsUploading(true);
-
+  
     const addCouponData = {
-        code: formData.code,
-        discountedAmount: formData.discountedAmount,
-        maxUses: formData.maxUses,
-        expirationDate: formData.expirationDate,
-      };
-   
+      code: formData.code,
+      discountedAmount: formData.discountedAmount,
+      maxUses: formData.maxUses,
+      expirationDate: moment(formData.expirationDate)
+        .tz("Asia/Kolkata")
+        .toISOString(),
+      forSpecificUser: formData.forSpecificUser,
+      targetUsers: formData.targetUsers, // Send only _id values
+    };
     try {
       if (isEditing) {
         const editCouponData = {
@@ -58,19 +82,16 @@ function AddCoupon({ isOpen, toggle, isEditing, couponData }) {
           discountedAmount: formData.discountedAmount,
           maxUses: formData.maxUses,
           expirationDate: formData.expirationDate,
+          forSpecificUser: formData.forSpecificUser,
+          targetUsers: formData.targetUsers, // Send only _id values
         };
-     
+  
         const couponId = couponData._id;
-
+  
         await dispatch(editCouponAsync({ id: couponId, ...editCouponData }));
         dispatch(fetchCoupons());
         toggle();
-
-        if (!response.ok) {
-          throw new Error("Failed to edit the coupon");
-        }
       } else {
-        // Use AddCouponAsync action for adding
         await dispatch(addCouponAsync(addCouponData));
       }
       toggle();
@@ -81,10 +102,11 @@ function AddCoupon({ isOpen, toggle, isEditing, couponData }) {
       setIsUploading(false);
     }
   };
-
+  
+  
   return (
-    <div>
-      <Modal isOpen={isOpen} toggle={toggle}>
+    <div className="w-100">
+      <Modal isOpen={isOpen} toggle={toggle} className="w-100" >
         <ModalHeader toggle={toggle}>
           {isEditing ? "Edit Coupon" : "Add New Coupon"}
         </ModalHeader>
@@ -93,9 +115,9 @@ function AddCoupon({ isOpen, toggle, isEditing, couponData }) {
             <div className="text-center">
               <Spinner color="primary" />
               {isEditing ? (
-                <p> Please Wait...</p>
+                <p>Please Wait...</p>
               ) : (
-                <p>Please while adding your Coupon..</p>
+                <p>Please wait while adding your Coupon..</p>
               )}
             </div>
           ) : (
@@ -117,6 +139,7 @@ function AddCoupon({ isOpen, toggle, isEditing, couponData }) {
                 onChange={handleInputChange}
                 required
               />
+
               <Label>Max Usage</Label>
               <Input
                 type="number"
@@ -124,14 +147,47 @@ function AddCoupon({ isOpen, toggle, isEditing, couponData }) {
                 value={formData.maxUses}
                 onChange={handleInputChange}
               />
-              <Label>Product Stock</Label>
+
+              <Label>Expiry Date</Label>
               <Input
-                type="date"
+                type="datetime-local"
                 name="expirationDate"
-                value={formatDateForInput(formData.expirationDate)}
+                value={formData.expirationDate}
                 onChange={handleInputChange}
                 required
               />
+
+              {/* New checkbox for specific users */}
+              <Label>
+                <Input
+                  type="checkbox"
+                  name="forSpecificUser"
+                  checked={formData.forSpecificUser}
+                  onChange={handleInputChange}
+                />{" "}
+                Specific Users
+              </Label>
+
+              {/* New dropdown for selecting users */}
+              {formData.forSpecificUser && (
+                <>
+                  <Label>Select Users</Label>
+                  <Input
+                    type="select"
+                    name="targetUsers"
+                    multiple
+                    value={formData.targetUsers}
+                    onChange={handleInputChange}
+                  >
+                    {customersData.map((customer) => (
+                      <option key={customer.id} value={customer.id} className="bg-light border border-dark w-100 p-2">
+                        {`${customer.name} - ${customer.mobile}`}
+                      </option>
+                    ))}
+                  </Input>
+                </>
+              )}
+
               <div className="d-flex justify-content-end gap-3">
                 <Button type="submit" variant="success">
                   Save

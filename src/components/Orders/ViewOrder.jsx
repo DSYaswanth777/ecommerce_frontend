@@ -1,31 +1,69 @@
-import React from "react";
-import Footer from "../Footer/Footer";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import React, { useState } from "react";
 import { formatCurrency } from "../../utilities/formatCurrency";
 import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { viewOrderAsync } from "../../redux/slice/orderSlice";
+import { editOrderAsync, viewOrderAsync } from "../../redux/slice/orderSlice";
 import { Shimmer } from "react-shimmer";
-import { Card } from "reactstrap";
+import { Button, Card } from "reactstrap";
 import { v4 as uuidv4 } from "uuid";
-import { ArrowLeft } from "react-feather";
+import { ArrowLeft, Copy } from "react-feather";
 import { formatDateForInput } from "../../utilities/FormatInputDate";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import toast from "react-hot-toast";
 
 function ViewOrder() {
   const { orderID } = useParams();
   const dispatch = useDispatch();
-  const orderData = useSelector((state) => state?.orders?.order?.order); 
+  const orderData = useSelector((state) => state?.orders?.order?.order);
   const orderStatus = useSelector((state) => state?.orders?.status);
   const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
+  const userRole = useSelector((state) => state.auth.user?.role);
   useEffect(() => {
     dispatch(viewOrderAsync(orderID));
     // Scroll to the top of the page when the component mounts
     window.scrollTo(0, 0);
   }, [dispatch, orderID]);
 
-  
+  const handleCopy = (idType) => () => {
+    setCopied(true);
+    let toastMessage = "";
+    if (idType === "orderID") {
+      toastMessage = ` ${orderData?.orderID} copied!`;
+    } else if (idType === "paymentID") {
+      toastMessage = ` ${orderData?.razorpay_payment_id} copied!`;
+    } else if (idType === "trackingID") {
+      toastMessage = ` ${orderData?.trackingID} copied!`;
+    }
+    toast.success(toastMessage);
+    // Reset the copied state after a short delay
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
+  const [selectedCourier, setSelectedCourier] = useState("");
+  const [trackingIdInput, setTrackingIdInput] = useState("");
+
+  const courierOptions = ["DTDC", "Indian Post", "Delhivery.com"];
+
+  const handleCourierChange = (e) => {
+    setSelectedCourier(e.target.value);
+  };
+
+  const handleTrackingIdChange = (e) => {
+    setTrackingIdInput(e.target.value);
+  };
+
+  const handleCourierSave = () => {
+    dispatch(
+      editOrderAsync({
+        orderID: orderID,
+        courierName: selectedCourier,
+        trackingID: trackingIdInput,
+      })
+    );
+  };
 
   return (
     <>
@@ -34,6 +72,18 @@ function ViewOrder() {
           <div className="d-flex justify-content-start align-items-center gap-2 p-3">
             <ArrowLeft onClick={() => navigate("/orders")} />
             <h5 className=" fs-4 "> Order Details</h5>
+          </div>
+          <div className="w-100">
+            {" "}
+            <span className="fw-bold me-2">Order Status: </span>
+            {orderData?.paymentStatus === "Successful" ? (
+              <p className="text-success fw-bold">
+                {" "}
+                You have placed your order {orderData?.paymentStatus}ly.
+              </p>
+            ) : (
+              `Your Payment was ${orderData?.paymentStatus} place try again after Some time!`
+            )}
           </div>
           {orderStatus === "loading" || orderStatus === "idle" ? (
             <Shimmer visible={true} autoRun={true} width={1300} height={160}>
@@ -101,10 +151,18 @@ function ViewOrder() {
                 <Card width={80} height={60}></Card>
               </Shimmer>
             ) : (
-              <h5>Total: &nbsp;{formatCurrency(orderData?.totalAmount)}/-</h5>
+              <>
+                <p className="text-muted">
+                  Coupon Discount: &nbsp;
+                  {formatCurrency(orderData?.couponDiscount)}/-
+                </p>
+                <h5>Total: &nbsp;{formatCurrency(orderData?.totalAmount)}/-</h5>
+              </>
             )}
+
             <p className="text-mark text-danger text-sm">
-              * Includes Standard Delivery Charges
+              * Includes Delivery Charges{" "}
+              {formatCurrency(orderData?.deliveryFee)}
             </p>
           </div>
         </div>
@@ -118,24 +176,92 @@ function ViewOrder() {
             {" "}
             <span className="fw-bold me-2 text-muted">Order ID:</span>
             {orderData?.orderID}
+            <CopyToClipboard
+              text={orderData?.orderID}
+              onCopy={handleCopy("orderID")}
+              className="ms-2"
+            >
+              <Copy className="cursor-pointer " />
+            </CopyToClipboard>
           </p>
-          <div className="w-100">
+          <p className="text-muted">
             {" "}
-            <span className="fw-bold me-2">Order Status: </span>
-            {orderData?.paymentStatus === "Successful" ? (
-              <p className="text-success fw-bold">
-                {" "}
-                You have placed your order {orderData?.paymentStatus}ly. You
-                order will be shipped with 2-3 business days.Soon You will get
-                details from courier partner !
-              </p>
-            ) : (
-              `Your Payment was ${orderData?.paymentStatus} place try again after Some time!`
-            )}
-          </div>
+            <span className="fw-bold me-2 text-muted">Payment Id:</span>
+            {orderData?.razorpay_payment_id}
+            <CopyToClipboard
+              text={orderData?.razorpay_payment_id}
+              onCopy={handleCopy("paymentID")}
+              className="m"
+            >
+              <Copy className="cursor-pointer" size={15} />
+            </CopyToClipboard>
+          </p>
+          <h6 className="fw-bold text-uppercase">Tracking Details</h6>
+          {orderData?.courierName ? (
+            <div className="d-flex flex-column">
+              <span className="mb-2 fw-bolder">
+                Courier Name:&nbsp;{" "}
+                <span className="fw-bold">{orderData?.courierName}</span>
+              </span>
+              <span className="mb-2 ">
+                Tracking ID:
+                <span className="ms-2">{orderData?.trackingID}</span>
+                <CopyToClipboard
+                  text={orderData?.trackingID}
+                  onCopy={handleCopy("trackingID")}
+                  className="ms-2"
+                >
+                  <Copy className="cursor-pointer" size={16} />
+                </CopyToClipboard>
+              </span>
+            </div>
+          ) : (
+            <p>You will receive shipment details once your order shipped! </p>
+          )}
+          {userRole === "admin" && (
+            <div className="bg-white p-3 border h-50 w-50 my-4  shadow-sm">
+              <div className="d-flex flex-column mb-3 just">
+                <label className="fw-bold mb-2">Select Courier:</label>
+                <select
+                  className="form-select"
+                  name="courierName"
+                  value={selectedCourier}
+                  onChange={handleCourierChange}
+                >
+                  <option value="" disabled>
+                    Select Courier
+                  </option>
+                  {courierOptions.map((courier) => (
+                    <option key={courier} value={courier}>
+                      {courier}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-          <div className="">
-            <h6>Shipping Address:</h6>
+              <div className="mb-3">
+                <label className="fw-bold mb-2">Enter Tracking ID:</label>
+                <input
+                  type="text"
+                  name="trackingID"
+                  className="form-control"
+                  value={trackingIdInput}
+                  onChange={handleTrackingIdChange}
+                />
+              </div>
+
+              <Button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleCourierSave}
+              >
+                Save Courier Details
+              </Button>
+            </div>
+          )}
+
+          <div className="shipping-address">
+            <h5 className="text-uppercase">Shipping Address:</h5>
             <div className="d-flex flex-column bg-light p-4 rounded shadow-sm border">
               <span>{orderData?.shippingAddress?.fullName}</span>
               <span>{orderData?.shippingAddress?.landmark}</span>
@@ -146,7 +272,6 @@ function ViewOrder() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

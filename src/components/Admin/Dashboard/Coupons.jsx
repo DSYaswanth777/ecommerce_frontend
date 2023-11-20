@@ -15,8 +15,9 @@ import {
   searchCouponAsync,
 } from "../../../redux/slice/couponSlice";
 import AddCoupon from "./AddCoupon";
-import { formatDateForInput } from "../../../utilities/FormatInputDate";
 import NoData from "../../NoData/NoData";
+import moment from "moment-timezone";
+
 function Coupons() {
   const dispatch = useDispatch();
   const couponData = useSelector((state) => state.coupons?.coupons);
@@ -106,8 +107,12 @@ function Coupons() {
     },
     {
       name: "Coupon Expiration",
-      selector: (row) => formatDateForInput(row.expirationDate),
-
+      selector: (row) => {
+        const expirationDateIST = moment(row.expirationDate)
+          .tz("Asia/Kolkata")
+          .format("LLL");
+        return expirationDateIST;
+      },
       sortable: true,
     },
     {

@@ -10,9 +10,6 @@ function ChangePassword() {
       <div className="auth-inner my-2">
         <div className="mb-0">
           <CardBody>
-            <div className="d-flex text-center justify-content-center align-items-center">
-              <img src={Logo} style={{ width: "200px" }} />
-            </div>
 
             <CardTitle tag="h4" className="mb-1 mt-5">
               Change Password <CgPassword />

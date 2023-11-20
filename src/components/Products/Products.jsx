@@ -189,10 +189,12 @@ function Products({ productData }) {
                   <CardText className="fw-medium fs-5">
                     Price :{formatCurrency(product?.productPrice)}
                   </CardText>
-                  <Button className="addToCartBtn d-flex justify-content-center align-items-center">
+                  <Button className="addToCartBtn d-flex justify-content-center align-items-center"
+                      onClick={() => handleAddCartItem(product._id)}
+                  
+                  >
                     <FaCartPlus
                       className="me-2"
-                      onClick={() => handleAddCartItem(product._id)}
                     />{" "}
                     Add To Cart
                   </Button>

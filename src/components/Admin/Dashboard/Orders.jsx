@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import DataTable from "react-data-table-component";
 import { BsSearch } from "react-icons/bs";
-import { FaDownload } from "react-icons/fa";
+import { FaDownload, FaEdit } from "react-icons/fa";
 import "react-date-range/dist/styles.css"; // Import the CSS styles
 import "react-date-range/dist/theme/default.css"; // Import the default theme
 import {
@@ -94,6 +94,14 @@ function Orders() {
         </div>
       ),
     },
+    {
+      name:"Edit Order",
+      cell: (row) => (
+        <div className="text-primary">
+          <FaEdit size={18}/>
+        </div>
+      ),
+    }
   ];
 
   return (
