@@ -191,12 +191,22 @@ function Products({ productData }) {
                   </CardText>
                   <Button className="addToCartBtn d-flex justify-content-center align-items-center"
                       onClick={() => handleAddCartItem(product._id)}
-                  
+                      disabled={product?.productStock === 0}
+
                   >
                     <FaCartPlus
                       className="me-2"
                     />{" "}
-                    Add To Cart
+                    {product?.productStock === 0 ? (
+                        <>
+                          <FaCartPlus className="me-2" />
+                          Out of Stock
+                        </>
+                      ) : (
+                        <>
+                          <FaCartPlus className="me-2" /> Add To Cart
+                        </>
+                      )}
                   </Button>
                 </CardBody>
               </Card>

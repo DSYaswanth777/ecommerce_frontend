@@ -268,12 +268,8 @@ export const viewOrderAsync = createAsyncThunk(
 );
 export const editOrderAsync = createAsyncThunk(
   "orders/editOrder",
-  async (
-    editorderData,
-
-    { getState, rejectWithValue }
-  ) => {
-    console.log(editorderData,"dsadsasad")
+  async (editorderData, { getState, rejectWithValue }) => {
+    const { orderID, trackingID, courierName } = editorderData;
     const token = getState().auth.token;
     try {
       const response = await fetch(
@@ -284,7 +280,7 @@ export const editOrderAsync = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(editorderData),
+          body: JSON.stringify({trackingID, courierName}),
         }
       );
 
@@ -293,19 +289,18 @@ export const editOrderAsync = createAsyncThunk(
         return data;
       } else if (response.status === 400 || response.status === 404) {
         const data = await response.json();
-        // Display an error toast notification
         toast.error(data.errorMessage, { duration: 4000 });
         return rejectWithValue(data);
       } else {
         throw new Error("Failed to edit the order");
       }
     } catch (error) {
-      // Display an error toast notification for network errors
-      // toast.error("Network error. Please try again.", { duration: 4000 });
+      toast.error("Network error. Please try again.", { duration: 4000 });
       return rejectWithValue(error.message);
     }
   }
 );
+
 //** Create an order slice
 const orderSlice = createSlice({
   name: "orders",

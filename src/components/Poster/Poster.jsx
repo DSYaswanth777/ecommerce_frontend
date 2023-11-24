@@ -40,22 +40,19 @@ const Poster = ({ title, subtitle, products }) => {
                   width={300}
                   height={300}
                 >
-                  <Card
-                    className="slider-content"
-                    
-                  ></Card>
+                  <Card className="slider-content"></Card>
                 </Shimmer>
               ))
             : products.map((product) => (
                 <Card
                   className="slider-content"
-                  
                   key={product?._id}
+                  disabled={product?.productStock === 0}
                 >
                   <img
                     alt={product?.name}
                     src={product?.productImages[0]}
-                   className="poster_img"
+                    className="poster_img"
                     onClick={() =>
                       navigate(`/products/viewproduct/${product?._id}`)
                     }
@@ -76,11 +73,22 @@ const Poster = ({ title, subtitle, products }) => {
                     <CardText className="fw-medium fs-5">
                       Price: {formatCurrency(product?.productPrice)}
                     </CardText>
+
                     <Button
                       className="addToCartBtn d-flex justify-content-center align-items-center"
                       onClick={() => dispatch(cartAddAsync(product?._id))}
+                      disabled={product?.productStock === 0}
                     >
-                      <FaCartPlus className="me-2" /> Add To Cart
+                      {product?.productStock === 0 ? (
+                        <>
+                          <FaCartPlus className="me-2" />
+                          Out of Stock
+                        </>
+                      ) : (
+                        <>
+                          <FaCartPlus className="me-2" /> Add To Cart
+                        </>
+                      )}
                     </Button>
                   </CardBody>
                 </Card>

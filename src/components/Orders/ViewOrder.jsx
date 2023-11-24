@@ -55,15 +55,23 @@ function ViewOrder() {
     setTrackingIdInput(e.target.value);
   };
 
-  const handleCourierSave = () => {
-    dispatch(
+  const handleCourierSave = async () => {
+    await dispatch(
       editOrderAsync({
-        orderID: orderID,
-        courierName: selectedCourier,
+        courierName:selectedCourier,
         trackingID: trackingIdInput,
+        orderID,
       })
-    );
+    )
+      .then(() => {
+        // Handle successful edit
+        dispatch(viewOrderAsync(orderID))
+      })
+      .catch((error) => {
+        console.error('Error editing order:', error);
+      });
   };
+
 
   return (
     <>

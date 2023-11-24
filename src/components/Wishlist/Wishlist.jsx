@@ -112,6 +112,8 @@ function Wishlist() {
                       onClick={() =>
                         dispatch(cartAddAsync(product.product._id))
                       }
+                      disabled={product?.productStock === 0}
+
                     >
                       <FaCartPlus className="me-2" /> Add To Cart
                     </Button>
