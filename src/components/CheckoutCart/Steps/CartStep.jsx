@@ -112,7 +112,7 @@ function CartStep() {
                         />
                         <div className="d-flex flex-column justify-content-center align-items-center gap-4">
                           <div className="productName text-center">
-                            {product.product.productName}
+                            {product?.product?.productName}
                           </div>
                           <h5>
                             <Badge color="success">

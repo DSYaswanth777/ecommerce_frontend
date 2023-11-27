@@ -194,9 +194,7 @@ function Products({ productData }) {
                       disabled={product?.productStock === 0}
 
                   >
-                    <FaCartPlus
-                      className="me-2"
-                    />{" "}
+                
                     {product?.productStock === 0 ? (
                         <>
                           <FaCartPlus className="me-2" />

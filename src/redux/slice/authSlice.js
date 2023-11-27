@@ -140,7 +140,7 @@ export const resetPasswordAsync = createAsyncThunk(
     }
   }
 );
-
+  
 export const verifyOtpAsync = createAsyncThunk(
   "auth/verifyOtpAsync",
   async ({ mobile, otp }) => {

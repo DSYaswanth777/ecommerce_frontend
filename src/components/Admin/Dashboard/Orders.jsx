@@ -23,6 +23,7 @@ function Orders() {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const ordersData = useSelector((state) => state?.orders?.orders?.orders);
+  console.log(ordersData);
   const status = useSelector((state) => state.orders?.status);
   const navigate = useNavigate()
   const handleDownloadClick = (row) => {
@@ -61,7 +62,7 @@ function Orders() {
     },
     {
       name: "Product",
-      cell: (row) => row.cartItems[0].product.productName,
+      cell: (row) => row.cartItems[0].product?.productName,
       sortable: true,
     },
     {
@@ -72,7 +73,7 @@ function Orders() {
     },
     {
       name: "Product Category",
-      cell: (row) => row.cartItems[0].product.subcategoryId.name,
+      // cell: (row) => row.cartItems[0].product.subcategoryId.name,
       sortable: true,
     },
     {

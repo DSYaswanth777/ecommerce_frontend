@@ -196,7 +196,7 @@ function ViewProduct() {
               color="success"
             >
               {" "}
-              {product?.productStock === 0 ? <>Out of Stock </> : <>Instock</>}
+              {product?.productStock === 0 ? <>Out of Stock </> : <>Instock({product?.productStock})</>}
             </Badge>
           )}
           {productStatus === "loading" || productStatus === "idle" ? (
